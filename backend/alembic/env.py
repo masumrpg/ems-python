@@ -6,10 +6,14 @@ from sqlalchemy import pool
 
 from alembic import context
 
+
+from user.models import Base
+from core.config import get_settings
+
+
 # this is to include backend dir in sys.path so that we can import from core
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from core.config import get_settings
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -22,7 +26,7 @@ if config.config_file_name is not None:
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-from users.models import Base
+
 target_metadata = Base.metadata
 # target_metadata = None
 
@@ -33,7 +37,7 @@ target_metadata = Base.metadata
 
 
 settings = get_settings()
-config.set_main_option('sqlalchemy.url', settings.DATABASE_MIGRATION_URL)
+config.set_main_option("sqlalchemy.url", settings.DATABASE_MIGRATION_URL)
 
 
 def run_migrations_offline() -> None:
@@ -76,7 +80,7 @@ def run_migrations_online() -> None:
     with connectable.connect() as connection:
         context.configure(
             connection=connection, target_metadata=target_metadata
-        )
+        )  # ignore
 
         with context.begin_transaction():
             context.run_migrations()
