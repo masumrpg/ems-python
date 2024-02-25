@@ -1,0 +1,12 @@
+/venv
+/.venv
+.venv
+/.idea
+.idea
+.env
+
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.flake8
