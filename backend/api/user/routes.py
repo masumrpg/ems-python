@@ -1,9 +1,9 @@
 from typing import List
 from fastapi import APIRouter, status, Depends, Request
 from sqlalchemy.orm import Session
-from core.database import get_db
-from user.schemas import CreateUserDetailRequest, CreateUserRequest
-from user.services import (
+from api.core.database import get_db
+from api.user.schemas import CreateUserDetailRequest, CreateUserRequest
+from api.user.services import (
     create_user_account_services,
     create_user_detail_by_id_services,
     create_user_detail_services,
@@ -13,8 +13,8 @@ from user.services import (
     update_user_detail_by_id_services,
     update_user_detail_services,
 )
-from core.security import get_current_user, is_superuser, oauth2_scheme
-from user.responses import SuccessResponse, UserWithDetilResponse
+from api.core.security import get_current_user, is_superuser, oauth2_scheme
+from api.user.responses import SuccessResponse, UserWithDetilResponse
 
 router = APIRouter(
     prefix="/user",

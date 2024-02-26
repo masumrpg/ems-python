@@ -1,10 +1,14 @@
-from user.models import UserModel
+from api.user.models import UserModel
 from fastapi.exceptions import HTTPException
-from core.security import verify_password
-from core.config import get_settings
+from api.core.security import verify_password
+from api.core.config import get_settings
 from datetime import timedelta
-from auth.responses import TokenResponse
-from core.security import create_access_token, create_refresh_token, get_token_payload
+from api.auth.responses import TokenResponse
+from api.core.security import (
+    create_access_token,
+    create_refresh_token,
+    get_token_payload,
+)
 
 settings = get_settings()
 
@@ -33,7 +37,7 @@ async def get_token(data, db):
 
 async def get_refresh_token(token, db):
     payload = get_token_payload(token=token)
-    user_id = payload.get('id', None)
+    user_id = payload.get("id", None)
     if not user_id:
         raise HTTPException(
             status_code=401,
@@ -78,5 +82,5 @@ async def _get_user_token(user: UserModel, refresh_token=None):
     return TokenResponse(
         access_token=access_token,
         refresh_token=refresh_token,
-        expires_in=access_token_expiry.seconds  # in seconds
+        expires_in=access_token_expiry.seconds,  # in seconds
     )

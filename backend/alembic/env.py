@@ -7,8 +7,8 @@ from sqlalchemy import pool
 from alembic import context
 
 
-from user.models import Base
-from core.config import get_settings
+from api.user.models import Base
+from api.core.config import get_settings
 
 
 # this is to include backend dir in sys.path so that we can import from core

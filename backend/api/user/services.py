@@ -2,15 +2,15 @@ from fastapi import Request, logger, status
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session, aliased
 from sqlalchemy.exc import SQLAlchemyError
-from user.models import AddressModel, UserDetailModel, UserModel
-from user.schemas import CreateUserDetailRequest, CreateUserRequest
-from user.responses import (
+from api.user.models import AddressModel, UserDetailModel, UserModel
+from api.user.schemas import CreateUserDetailRequest, CreateUserRequest
+from api.user.responses import (
     AddressResponse,
     UserDetailResponse,
     UserWithDetilResponse,
 )
 from datetime import datetime
-from core.security import get_password_hash
+from api.core.security import get_password_hash
 from fastapi.exceptions import HTTPException
 
 

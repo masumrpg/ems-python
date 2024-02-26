@@ -10,7 +10,7 @@ from sqlalchemy import (
     func,
 )
 from sqlalchemy.orm import relationship
-from core.database import Base
+from api.core.database import Base
 
 
 class AddressModel(Base):

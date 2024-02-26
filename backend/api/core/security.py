@@ -3,10 +3,10 @@ from fastapi.security import OAuth2PasswordBearer
 from starlette.authentication import AuthCredentials, UnauthenticatedUser
 from datetime import timedelta, datetime
 from jose import jwt, JWTError
-from core.config import get_settings
+from api.core.config import get_settings
 from fastapi import Depends, HTTPException
-from core.database import get_db
-from user.models import UserModel
+from api.core.database import get_db
+from api.user.models import UserModel
 
 settings = get_settings()
 
