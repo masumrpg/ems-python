@@ -13,7 +13,7 @@ app = FastAPI(
     docs_url=f"/{docs_url}",
     redoc_url=f"/{redocs_url}",
     title="Employee Management System API",
-    version="1.0.0",
+    version="0.1.0",
     description="My first big project  by Ma'sum",
 )
 app.include_router(guest_router)

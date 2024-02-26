@@ -44,9 +44,7 @@ class CreateUserDetailRequest(BaseModel):
         min_length=4, max_length=50, examples=["Sarjana Manajemen"]
     )
     job: str = Field(min_length=4, max_length=10, examples=["Developer"])
-    salary: int = Field(
-        min_length=4, max_length=50, pattern=r"\d+", examples=["5000000"]
-    )
+    salary: int
 
     class Config:
         arbitrary_types_allowed = True

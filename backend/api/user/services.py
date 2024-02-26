@@ -340,7 +340,7 @@ async def update_user_detail_services(
     db_user_detail: UserDetailModel = (
         db.query(UserDetailModel).filter(UserDetailModel.user_id == user_id).first()
     )
-    if db_user_detail is None:
+    if not db_user_detail:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="User detail not found."
         )
