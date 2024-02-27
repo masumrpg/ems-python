@@ -1,7 +1,10 @@
-import SignIn from "@/components/form/signIn";
+import SignInForm from "@/components/auth/signin-form";
+import {Suspense} from "react";
 
 export default function SignInPage() {
     return (
-        <SignIn />
-    )
+        <Suspense>
+            <SignInForm/>
+        </Suspense>
+    );
 }

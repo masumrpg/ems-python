@@ -8,9 +8,10 @@ settings = get_settings()
 engine = create_engine(
     settings.DATABASE_URL,
     pool_pre_ping=True,
-    pool_recycle=300,
-    pool_size=20,
-    max_overflow=0,
+    pool_recycle=300,  # Daur ulang setiap 5 menit
+    pool_size=10,  # Batasi jumlah koneksi dalam pool
+    max_overflow=10,  # Batas overflow 10 koneksi
+    pool_timeout=30,  # Timeout 30 detik untuk memperoleh koneksi
 )
 
 
