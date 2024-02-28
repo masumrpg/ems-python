@@ -82,5 +82,5 @@ async def _get_user_token(user: UserModel, refresh_token=None):
     return TokenResponse(
         access_token=access_token,
         refresh_token=refresh_token,
-        expires_in=access_token_expiry.seconds,  # in seconds
+        expires_in=int(access_token_expiry.total_seconds())
     )

@@ -1,56 +1,19 @@
 import {Button} from "@/components/ui/button";
 import {TableHead, TableRow, TableHeader, TableCell, TableBody, Table} from "@/components/ui/table";
 import {FileEditIcon, TrashIcon} from "lucide-react";
-import {toast} from "sonner";
 import {getAllUserAction} from "@/server/action/getAllUserAction";
 import Image from "next/image";
 import { ResponseUsers } from "@/model/interface";
-import {useQuery} from "react-query";
+import { auth } from "@/lib/auth";
 
-const tableData = [
-    {
-        avatarSrc: "https://github.com/shadcn.png",
-        name: "Alice Johnson",
-        email: "alice@example.com",
-        role: "Manager"
-    },
-    {
-        avatarSrc: "https://github.com/shadcn.png",
-        name: "Bob Smith",
-        email: "bob@example.com",
-        role: "Developer"
-    },
-    {
-        avatarSrc: "https://github.com/shadcn.png",
-        name: "Eva Williams",
-        email: "eva@example.com",
-        role: "Designer"
-    },
-    {
-        avatarSrc: "https://github.com/shadcn.png",
-        name: "Mark Davis",
-        email: "mark@example.com",
-        role: "Intern"
+export default async function EmployeesPage() {
+    const session = await auth();
+    if (!session) {
+        console.log("Jamettt");
     }
-];
+    const data: [ResponseUsers] = await getAllUserAction();
+    console.log(data);
 
-const fetchUsers = async () => {
-    const response = await getAllUserAction();
-    if (!response) {
-        throw new Error("Failed load data!");
-    }
-    return response.json();
-};
-
-const ok = async() =>{
-    const res = await getAllUserAction();
-    return res;
-};
-
-export default function EmployeesPage() {
-
-
-    const data = false;
 
     return (
         <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">

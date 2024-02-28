@@ -41,6 +41,7 @@ export const {
             id: "credentials",
             name: "Credentials",
             type: "credentials",
+            // eslint-disable-next-line no-unused-vars
             async authorize(credentials: any, req: Request) {
                 const url = process.env.NEXT_PUBLIC_API_URL + "/auth/token";
                 const formData = new URLSearchParams();
@@ -70,11 +71,11 @@ export const {
             if (Date.now() < token.expiresIn) {
                 return token;
             }
+
             return await refreshTokenApiCall(token);
         },
-        // @ts-ignore
+
         async session({session, token}) {
-            // @ts-ignore
             session.accessToken = token.accessToken;
             if (session?.accessToken ?? false) {
                 const url = process.env.NEXT_PUBLIC_API_URL + "/user/me";
@@ -83,7 +84,7 @@ export const {
                         method: "GET",
                         headers: {
                             "Accept": "application/json",
-                            "Authorization": `Bearer ${session?.accessToken}`
+                            "Authorization": `Bearer ${session.accessToken}`
                         }
                     });
                     if (userRes.ok) {

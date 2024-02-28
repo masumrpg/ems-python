@@ -32,7 +32,7 @@ class Settings(BaseSettings):
     JWT_ALGORITHM: str = os.environ.get("JWT_ALGORITHM", "HS256")
     ACCESS_TOKEN_EXPIRE_MINUTES: int = os.environ.get(
         "JWT_TOKEN_EXPIRE_MINUTES", 60
-    )  # ignore
+    )
 
 
 def get_settings() -> Settings:
