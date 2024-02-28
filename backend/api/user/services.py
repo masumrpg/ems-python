@@ -219,6 +219,33 @@ async def get_all_user_services(db: Session):
     return user_responses
 
 
+async def get_me_by_id_services(user_id: str, db: Session):
+    db_user: UserModel = db.query(UserModel).filter(UserModel.id == user_id).first()
+    if db_user is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+        )
+
+    user_response = UserResponse(
+        id=db_user.id,
+        username=db_user.username,
+        email=db_user.email,
+        full_name=db_user.full_name,
+        is_active=db_user.is_active,
+        is_superuser=db_user.is_superuser,
+        is_verified=db_user.is_verified,
+        verified_at=str(db_user.verified_at) if db_user.verified_at else None,
+        created_at=str(db_user.created_at)
+    )
+
+    if user_response is None:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error"
+        )
+
+    return user_response
+
+
 async def get_user_by_id_services(user_id: str, db: Session):
     db_user: UserModel = db.query(UserModel).filter(UserModel.id == user_id).first()
     if db_user is None:

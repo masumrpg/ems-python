@@ -7,6 +7,7 @@ import {cn} from "@/lib/utils";
 import SideBar from "@/components/navigation/sidebar";
 import {Toaster} from "@/components/ui/sonner";
 import Provider from "@/components/provider";
+import ReactQuery from "@/components/react-query";
 
 export const metadata: Metadata = {
     title: "Employee Management",
@@ -39,7 +40,9 @@ export default function RootLayout({
                     >
                         <Toaster richColors={true} position="top-center"/>
                         <SideBar>
-                            {children}
+                            <ReactQuery>
+                                {children}
+                            </ReactQuery>
                         </SideBar>
                     </ThemeProvider>
                 </Provider>

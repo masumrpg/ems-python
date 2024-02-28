@@ -9,6 +9,7 @@ from api.user.services import (
     create_user_detail_services,
     delete_user_by_id_services,
     get_all_user_services,
+    get_me_by_id_services,
     get_user_by_id_services,
     update_user_detail_by_id_services,
     update_user_detail_services,
@@ -55,14 +56,14 @@ async def create_user_detail_me(
 
 
 @user_router.get(
-    "/me", status_code=status.HTTP_200_OK, response_model=UserWithDetilResponse
+    "/me", status_code=status.HTTP_200_OK, response_model=UserResponse
 )
 async def get_me(
-    current_user: UserWithDetilResponse = Depends(get_current_user),
+    current_user: UserResponse = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     user_id = current_user.id
-    res = await get_user_by_id_services(user_id, db)
+    res = await get_me_by_id_services(user_id, db)
     return res
 
 

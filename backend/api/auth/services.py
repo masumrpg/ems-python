@@ -19,7 +19,7 @@ async def get_token(data, db):
     if not user:
         raise HTTPException(
             status_code=400,
-            detail="Email is not registered with us.",
+            detail="Username is not registered with us.",
             headers={"WWW-Authenticate": "Bearer"},
         )
 

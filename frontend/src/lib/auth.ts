@@ -6,6 +6,7 @@ const refreshTokenApiCall = async (token: any) => {
     const res = await fetch(url, {
         method: "POST",
         headers: {
+            "Accept": "application/json",
             "refresh-token": token.refreshToken
         }
     });
@@ -77,14 +78,19 @@ export const {
             session.accessToken = token.accessToken;
             if (session?.accessToken ?? false) {
                 const url = process.env.NEXT_PUBLIC_API_URL + "/user/me";
-                const userRes = await fetch(url, {
-                    method: "GET",
-                    headers: {
-                        "Authorization": `Bearer ${session?.accessToken}`
+                try {
+                    const userRes = await fetch(url, {
+                        method: "GET",
+                        headers: {
+                            "Accept": "application/json",
+                            "Authorization": `Bearer ${session?.accessToken}`
+                        }
+                    });
+                    if (userRes.ok) {
+                        session.user = await userRes.json();
                     }
-                });
-                if (userRes.ok) {
-                    session.user = await userRes.json();
+                } catch (e) {
+                    throw new Error(`Internal server error, detail: ${e}`);
                 }
             }
             return session;
