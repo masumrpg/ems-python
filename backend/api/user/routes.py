@@ -14,7 +14,7 @@ from api.user.services import (
     update_user_detail_services,
 )
 from api.core.security import get_current_user, is_superuser, oauth2_scheme
-from api.user.responses import SuccessResponse, UserWithDetilResponse
+from api.user.responses import SuccessResponse, UserResponse, UserWithDetilResponse
 
 router = APIRouter(
     prefix="/user",
@@ -87,7 +87,7 @@ async def create_user_detail_by_id(
 
 
 @admin_router.get(
-    "", status_code=status.HTTP_200_OK, response_model=List[UserWithDetilResponse]
+    "", status_code=status.HTTP_200_OK, response_model=List[UserResponse]
 )
 async def get_all_user(db: Session = Depends(get_db)):
     users = await get_all_user_services(db=db)

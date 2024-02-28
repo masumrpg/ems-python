@@ -1,10 +1,8 @@
-"use client";
 import {Button} from "@/components/ui/button";
 import {TableHead, TableRow, TableHeader, TableCell, TableBody, Table} from "@/components/ui/table";
 import {FileEditIcon, TrashIcon} from "lucide-react";
 import {toast} from "sonner";
 import {getAllUserAction} from "@/server/action/getAllUserAction";
-import {useEffect, useState} from "react";
 import Image from "next/image";
 
 const tableData = [
@@ -35,21 +33,15 @@ const tableData = [
 ];
 
 
-export default function EmployeesPage() {
-    const [data, setData] = useState<any>(null);
+export default async function EmployeesPage() {
 
-    useEffect(() => {
-        (async () => {
-            const ok = await getAllUserAction();
-            setData(await ok);
-        })();
-    }, []);
-    console.log(data);
+    const res = await getAllUserAction();
 
     const getAllUsers = async () => {
         const data = await getAllUserAction();
         const name = await data;
-        console.log(name);
+
+        console.log(JSON.stringify(name));
     };
 
 
@@ -61,7 +53,7 @@ export default function EmployeesPage() {
         <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
             <div className="flex items-center">
                 <h1 className="font-semibold text-lg md:text-2xl">Employees</h1>
-                <Button className="ml-auto" size="sm" onClick={getAllUsers}>
+                <Button className="ml-auto" size="sm">
                     Add employee
                 </Button>
             </div>
@@ -76,57 +68,25 @@ export default function EmployeesPage() {
                             <TableHead className="w-[100px]">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
-                    {/*<TableBody>*/}
-                    {/*    {tableData.map((data, index) => (*/}
-                    {/*        <TableRow key={index}>*/}
-                    {/*            <TableCell>*/}
-                    {/*                <Image*/}
-                    {/*                    alt="Avatar"*/}
-                    {/*                    className="rounded-full object-cover"*/}
-                    {/*                    height="40"*/}
-                    {/*                    src={data.avatarSrc}*/}
-                    {/*                    style={{*/}
-                    {/*                        aspectRatio: "40/40",*/}
-                    {/*                        objectFit: "cover",*/}
-                    {/*                    }}*/}
-                    {/*                    width="40"*/}
-                    {/*                />*/}
-                    {/*            </TableCell>*/}
-                    {/*            <TableCell className="font-semibold">{data.name}</TableCell>*/}
-                    {/*            <TableCell className="hidden md:table-cell">{data.email}</TableCell>*/}
-                    {/*            <TableCell>{data.role}</TableCell>*/}
-                    {/*            <TableCell className="flex gap-2 w-[100px]">*/}
-                    {/*                <Button className="w-6 h-6" size="icon" variant="outline">*/}
-                    {/*                    <FileEditIcon className="w-4 h-4"/>*/}
-                    {/*                    <span className="sr-only">Edit</span>*/}
-                    {/*                </Button>*/}
-                    {/*                <Button className="w-6 h-6" size="icon" variant="outline">*/}
-                    {/*                    <TrashIcon className="w-4 h-4"/>*/}
-                    {/*                    <span className="sr-only">Delete</span>*/}
-                    {/*                </Button>*/}
-                    {/*            </TableCell>*/}
-                    {/*        </TableRow>*/}
-                    {/*    ))}*/}
-                    {/*</TableBody>*/}
-                    {data === null ? (
-                        <TableBody>
-                            <TableRow>
+                    <TableBody>
+                        {tableData.map((data, index) => (
+                            <TableRow key={index}>
                                 <TableCell>
                                     <Image
                                         alt="Avatar"
                                         className="rounded-full object-cover"
                                         height="40"
-                                        src="https://github.com/shadcn.png"
+                                        src={data.avatarSrc}
                                         style={{
                                             aspectRatio: "40/40",
-                                            objectFit: "cover",
+                                            objectFit: "cover"
                                         }}
                                         width="40"
                                     />
                                 </TableCell>
-                                <TableCell className="font-semibold">Loading...</TableCell>
-                                <TableCell className="hidden md:table-cell">Loading...</TableCell>
-                                <TableCell>Loading...</TableCell>
+                                <TableCell className="font-semibold">{data.name}</TableCell>
+                                <TableCell className="hidden md:table-cell">{data.email}</TableCell>
+                                <TableCell>{data.role}</TableCell>
                                 <TableCell className="flex gap-2 w-[100px]">
                                     <Button className="w-6 h-6" size="icon" variant="outline">
                                         <FileEditIcon className="w-4 h-4"/>
@@ -138,41 +98,75 @@ export default function EmployeesPage() {
                                     </Button>
                                 </TableCell>
                             </TableRow>
-                        </TableBody>
-                    ) : (
-                        <TableBody>
-                            {data.map((data: any, index: any) => (
-                                <TableRow key={index}>
-                                    <TableCell>
-                                        <Image
-                                            alt="Avatar"
-                                            className="rounded-full object-cover"
-                                            height="40"
-                                            src="https://github.com/shadcn.png"
-                                            style={{
-                                                aspectRatio: "40/40",
-                                                objectFit: "cover",
-                                            }}
-                                            width="40"
-                                        />
-                                    </TableCell>
-                                    <TableCell className="font-semibold">{data.full_name}</TableCell>
-                                    <TableCell className="hidden md:table-cell">{data.email}</TableCell>
-                                    <TableCell>{data.role}</TableCell>
-                                    <TableCell className="flex gap-2 w-[100px]">
-                                        <Button className="w-6 h-6" size="icon" variant="outline">
-                                            <FileEditIcon className="w-4 h-4"/>
-                                            <span className="sr-only">Edit</span>
-                                        </Button>
-                                        <Button className="w-6 h-6" size="icon" variant="outline">
-                                            <TrashIcon className="w-4 h-4"/>
-                                            <span className="sr-only">Delete</span>
-                                        </Button>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    )}
+                        ))}
+                    </TableBody>
+
+                    {/*batas*/}
+                    {/*{data === null ? (*/}
+                    {/*    <TableBody>*/}
+                    {/*        <TableRow>*/}
+                    {/*            <TableCell>*/}
+                    {/*                <Image*/}
+                    {/*                    alt="Avatar"*/}
+                    {/*                    className="rounded-full object-cover"*/}
+                    {/*                    height="40"*/}
+                    {/*                    src="https://github.com/shadcn.png"*/}
+                    {/*                    style={{*/}
+                    {/*                        aspectRatio: "40/40",*/}
+                    {/*                        objectFit: "cover"*/}
+                    {/*                    }}*/}
+                    {/*                    width="40"*/}
+                    {/*                />*/}
+                    {/*            </TableCell>*/}
+                    {/*            <TableCell className="font-semibold">Loading...</TableCell>*/}
+                    {/*            <TableCell className="hidden md:table-cell">Loading...</TableCell>*/}
+                    {/*            <TableCell>Loading...</TableCell>*/}
+                    {/*            <TableCell className="flex gap-2 w-[100px]">*/}
+                    {/*                <Button className="w-6 h-6" size="icon" variant="outline">*/}
+                    {/*                    <FileEditIcon className="w-4 h-4"/>*/}
+                    {/*                    <span className="sr-only">Edit</span>*/}
+                    {/*                </Button>*/}
+                    {/*                <Button className="w-6 h-6" size="icon" variant="outline">*/}
+                    {/*                    <TrashIcon className="w-4 h-4"/>*/}
+                    {/*                    <span className="sr-only">Delete</span>*/}
+                    {/*                </Button>*/}
+                    {/*            </TableCell>*/}
+                    {/*        </TableRow>*/}
+                    {/*    </TableBody>*/}
+                    {/*) : (*/}
+                    {/*    <TableBody>*/}
+                    {/*        {data.map((data: any, index: any) => (*/}
+                    {/*            <TableRow key={index}>*/}
+                    {/*                <TableCell>*/}
+                    {/*                    <Image*/}
+                    {/*                        alt="Avatar"*/}
+                    {/*                        className="rounded-full object-cover"*/}
+                    {/*                        height="40"*/}
+                    {/*                        src="https://github.com/shadcn.png"*/}
+                    {/*                        style={{*/}
+                    {/*                            aspectRatio: "40/40",*/}
+                    {/*                            objectFit: "cover"*/}
+                    {/*                        }}*/}
+                    {/*                        width="40"*/}
+                    {/*                    />*/}
+                    {/*                </TableCell>*/}
+                    {/*                <TableCell className="font-semibold">{data.full_name}</TableCell>*/}
+                    {/*                <TableCell className="hidden md:table-cell">{data.email}</TableCell>*/}
+                    {/*                <TableCell>{data.role}</TableCell>*/}
+                    {/*                <TableCell className="flex gap-2 w-[100px]">*/}
+                    {/*                    <Button className="w-6 h-6" size="icon" variant="outline">*/}
+                    {/*                        <FileEditIcon className="w-4 h-4"/>*/}
+                    {/*                        <span className="sr-only">Edit</span>*/}
+                    {/*                    </Button>*/}
+                    {/*                    <Button className="w-6 h-6" size="icon" variant="outline">*/}
+                    {/*                        <TrashIcon className="w-4 h-4"/>*/}
+                    {/*                        <span className="sr-only">Delete</span>*/}
+                    {/*                    </Button>*/}
+                    {/*                </TableCell>*/}
+                    {/*            </TableRow>*/}
+                    {/*        ))}*/}
+                    {/*    </TableBody>*/}
+                    {/*)}*/}
 
                 </Table>
             </div>

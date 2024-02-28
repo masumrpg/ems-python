@@ -1,7 +1,23 @@
 {
-  "extends": "next/core-web-vitals",
-  "rules": {
-    "semi": "error",
-    "quotes": "warn"
-  }
+    "extends": "next/core-web-vitals",
+    "ignorePatterns": [
+        "src/types/*",
+        "../backend/",
+        "../test/"
+    ],
+    "rules": {
+        "indent": [
+            "error",
+            4
+        ],
+        "semi": "warn",
+        "quotes": "warn",
+        "no-trailing-spaces": "warn",
+        "no-mixed-spaces-and-tabs": "warn",
+        "comma-dangle": "warn",
+        "no-console": "warn",
+        "no-unused-expressions": "warn",
+        "no-unused-labels": "warn",
+        "no-unused-vars": "warn"
+    }
 }

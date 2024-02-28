@@ -33,7 +33,7 @@ export const {
 } = NextAuth({
     secret: process.env.AUTH_SECRET,
     session: {
-        strategy: "jwt",
+        strategy: "jwt"
     },
     providers: [
         Credentials({
@@ -55,8 +55,8 @@ export const {
                     return await res.json();
                 }
                 return null;
-            },
-        }),
+            }
+        })
     ],
     callbacks: {
         async jwt({token, user}) {
@@ -88,7 +88,7 @@ export const {
                 }
             }
             return session;
-        },
+        }
     },
     pages: {
         signIn: "/signin"

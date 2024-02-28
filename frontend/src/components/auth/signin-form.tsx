@@ -10,7 +10,6 @@ import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {useSearchParams} from "next/navigation";
-import {DEFAULT_LOGIN_REDIRECT} from "@/routes";
 
 const FormSchema = z.object({
     username: z
@@ -22,7 +21,7 @@ const FormSchema = z.object({
         .string()
         .min(1, "Password required")
         .regex(RegExp("^[^ ]+$"), "No space")
-        .min(8, "Password minimal 8 character"),
+        .min(8, "Password minimal 8 character")
 });
 
 type FormFields = z.infer<typeof FormSchema>;
@@ -35,8 +34,8 @@ export default function SignInForm() {
         resolver: zodResolver(FormSchema),
         defaultValues: {
             username: "",
-            password: "",
-        },
+            password: ""
+        }
     });
 
     const onSubmit = async (formData: FormFields) => {

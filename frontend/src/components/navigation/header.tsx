@@ -46,7 +46,7 @@ export default function Header() {
                             src="https://github.com/shadcn.png"
                             style={{
                                 aspectRatio: "32/32",
-                                objectFit: "cover",
+                                objectFit: "cover"
                             }}
                             width="32"
                         />

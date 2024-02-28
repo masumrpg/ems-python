@@ -7,6 +7,7 @@ from api.user.schemas import CreateUserDetailRequest, CreateUserRequest
 from api.user.responses import (
     AddressResponse,
     UserDetailResponse,
+    UserResponse,
     UserWithDetilResponse,
 )
 from datetime import datetime
@@ -179,16 +180,10 @@ async def create_user_detail_by_id_services(
 
 
 async def get_all_user_services(db: Session):
-    # Aliases untuk tabel UserDetailModel dan AddressModel
-    UserDetail = aliased(UserDetailModel)
-    Address = aliased(AddressModel)
 
     try:
         all_users_details = (
-            db.query(UserModel, UserDetail, Address)
-            .outerjoin(UserDetail, UserModel.id == UserDetail.user_id)
-            .outerjoin(Address, UserDetail.user_detail_id == Address.user_detail_id)
-            .all()
+            db.query(UserModel).all()
         )
     except SQLAlchemyError as e:
         db.rollback()
@@ -199,7 +194,7 @@ async def get_all_user_services(db: Session):
             detail=f"Database error: {str(e)}",
         )
 
-    # Jika tidak ada data user yang ditemukan, raise HTTPException
+    # Give response 404
     if not all_users_details:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="No users found"
@@ -207,8 +202,8 @@ async def get_all_user_services(db: Session):
 
     user_responses = []
 
-    for user_data, user_detail_data, address_data in all_users_details:
-        user_response = UserWithDetilResponse(
+    for user_data in all_users_details:
+        user_response = UserResponse(
             id=user_data.id,
             username=user_data.username,
             email=user_data.email,
@@ -218,46 +213,6 @@ async def get_all_user_services(db: Session):
             is_verified=user_data.is_verified,
             verified_at=user_data.verified_at,
             created_at=user_data.created_at,
-            user_detail=(
-                UserDetailResponse(
-                    user_detail_id=(
-                        user_detail_data.user_detail_id if user_detail_data else None
-                    ),
-                    address=(
-                        AddressResponse(
-                            postal_code=(
-                                address_data.postal_code if address_data else None
-                            ),
-                            village=address_data.village if address_data else None,
-                            subdistrict=(
-                                address_data.subdistrict if address_data else None
-                            ),
-                            city=address_data.city if address_data else None,
-                            province=address_data.province if address_data else None,
-                            country=address_data.country if address_data else None,
-                        )
-                        if address_data
-                        else None
-                    ),
-                    phone=user_detail_data.phone if user_detail_data else None,
-                    dob=user_detail_data.dob if user_detail_data else None,
-                    gender=user_detail_data.gender if user_detail_data else None,
-                    marital_status=(
-                        user_detail_data.marital_status if user_detail_data else None
-                    ),
-                    id_card=user_detail_data.id_card if user_detail_data else None,
-                    religion=user_detail_data.religion if user_detail_data else None,
-                    tertiary_education=(
-                        user_detail_data.tertiary_education
-                        if user_detail_data
-                        else None
-                    ),
-                    job=user_detail_data.job if user_detail_data else None,
-                    salary=user_detail_data.salary if user_detail_data else None,
-                )
-                if user_detail_data
-                else None
-            ),
         )
         user_responses.append(user_response)
 
