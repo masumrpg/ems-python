@@ -6,7 +6,7 @@ import {Inter as FontSans} from "next/font/google";
 import {cn} from "@/lib/utils";
 import SideBar from "@/components/navigation/sidebar";
 import {Toaster} from "@/components/ui/sonner";
-import Provider from "@/components/provider";
+import NextAuthSessionProvider from "@/components/nextauth-provider";
 import ReactQuery from "@/components/react-query";
 
 export const metadata: Metadata = {
@@ -31,21 +31,21 @@ export default function RootLayout({
                 "min-h-screen bg-background font-sans antialiased",
                 fontSans.variable
             )}>
-                <Provider>
-                    <ThemeProvider
-                        attribute="class"
-                        defaultTheme="system"
-                        enableSystem
-                        disableTransitionOnChange
-                    >
-                        <Toaster richColors={true} position="top-center"/>
-                        <SideBar>
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme="system"
+                    enableSystem
+                    disableTransitionOnChange
+                >
+                    <Toaster richColors={true} position="bottom-right"/>
+                    <SideBar>
+                        <NextAuthSessionProvider>
                             <ReactQuery>
                                 {children}
                             </ReactQuery>
-                        </SideBar>
-                    </ThemeProvider>
-                </Provider>
+                        </NextAuthSessionProvider>
+                    </SideBar>
+                </ThemeProvider>
             </body>
         </html>
     );

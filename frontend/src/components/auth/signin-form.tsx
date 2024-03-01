@@ -1,7 +1,7 @@
 "use client";
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {signInAction} from "@/server/action/signInAction";
+import {signInAction} from "@/action/signInAction";
 import {useForm} from "react-hook-form";
 import {toast} from "sonner";
 import Link from "next/link";

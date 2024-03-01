@@ -1,8 +1,7 @@
 "use server";
 import {auth} from "@/lib/auth";
-import { NextResponse } from "next/server";
 
-export async function getAllUserAction() {
+export async function getAllUsersAction() {
     const session = await auth();
     try {
         const url = process.env.NEXT_PUBLIC_API_URL + "/user";
@@ -14,10 +13,16 @@ export async function getAllUserAction() {
             }
         });
 
-        return res.json();
+        if (res.ok) {
+            return res.json();
+        } else {
+            throw new Error(`HTTP error! Status: ${res.status}`);
+        }
     } catch (e) {
-        return NextResponse.json({
-            "error": `Error ${e}`
-        });
+        if (e) {
+            return Response.json({
+                "error": `Error ${e}`
+            });
+        }
     }
 }
