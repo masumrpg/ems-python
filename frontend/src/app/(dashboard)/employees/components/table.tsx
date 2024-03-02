@@ -1,52 +1,42 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { FileEditIcon, TrashIcon } from "lucide-react";
+import { FileEditIcon } from "lucide-react";
 import Image from "next/image";
 import EmployeesTableSkeleton from "./table-skeleton";
-import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
-import {useRouter} from "next/navigation";
-import { useState } from "react";
-import { useSession } from "next-auth/react";
-import deleteUserHook from "@/hooks/deleteUserHook";
-import  getAllUsersHook  from "@/hooks/getAllUsersHook";
+import {  useState } from "react";
+import { ResponseUsers } from "@/model/interface";
+import getAllEmployeesAction from "@/action/getAllEmployeesAction";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import deleteEmployeeAction from "@/action/deleteEmployeeAction";
+import DeleteEmployeeDialog from "./delete-employee";
 
 export default function EmployeesTable() {
-    const session = useSession();
-    const router = useRouter();
-    const [idClicked, setIdClicked] = useState<string>("");
-    const { data, isPending, isLoading, error, refetch} = useQuery({
-        queryKey: ["user"],
-        queryFn: async () => await getAllUsersHook(session.data)
-        // refetchOnWindowFocus: "always",
-        // gcTime: 0
-    });
-    const {mutate} = useMutation({
-        mutationKey: ["user"],
-        mutationFn: async () => await deleteUserHook(idClicked,session.data),
-        onSuccess: () => toast.success("Success delete employee.")
+    const [employeeIdFromButton, setEmployeeIdFromButton] = useState<string>("");
+
+    const { isPending, error, data, refetch } = useQuery<[ResponseUsers]>({
+        queryKey: ["users"],
+        queryFn: async () => await getAllEmployeesAction(),
+        refetchOnWindowFocus: "always",
+        gcTime: 0
     });
 
-    if (data === undefined || null) {
-        refetch();
-        return <EmployeesTableSkeleton/>;
-    }
-    console.log(data[0]);
+    const { mutate, isPending: isDeleting } = useMutation({
+        mutationKey: ["users"],
+        mutationFn: async () => await deleteEmployeeAction(employeeIdFromButton),
+        onSuccess: () => {
+            refetch();
+            toast.success("Success delete employee");
+        }
+    });
 
-    if (isPending || isLoading) return <EmployeesTableSkeleton/>;
-
-    if (error) return "An error has occurred: " + error.message;
-
-    const editHabdler = () => {
-        toast.success("OK");
-    };
-
-    const deleteHandler = () => {
+    const handleDeleteEmployee = async () => {
         mutate();
-        refetch();
-        router.refresh();
     };
+
+    if (isPending) return <EmployeesTableSkeleton />;
+    if (error) return "An error has occurred: " + error.message;
 
 
     return (
@@ -64,7 +54,7 @@ export default function EmployeesTable() {
             </TableHeader>
             {/* table body */}
             <TableBody>
-                {data.map((data: any, index: any) => (
+                {data.map((data, index) => (
                     <TableRow key={index}>
                         <TableCell>
                             <div className="w-full flex items-center justify-center">
@@ -86,19 +76,15 @@ export default function EmployeesTable() {
                         <TableCell className="font-semibold text-center">{data.full_name}</TableCell>
                         <TableCell className="font-semibold text-center">{data.is_superuser === true ? "admin" : "user"}</TableCell>
                         <TableCell className="font-semibold text-center">{data.is_verified === true ? "Active" : "Inactive"}</TableCell>
-                        <TableCell>
+                        <TableCell onClick={()=>{
+                            setEmployeeIdFromButton(data.id);
+                        }}>
                             <div className="w-full flex items-center justify-center space-x-2">
-                                <Button onClick={editHabdler} className="w-6 h-6" size="icon" variant="outline">
+                                <Button className="w-6 h-6" size="icon" variant="outline" disabled={isDeleting}>
                                     <FileEditIcon className="w-4 h-4"/>
                                     <span className="sr-only">Edit</span>
                                 </Button>
-                                <Button onClick={() => {
-                                    setIdClicked(data.id);
-                                    deleteHandler();
-                                }} className="w-6 h-6" size="icon" variant="outline">
-                                    <TrashIcon className="w-4 h-4"/>
-                                    <span className="sr-only">Delete</span>
-                                </Button>
+                                <DeleteEmployeeDialog deleteEmployee={handleDeleteEmployee} isDeleting={isDeleting} />
                             </div>
                         </TableCell>
                     </TableRow>
