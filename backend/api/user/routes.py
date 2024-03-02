@@ -90,8 +90,8 @@ async def create_user_detail_by_id(
 @admin_router.get(
     "", status_code=status.HTTP_200_OK, response_model=List[UserResponse]
 )
-async def get_all_user(db: Session = Depends(get_db)):
-    users = await get_all_user_services(db=db)
+def get_all_user(db: Session = Depends(get_db)):
+    users = get_all_user_services(db=db)
     return users
 
 
@@ -116,7 +116,7 @@ async def update_user_detail_by_id(
 @admin_router.delete(
     "/{user_id}", status_code=status.HTTP_200_OK, response_model=SuccessResponse
 )
-async def delete_user_by_id(user_id: str, db: Session = Depends(get_db)):
+def delete_user_by_id(user_id: str, db: Session = Depends(get_db)):
     # db: Session = Depends(get_db)
-    res = await delete_user_by_id_services(user_id, db)
+    res = delete_user_by_id_services(user_id, db)
     return res

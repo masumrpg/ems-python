@@ -67,7 +67,8 @@ export const {
     signIn,
     signOut
 } = NextAuth({
-    useSecureCookies: process.env.NODE_ENV === "production",
+    // useSecureCookies: process.env.NODE_ENV === "production",
+    trustHost: true,
     secret: process.env.AUTH_SECRET,
     session: {
         maxAge: maxAge,

@@ -179,7 +179,7 @@ async def create_user_detail_by_id_services(
     )
 
 
-async def get_all_user_services(db: Session):
+def get_all_user_services(db: Session):
 
     try:
         all_users_details = (
@@ -450,7 +450,7 @@ async def update_user_detail_by_id_services(
     )
 
 
-async def delete_user_by_id_services(user_id: str, db: Session):
+def delete_user_by_id_services(user_id: str, db: Session):
     # Aliases untuk tabel UserDetailModel dan AddressModel
     User = aliased(UserModel)
     UserDetail = aliased(UserDetailModel)
