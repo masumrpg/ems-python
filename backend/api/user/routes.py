@@ -80,10 +80,10 @@ async def update_user_detail_me(
 @admin_router.post(
     "/detail/{user_id}", status_code=status.HTTP_200_OK, response_model=SuccessResponse
 )
-async def create_user_detail_by_id(
+def create_user_detail_by_id(
     data: CreateUserDetailRequest, user_id: str, db: Session = Depends(get_db)
 ):
-    res = await create_user_detail_by_id_services(data, user_id, db)
+    res = create_user_detail_by_id_services(data, user_id, db)
     return res
 
 
@@ -98,18 +98,18 @@ def get_all_user(db: Session = Depends(get_db)):
 @admin_router.get(
     "/{user_id}", status_code=status.HTTP_200_OK, response_model=UserWithDetilResponse
 )
-async def get_user_by_id(user_id: str, db: Session = Depends(get_db)):
-    user = await get_user_by_id_services(user_id, db)
+def get_user_by_id(user_id: str, db: Session = Depends(get_db)):
+    user = get_user_by_id_services(user_id, db)
     return user
 
 
 @admin_router.patch(
     "/detail/{user_id}", status_code=status.HTTP_200_OK, response_model=SuccessResponse
 )
-async def update_user_detail_by_id(
+def update_user_detail_by_id(
     data: CreateUserDetailRequest, user_id: str, db: Session = Depends(get_db)
 ):
-    res = await update_user_detail_by_id_services(data, user_id, db)
+    res = update_user_detail_by_id_services(data, user_id, db)
     return res
 
 

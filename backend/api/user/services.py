@@ -110,7 +110,7 @@ async def create_user_detail_services(
     )
 
 
-async def create_user_detail_by_id_services(
+def create_user_detail_by_id_services(
     data: CreateUserDetailRequest, user_id: str, db: Session
 ):
     db_user: UserModel = db.query(UserModel).filter(UserModel.id == user_id).first()
@@ -246,7 +246,7 @@ async def get_me_by_id_services(user_id: str, db: Session):
     return user_response
 
 
-async def get_user_by_id_services(user_id: str, db: Session):
+def get_user_by_id_services(user_id: str, db: Session):
     db_user: UserModel = db.query(UserModel).filter(UserModel.id == user_id).first()
     if db_user is None:
         raise HTTPException(
@@ -383,7 +383,7 @@ async def update_user_detail_services(
     )
 
 
-async def update_user_detail_by_id_services(
+def update_user_detail_by_id_services(
     data: CreateUserDetailRequest, user_id: str, db: Session
 ):
     db_user_detail: UserDetailModel = (
