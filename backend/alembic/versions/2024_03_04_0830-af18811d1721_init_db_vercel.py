@@ -1,8 +1,8 @@
-"""init railway
+"""init db vercel
 
-Revision ID: 0a597cf45769
-Revises: 9e251f71e501
-Create Date: 2024-03-02 19:04:45.368252
+Revision ID: af18811d1721
+Revises: 
+Create Date: 2024-03-04 08:30:26.452826
 
 """
 from typing import Sequence, Union
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '0a597cf45769'
-down_revision: Union[str, None] = '9e251f71e501'
+revision: str = 'af18811d1721'
+down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 

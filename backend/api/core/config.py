@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
-from urllib.parse import quote_plus, quote
+from urllib.parse import quote_plus
 from pydantic_settings import BaseSettings
 
 env_path = Path(".") / ".env"
@@ -16,12 +16,10 @@ class Settings(BaseSettings):
     DB_HOST: str = os.environ.get("POSTGRESQL_HOST")
     DB_PORT: str = os.environ.get("POSTGRESQL_PORT")
     DATABASE_URL: str = (
-        f"postgresql+psycopg2://{DB_USER}:%s@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-        % quote_plus(DB_PASSWORD)
+        f"postgresql+psycopg2://{DB_USER}:{quote_plus(DB_PASSWORD)}@{DB_HOST}:{DB_PORT}/{DB_NAME}?sslmode=require"
     )
     DATABASE_MIGRATION_URL: str = (
-        f"postgresql+psycopg2://{DB_USER}:%s@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-        % quote(DB_PASSWORD).replace("%", "%%")
+        f"postgresql+psycopg2://{DB_USER}:{quote_plus(DB_PASSWORD)}@{DB_HOST}:{DB_PORT}/{DB_NAME}?sslmode=require"
     )
 
     # JWT
