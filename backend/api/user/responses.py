@@ -1,12 +1,10 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import ConfigDict, BaseModel, EmailStr
 from typing import Optional, Union
 from datetime import date, datetime
 
 
 class BaseResponse(BaseModel):
-    class Config:
-        from_attributes = True
-        arbitrary_types_allowed = True
+    model_config = ConfigDict(from_attributes=True, arbitrary_types_allowed=True)
 
 
 class UserResponse(BaseModel):

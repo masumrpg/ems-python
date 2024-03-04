@@ -6,6 +6,7 @@ from api.user.models import AddressModel, UserDetailModel, UserModel
 from api.user.schemas import CreateUserDetailRequest, CreateUserRequest
 from api.user.responses import (
     AddressResponse,
+    SuccessResponse,
     UserDetailResponse,
     UserResponse,
     UserWithDetilResponse,
@@ -15,7 +16,7 @@ from api.core.security import get_password_hash
 from fastapi.exceptions import HTTPException
 
 
-async def create_user_account_services(data: CreateUserRequest, db: Session):
+def create_user_account_services(data: CreateUserRequest, db: Session):
     username = db.query(UserModel).filter(UserModel.username == data.username).first()
 
     if username:
@@ -38,12 +39,15 @@ async def create_user_account_services(data: CreateUserRequest, db: Session):
         updated_at=datetime.now(),
     )
 
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
-    return JSONResponse(
-        content={"message": "User account has been succesfully created."}
-    )
+    try:
+        db.add(new_user)
+        db.commit()
+        db.refresh(new_user)
+        return SuccessResponse(message="User account has been successfully created.")
+    except Exception as e:
+        print("Error: ", e)
+    finally:
+        db.close()
 
 
 async def create_user_detail_services(

@@ -1,6 +1,6 @@
 from datetime import date
 from typing import Optional
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import ConfigDict, BaseModel, EmailStr, Field
 
 
 class CreateUserRequest(BaseModel):
@@ -14,7 +14,7 @@ class CreateUserRequest(BaseModel):
         min_length=5, max_length=100, pattern=r"^[a-z0-9]+$", examples=["masumrpg"]
     )
     email: EmailStr = Field(examples=["masumrpg@gmail.com"])
-    password: str = Field(min_length=8, pattern=r"^\S*$")
+    password: str = Field(min_length=8, pattern=r"^\S+$")
 
 
 class CreateAddressRequest(BaseModel):
@@ -45,9 +45,7 @@ class CreateUserDetailRequest(BaseModel):
     )
     job: str = Field(min_length=4, max_length=10, examples=["Developer"])
     salary: int
-
-    class Config:
-        arbitrary_types_allowed = True
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
 
 class CreateUserWithDetailRequest(BaseModel):
@@ -61,8 +59,6 @@ class CreateUserWithDetailRequest(BaseModel):
         min_length=5, max_length=100, pattern=r"^[a-z0-9]+$", examples=["masumrpg"]
     )
     email: EmailStr = Field(examples=["masumrpg@gmail.com"])
-    password: str = Field(min_length=8, pattern=r"^\S*$")
+    password: str = Field(min_length=8, pattern=r"^\S+$")
     user_detail: Optional[CreateUserDetailRequest] = None
-
-    class Config:
-        arbitrary_types_allowed = True
+    model_config = ConfigDict(arbitrary_types_allowed=True)

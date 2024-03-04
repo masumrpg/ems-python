@@ -40,8 +40,8 @@ admin_router = APIRouter(
 
 
 @router.post("", status_code=status.HTTP_201_CREATED, response_model=SuccessResponse)
-async def create_user(data: CreateUserRequest, db: Session = Depends(get_db)):
-    res = await create_user_account_services(data=data, db=db)
+def create_user(data: CreateUserRequest, db: Session = Depends(get_db)):
+    res = create_user_account_services(data=data, db=db)
     return res
 
 
