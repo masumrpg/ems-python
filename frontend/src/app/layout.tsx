@@ -37,7 +37,7 @@ export default function RootLayout({
                     enableSystem
                     disableTransitionOnChange
                 >
-                    <Toaster richColors={true} position="bottom-right"/>
+                    <Toaster richColors={true} position="top-right"/>
                     <SideBar>
                         <NextAuthSessionProvider>
                             <ReactQuery>

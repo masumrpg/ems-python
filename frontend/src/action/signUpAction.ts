@@ -1,22 +1,20 @@
 "use server";
 
-import { auth } from "@/lib/auth";
 import { ResponseMessage } from "@/model/interface-server";
 
-export default async function getAllEmployeesAction(id:string) {
-    const session = await auth();
+export default async function signUpAction(formData: any) {
+    const jsonData = JSON.stringify(formData);
+
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/user`;
     try {
-        const url = `${process.env.NEXT_PUBLIC_API_URL}/user/${id}`;
-        const res = await fetch(url,{
-            method: "DELETE",
-            headers: {
-                "Accept": "application/json",
-                "Authorization": `Bearer ${session?.accessToken}`
-            }
+        const res = await fetch(url, {
+            method: "POST",
+            headers: {"Accept": "application/json", "Content-Type": "application/json"},
+            body: jsonData
         });
         const resMsg: ResponseMessage = await res.json().then((value)=> {return value;});
 
-        if (res.status === 200) {
+        if (res.status === 201) {
             return {
                 status: res.status,
                 message: resMsg.message

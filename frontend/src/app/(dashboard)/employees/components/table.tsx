@@ -6,7 +6,7 @@ import Image from "next/image";
 import EmployeesTableSkeleton from "./table-skeleton";
 import { toast } from "sonner";
 import {  useState } from "react";
-import { ResponseUsers } from "@/model/interface";
+import { ResponseUsers } from "@/model/interface-client";
 import getAllEmployeesAction from "@/action/getAllEmployeesAction";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import deleteEmployeeAction from "@/action/deleteEmployeeAction";
@@ -22,7 +22,7 @@ export default function EmployeesTable() {
         gcTime: 0
     });
 
-    const { mutate, isPending: isDeleting } = useMutation({
+    const { mutate, isPending: isDeleting, error: onErrorDelete, reset: reserDelete } = useMutation({
         mutationKey: ["users"],
         mutationFn: async () => await deleteEmployeeAction(employeeIdFromButton),
         onSuccess: () => {
@@ -36,7 +36,15 @@ export default function EmployeesTable() {
     };
 
     if (isPending) return <EmployeesTableSkeleton />;
+    if (!data) {
+        refetch();
+        return <EmployeesTableSkeleton />;
+    };
     if (error) return "An error has occurred: " + error.message;
+    if (onErrorDelete) {
+        reserDelete();
+        return "An error has occurred: " + onErrorDelete.message;
+    }
 
 
     return (

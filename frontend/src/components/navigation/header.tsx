@@ -11,8 +11,18 @@ import {
 import {Button} from "@/components/ui/button";
 import ModeToggle from "@/components/mode-toggle";
 import Image from "next/image";
+import { toast } from "sonner";
+import signOutAction  from "@/action/signOutAction";
 
 export default function Header() {
+    const handleSignout = async () => {
+        const error = await signOutAction();
+        if (error) {
+            toast.error(error.error);
+        } else {
+            toast.success("Signout success");
+        }
+    };
     return (
         <header className="flex h-14 lg:h-[60px] items-center gap-4 border-b bg-gray-100/40 px-6 dark:bg-gray-800/40">
             <Link className="lg:hidden" href="#">
@@ -56,10 +66,10 @@ export default function Header() {
                 <DropdownMenuContent align="end">
                     <DropdownMenuLabel>My Account</DropdownMenuLabel>
                     <DropdownMenuSeparator/>
-                    <DropdownMenuItem>Settings</DropdownMenuItem>
-                    <DropdownMenuItem>Support</DropdownMenuItem>
+                    <DropdownMenuItem className="cursor-pointer">Settings</DropdownMenuItem>
+                    <DropdownMenuItem className="cursor-pointer">Support</DropdownMenuItem>
                     <DropdownMenuSeparator/>
-                    <DropdownMenuItem>Logout</DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleSignout} className="cursor-pointer">Signout</DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
         </header>
