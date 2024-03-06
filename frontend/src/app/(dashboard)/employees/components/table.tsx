@@ -11,6 +11,7 @@ import getAllEmployeesAction from "@/action/getAllEmployeesAction";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import deleteEmployeeAction from "@/action/deleteEmployeeAction";
 import DeleteEmployeeDialog from "./delete-employee";
+import EditEmployeeDialog from "./edit-employee";
 
 export default function EmployeesTable() {
     const [employeeIdFromButton, setEmployeeIdFromButton] = useState<string>("");
@@ -52,9 +53,9 @@ export default function EmployeesTable() {
             <TableHeader>
                 <TableRow>
                     <TableHead className="w-[80px] text-center">Avatar</TableHead>
+                    <TableHead className="hidden md:table-cell text-center">Name</TableHead>
                     <TableHead className="w-[120px] text-center">Username</TableHead>
                     <TableHead className="hidden md:table-cell text-center">Email</TableHead>
-                    <TableHead className="hidden md:table-cell text-center">Name</TableHead>
                     <TableHead className="hidden md:table-cell text-center">Role</TableHead>
                     <TableHead className="hidden md:table-cell text-center">Status</TableHead>
                     <TableHead className="w-[100px] text-center">Actions</TableHead>
@@ -79,20 +80,17 @@ export default function EmployeesTable() {
                                 />
                             </div>
                         </TableCell>
+                        <TableCell className="font-semibold text-center">{data.full_name}</TableCell>
                         <TableCell className="font-semibold text-center">{data.username}</TableCell>
                         <TableCell className="font-semibold text-center">{data.email}</TableCell>
-                        <TableCell className="font-semibold text-center">{data.full_name}</TableCell>
                         <TableCell className="font-semibold text-center">{data.is_superuser === true ? "admin" : "user"}</TableCell>
                         <TableCell className="font-semibold text-center">{data.is_verified === true ? "Active" : "Inactive"}</TableCell>
                         <TableCell onClick={()=>{
                             setEmployeeIdFromButton(data.id);
                         }}>
                             <div className="w-full flex items-center justify-center space-x-2">
-                                <Button className="w-6 h-6" size="icon" variant="outline" disabled={isDeleting}>
-                                    <FileEditIcon className="w-4 h-4"/>
-                                    <span className="sr-only">Edit</span>
-                                </Button>
-                                <DeleteEmployeeDialog deleteEmployee={handleDeleteEmployee} isDeleting={isDeleting} />
+                                <EditEmployeeDialog name={data.full_name} isDeleting={isDeleting}/>
+                                <DeleteEmployeeDialog name={data.full_name} deleteEmployee={handleDeleteEmployee} isDeleting={isDeleting} />
                             </div>
                         </TableCell>
                     </TableRow>

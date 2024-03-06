@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
     DialogHeader,
     DialogTitle,
     DialogTrigger
@@ -15,12 +14,9 @@ export default function AddEmployeeDialog() {
             <DialogTrigger asChild>
                 <Button className="ml-auto" size="sm">Add Employee</Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px] scale-[87%]">
+            <DialogContent className="sm:max-w-[400px] scale-90">
                 <DialogHeader>
-                    <DialogTitle>Add Employee</DialogTitle>
-                    <DialogDescription>
-                        Add more employee.
-                    </DialogDescription>
+                    <DialogTitle className="text-center">Add Employee</DialogTitle>
                 </DialogHeader>
                 <SignUpForm hidden="hidden" add={true}/>
             </DialogContent>

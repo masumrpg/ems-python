@@ -21,7 +21,12 @@ class CreateAddressRequest(BaseModel):
     postal_code: str = Field(
         min_length=5, max_length=5, pattern=r"\d+", examples=["54366"]
     )
-    village: str = Field(min_length=2, max_length=20, examples=["Serut"])
+    village: str = Field(
+        min_length=2,
+        max_length=20,
+        pattern=r"[A-Z][a-z]+(?: [A-Z][a-z]+)?",
+        examples=["Serut"],
+    )
     subdistrict: str = Field(min_length=4, max_length=20, examples=["Kuwarasan"])
     city: str = Field(min_length=4, max_length=25, examples=["Kebumen"])
     province: str = Field(min_length=4, max_length=25, examples=["Jawa Tengah"])
@@ -39,11 +44,11 @@ class CreateUserDetailRequest(BaseModel):
     id_card: str = Field(
         min_length=16, max_length=16, pattern=r"\d+", examples=["3305161010970001"]
     )
-    religion: str = Field(min_length=4, max_length=8, examples=["Islam"])
+    religion: str = Field(min_length=4, max_length=20, examples=["Islam"])
     tertiary_education: str = Field(
         min_length=4, max_length=50, examples=["Sarjana Manajemen"]
     )
-    job: str = Field(min_length=4, max_length=10, examples=["Developer"])
+    job: str = Field(min_length=4, max_length=20, examples=["Developer"])
     salary: int
     model_config = ConfigDict(arbitrary_types_allowed=True)
 

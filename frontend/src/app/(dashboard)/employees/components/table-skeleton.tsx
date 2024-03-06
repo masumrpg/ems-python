@@ -76,9 +76,9 @@ export default function EmployeesTableSkeleton() {
             <TableHeader>
                 <TableRow>
                     <TableHead className="w-[80px] text-center">Avatar</TableHead>
+                    <TableHead className="hidden md:table-cell text-center">Name</TableHead>
                     <TableHead className="w-[120px] text-center">Username</TableHead>
                     <TableHead className="hidden md:table-cell text-center">Email</TableHead>
-                    <TableHead className="hidden md:table-cell text-center">Name</TableHead>
                     <TableHead className="hidden md:table-cell text-center">Role</TableHead>
                     <TableHead className="hidden md:table-cell text-center">Status</TableHead>
                     <TableHead className="w-[100px] text-center">Actions</TableHead>

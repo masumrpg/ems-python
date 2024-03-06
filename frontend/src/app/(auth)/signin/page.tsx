@@ -4,7 +4,7 @@ import {Suspense} from "react";
 
 export default function SignInPage() {
     return (
-        <Card className="flex flex-col w-[25rem]">
+        <Card className="flex flex-col w-[25rem] my-16">
             <CardHeader>
                 <CardTitle>Signin</CardTitle>
                 <CardDescription>Please log in to your account.</CardDescription>

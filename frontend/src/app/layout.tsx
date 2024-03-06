@@ -5,9 +5,9 @@ import {ThemeProvider} from "@/components/theme-provider";
 import {Inter as FontSans} from "next/font/google";
 import {cn} from "@/lib/utils";
 import SideBar from "@/components/navigation/sidebar";
-import {Toaster} from "@/components/ui/sonner";
 import NextAuthSessionProvider from "@/components/nextauth-provider";
 import ReactQuery from "@/components/react-query";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
     title: "Employee Management",
@@ -20,6 +20,8 @@ const fontSans = FontSans({
     variable: "--font-sans"
 });
 
+const mobileBlock = "content hidden md:block";
+
 export default function RootLayout({
     children
 }: Readonly<{
@@ -29,15 +31,14 @@ export default function RootLayout({
         <html lang="en" suppressHydrationWarning>
             <body className={cn(
                 "min-h-screen bg-background font-sans antialiased",
-                fontSans.variable
+                fontSans.variable, mobileBlock
             )}>
                 <ThemeProvider
                     attribute="class"
-                    defaultTheme="system"
+                    defaultTheme="light"
                     enableSystem
                     disableTransitionOnChange
                 >
-                    <Toaster richColors={true} position="top-right"/>
                     <SideBar>
                         <NextAuthSessionProvider>
                             <ReactQuery>
@@ -45,6 +46,7 @@ export default function RootLayout({
                             </ReactQuery>
                         </NextAuthSessionProvider>
                     </SideBar>
+                    <Toaster richColors={true} position="top-right"/>
                 </ThemeProvider>
             </body>
         </html>

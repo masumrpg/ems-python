@@ -11,12 +11,13 @@ import {
 import { TrashIcon } from "lucide-react";
 
 interface ButtonProps {
+    name: string
     deleteEmployee: () => Promise<void>
     isDeleting: boolean
-  }
+}
 
 export default function DeleteEmployeeDialog(
-    {deleteEmployee, isDeleting } : ButtonProps) {
+    {name, deleteEmployee, isDeleting } : ButtonProps) {
 
     const handleDeleteComfirm = () => {
         deleteEmployee();
@@ -30,11 +31,11 @@ export default function DeleteEmployeeDialog(
                 </Button>
             </DialogTrigger>
             <DialogClose>
-                <DialogContent className="sm:max-w-[280px]">
+                <DialogContent className="flex flex-col items-center justify-center sm:max-w-[250px]">
                     <DialogHeader>
-                        <DialogTitle>Delete Employee</DialogTitle>
-                        <DialogDescription>
-                        Are you sure to delete employee?
+                        <DialogTitle className="text-center">Delete Employee</DialogTitle>
+                        <DialogDescription className="text-center">
+                        Are you sure to delete <span className="font-bold">{name}</span> from employees?
                         </DialogDescription>
                     </DialogHeader>
                     <div className="flex flex-row items-center justify-center space-x-5">
