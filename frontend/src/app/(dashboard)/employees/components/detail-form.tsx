@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -14,136 +13,83 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { ArrowRight, CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useState } from "react";
+import { formSchemaDetailEmployee } from "@/validators/validators";
+import addEmployeeDetailsAction from "@/action/addEmployeeDetailsAction";
+import { UserFromApi } from "@/model/interface-client";
+import editEmployeeDetailsAction from "@/action/editEmployeeDetailsAction";
+import { CalendarIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { ResponseMessage } from "@/model/interface-server";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
-
-const formSchema = z
-    .object({
-        postalCode: z
-            .string()
-            .min(1, "Need postal code field")
-            // .regex(RegExp("\d"), "Only number")
-            .min(5, "Minimum 5 characters")
-            .max(5, "Maximum 5 characters"),
-        village: z
-            .string()
-            .min(1, "Need village field")
-            .regex(RegExp("[A-Z][a-z]+(?: [A-Z][a-z]+)?"), "Non special char and number")
-            .min(2, "Minimum 2 characters")
-            .max(20, "Maximum 20 characters "),
-        subdistrict: z
-            .string()
-            .min(1, "Need subdistric field")
-            .regex(RegExp("[A-Z][a-z]+(?: [A-Z][a-z]+)?"), "Non special char and number")
-            .min(4, "Minimum 4 characters")
-            .max(20, "Minimum 20 characters"),
-        city: z
-            .string()
-            .min(1, "Need city field")
-            .regex(RegExp("[A-Z][a-z]+(?: [A-Z][a-z]+)?"), "Non special char and number")
-            .min(4, "Minimum 4 characters")
-            .max(25, "Minimum 25 characters"),
-        province: z
-            .string()
-            .regex(RegExp("[A-Z][a-z]+(?: [A-Z][a-z]+)?"), "Non special char and number")
-            .min(4, "Minimum 4 characters")
-            .max(25, "Minimum 25 characters"),
-        country: z
-            .string()
-            .regex(RegExp("[A-Z][a-z]+(?: [A-Z][a-z]+)?"), "Non special char and number")
-            .min(4, "Minimum 4 characters")
-            .max(25, "Minimum 25 characters"),
-        phone: z
-            .string()
-            .min(1, "Need phone field")
-            .regex(RegExp("\d"), "Only number")
-            .min(4, "Minimum 4 characters")
-            .max(20, "Maximum 20 characters"),
-        dob: z.date(),
-        gender: z
-            .string()
-            .min(1, "Need gender field")
-            .regex(RegExp("[A-Z][a-z]+(?: [A-Z][a-z]+)?"), "Non special char and number")
-            .min(4, "Minimum 4 characters")
-            .max(20, "Maximum 20 characters"),
-        maritalStatus: z
-            .string()
-            .min(1, "Need martial status field")
-            .regex(RegExp("[A-Z][a-z]+(?: [A-Z][a-z]+)?"), "Non special char and number")
-            .min(4, "Minimum 4 characters")
-            .max(10, "Maximum 10 characters"),
-        idCard: z
-            .string()
-            .min(1, "Need id card field")
-            .regex(RegExp("\d"), "Only number")
-            .min(16, "Minimum 16 characters")
-            .max(16, "Maximum 16 characters"),
-        religion: z
-            .string()
-            .min(1, "Need religion field")
-            .regex(RegExp("[A-Z][a-z]+(?: [A-Z][a-z]+)?"), "Non special char and number")
-            .min(4, "Minimum 4 characters")
-            .max(20, "Maximum 20 characters"),
-        tertiaryEducation: z
-            .string()
-            .min(1, "Need tertiary education field")
-            .regex(RegExp("[A-Z][a-z]+(?: [A-Z][a-z]+)?"), "Non special char and number")
-            .min(4, "Minimum 4 characters")
-            .max(50, "Maximum 50 characters"),
-        job: z
-            .string()
-            .min(1, "Need job field")
-            .regex(RegExp("[A-Z][a-z]+(?: [A-Z][a-z]+)?"), "Non special char and number")
-            .min(4, "Minimum 4 characters")
-            .max(20, "Maximum 20 characters"),
-        salary: z
-            .number()
-            .min(6, "Need salary field")
-            .max(16, "Maximum 16 characters")
-    });
-
-export default function DetailFormDialog() {
-    const [formStep, setFormStep] = useState(0);
+// Bug on update harus refresh dulu === ini todo
+export default function DetailFormDialog({id,data}:{id:string,data:UserFromApi}) {
     const router = useRouter();
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+    const dobData = data?.user_detail?.dob ? new Date(data?.user_detail.dob) : new Date();
+    const form = useForm<z.infer<typeof formSchemaDetailEmployee>>({
+        resolver: zodResolver(formSchemaDetailEmployee),
         defaultValues: {
-            postalCode: "",
-            village: "",
-            subdistrict: "",
-            city: "",
-            province: "",
-            country: "",
-            phone: "",
-            dob: new Date(),
-            gender: "",
-            maritalStatus: "",
-            idCard: "",
-            religion: "",
-            tertiaryEducation: "",
-            job: "",
-            salary: 0
+            postalCode: data?.user_detail?.address?.postal_code ?? "",
+            village: data?.user_detail?.address.village ?? "",
+            subdistrict: data?.user_detail?.address.subdistrict ?? "",
+            city: data?.user_detail?.address.city ?? "",
+            province: data?.user_detail?.address.province ?? "",
+            country: data?.user_detail?.address.country ?? "",
+            phone: data?.user_detail?.phone ?? "",
+            dob: dobData ?? new Date(),
+            gender: data?.user_detail?.gender ?? "",
+            maritalStatus: data?.user_detail?.marital_status ?? "",
+            idCard: data?.user_detail?.id_card ?? "",
+            religion: data?.user_detail?.religion ?? "",
+            tertiaryEducation: data?.user_detail?.tertiary_education ?? "",
+            job: data?.user_detail?.job ?? "",
+            salary: String(data?.user_detail?.salary) ?? 0
         }
     });
 
-    const onSubmit = async (values: z.infer<typeof formSchema>) => {
+
+    const onSubmit = async (values: z.infer<typeof formSchemaDetailEmployee>) => {
+        const year = values.dob.getFullYear();
+        const month = String(values.dob.getMonth() + 1).padStart(2, "0"); // Ditambah 1 karena bulan dimulai dari 0
+        const day = String(values.dob.getDate()).padStart(2, "0");
+        const formattedDOB = `${year}-${month}-${day}`;
+
+
         const formData = {
-            username: values.username,
-            password: values.password,
-            name: values.name,
-            dob: values.dob,
-            village: values.village,
-            rtRw: values.rtRw,
-            phone: values.phone
+            address: {
+                postal_code: values.postalCode,
+                village: values.village,
+                subdistrict: values.subdistrict,
+                city: values.city,
+                province: values.province,
+                country: values.country
+            },
+            phone: values.phone,
+            dob: formattedDOB,
+            gender: values.gender,
+            marital_status: values.maritalStatus,
+            id_card: values.idCard,
+            religion: values.religion,
+            tertiary_education: values.tertiaryEducation,
+            job: values.job,
+            salary: parseInt(values.salary)
         };
+
+        if (data.user_detail === null) {
+            const res: ResponseMessage = await addEmployeeDetailsAction(id, formData) as ResponseMessage;
+            router.refresh();
+            toast.success(res.message);
+            console.log("add", res);
+        } else {
+            const res: ResponseMessage = await editEmployeeDetailsAction(id, formData) as ResponseMessage;
+            router.refresh();
+            toast.success(res.message);
+            console.log("update",res);
+        }
     };
 
     return (
@@ -152,9 +98,7 @@ export default function DetailFormDialog() {
                 className="w-full"
                 // className="flex flex-wrap justify-between"
             >
-                <div className={cn("flex justify-between gap-6", {
-                    hidden: formStep == 1
-                })}>
+                <div className={cn("flex justify-between gap-6")}>
                     <div className="w-1/2 space-y-2">
                         {/* address */}
                         <FormField
@@ -164,7 +108,7 @@ export default function DetailFormDialog() {
                                 <FormItem>
                                     <FormLabel>Postal Code</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="54366" {...field} />
+                                        <Input type="number" placeholder="54366" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -247,9 +191,7 @@ export default function DetailFormDialog() {
                 </div>
 
                 {/* ========================================= */}
-                <div className={cn("flex justify-between gap-6 top-0 left-0 right-0", {
-                    hidden: formStep == 0
-                })}>
+                <div className={cn("flex justify-between gap-6 top-0 left-0 right-0")}>
                     <div className="w-1/2 space-y-2">
                         <FormField
                             control={form.control}
@@ -258,7 +200,7 @@ export default function DetailFormDialog() {
                                 <FormItem>
                                     <FormLabel>Phone</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="085218939086" {...field} />
+                                        <Input type="number" placeholder="085218939086" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -277,7 +219,7 @@ export default function DetailFormDialog() {
                                                 <Button
                                                     variant={"outline"}
                                                     className={cn(
-                                                        "w-[240px] pl-3 text-left font-normal",
+                                                        "w-full pl-3 text-left font-normal",
                                                         !field.value && "text-muted-foreground"
                                                     )}
                                                 >
@@ -352,7 +294,7 @@ export default function DetailFormDialog() {
                                 <FormItem>
                                     <FormLabel>ID Card</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="3309861064839991" {...field} />
+                                        <Input type="number" placeholder="3309861064839991" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -417,52 +359,8 @@ export default function DetailFormDialog() {
                 <div className="flex justify-end gap-2 mt-4">
                     <Button
                         type="submit"
-                        className={cn( {
-                            hidden: formStep == 0
-                        })}
                     >
-                        Sign up
-                    </Button>
-                    <Button
-                        type="button"
-                        variant={"ghost"}
-                        className={cn({
-                            hidden: formStep == 1
-                        })}
-                        onClick={() => {
-                            // validation
-                            form.trigger(["postalCode", "village", "subdistrict", "city", "province", "country"]);
-                            const postalState = form.getFieldState("postalCode");
-                            const villageState = form.getFieldState("village");
-                            const subdistrictState = form.getFieldState("subdistrict");
-                            const cityState = form.getFieldState("city");
-                            const provinceState = form.getFieldState("province");
-                            const countryState = form.getFieldState("country");
-
-                            if (!postalState.isDirty || postalState.invalid) return;
-                            if (!villageState.isDirty || villageState.invalid) return;
-                            if (!subdistrictState.isDirty || subdistrictState.invalid) return;
-                            if (!cityState.isDirty || cityState.invalid) return;
-                            if (!provinceState.isDirty || provinceState.invalid) return;
-                            if (!countryState.isDirty || countryState.invalid) return;
-
-                            setFormStep(1);
-                        }}
-                    >
-                        Next Step
-                        <ArrowRight className="w-4 h-4 ml-2" />
-                    </Button>
-                    <Button
-                        type="button"
-                        variant={"ghost"}
-                        onClick={() => {
-                            setFormStep(0);
-                        }}
-                        className={cn({
-                            hidden: formStep == 0
-                        })}
-                    >
-                        Go Back
+                        Add Details
                     </Button>
                 </div>
             </form>

@@ -12,6 +12,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import deleteEmployeeAction from "@/action/deleteEmployeeAction";
 import DeleteEmployeeDialog from "./delete-employee";
 import EditEmployeeDialog from "./edit-employee";
+import { Badge } from "@/components/ui/badge";
 
 export default function EmployeesTable() {
     const [employeeIdFromButton, setEmployeeIdFromButton] = useState<string>("");
@@ -84,12 +85,12 @@ export default function EmployeesTable() {
                         <TableCell className="font-semibold text-center">{data.username}</TableCell>
                         <TableCell className="font-semibold text-center">{data.email}</TableCell>
                         <TableCell className="font-semibold text-center">{data.is_superuser === true ? "admin" : "user"}</TableCell>
-                        <TableCell className="font-semibold text-center">{data.is_verified === true ? "Active" : "Inactive"}</TableCell>
+                        <TableCell className="font-semibold text-center">{data.is_verified === true ? <Badge>Active</Badge> : <Badge variant="destructive">Inactive</Badge>}</TableCell>
                         <TableCell onClick={()=>{
                             setEmployeeIdFromButton(data.id);
                         }}>
                             <div className="w-full flex items-center justify-center space-x-2">
-                                <EditEmployeeDialog name={data.full_name} isDeleting={isDeleting}/>
+                                <EditEmployeeDialog id={data.id} name={data.full_name} isDeleting={isDeleting}/>
                                 <DeleteEmployeeDialog name={data.full_name} deleteEmployee={handleDeleteEmployee} isDeleting={isDeleting} />
                             </div>
                         </TableCell>
