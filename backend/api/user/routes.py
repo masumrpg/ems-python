@@ -78,7 +78,7 @@ async def update_user_detail_me(
 
 
 @admin_router.post(
-    "/detail/{user_id}", status_code=status.HTTP_200_OK, response_model=SuccessResponse
+    "/detail/{user_id}", status_code=status.HTTP_201_CREATED, response_model=SuccessResponse
 )
 def create_user_detail_by_id(
     data: CreateUserDetailRequest, user_id: str, db: Session = Depends(get_db)

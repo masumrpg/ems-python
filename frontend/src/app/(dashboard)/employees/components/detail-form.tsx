@@ -81,11 +81,20 @@ export default function DetailFormDialog({id,data}:{id:string,data:UserFromApi})
         if (data.user_detail === null) {
             const res: ResponseMessage = await addEmployeeDetailsAction(id, formData) as ResponseMessage;
             router.refresh();
-            toast.success(res.message);
+            if (res.status === 201) {
+                toast.success(res.message);
+            } else {
+                toast.success(res.detail);
+            }
         } else {
             const res: ResponseMessage = await editEmployeeDetailsAction(id, formData) as ResponseMessage;
             router.refresh();
-            toast.success(res.message);
+            router.refresh();
+            if (res.status === 200) {
+                toast.success(res.message);
+            } else {
+                toast.success(res.detail);
+            }
         }
     };
 

@@ -1,4 +1,5 @@
 export interface ResponseMessage {
-    message: string | null | undefined
-    detail: string | null | undefined
+    status?: number
+    message?: string
+    detail?: string
 };
