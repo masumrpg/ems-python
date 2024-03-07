@@ -29,7 +29,7 @@ export default function Header() {
                 <Package2Icon className="h-6 w-6"/>
                 <span className="sr-only">Home</span>
             </Link>
-            <div className="w-full flex-1">
+            {/* <div className="w-full flex-1">
                 <form>
                     <div className="relative">
                         <SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500 dark:text-gray-400"/>
@@ -40,7 +40,7 @@ export default function Header() {
                         />
                     </div>
                 </form>
-            </div>
+            </div> */}
             <ModeToggle/>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>

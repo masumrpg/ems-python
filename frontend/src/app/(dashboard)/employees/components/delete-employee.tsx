@@ -33,9 +33,9 @@ export default function DeleteEmployeeDialog(
             <DialogClose>
                 <DialogContent className="flex flex-col items-center justify-center sm:max-w-[250px]">
                     <DialogHeader>
-                        <DialogTitle className="text-center">Delete Employee</DialogTitle>
+                        <DialogTitle className="text-center">{name}</DialogTitle>
                         <DialogDescription className="text-center">
-                        Are you sure to delete <span className="font-bold">{name}</span> from employees?
+                        Are you sure to delete this employee?
                         </DialogDescription>
                     </DialogHeader>
                     <div className="flex flex-row items-center justify-center space-x-5">

@@ -1,7 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { FileEditIcon } from "lucide-react";
 import Image from "next/image";
 import EmployeesTableSkeleton from "./table-skeleton";
 import { toast } from "sonner";

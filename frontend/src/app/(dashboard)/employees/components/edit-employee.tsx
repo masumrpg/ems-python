@@ -8,20 +8,22 @@ import {
     SheetTitle,
     SheetTrigger
 } from "@/components/ui/sheet";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { FileEditIcon } from "lucide-react";
 import DetailFormDialog from "./detail-form";
 import getEmployeeByIdAction from "@/action/getEmployeeByIdAction";
 import { useState } from "react";
 import { UserFromApi } from "@/model/interface-client";
+import { useRouter } from "next/navigation";
+import DetailFormSkeleton from "./detail-form-skeleton";
 
 export default function EditEmployeeDialog({id,name,isDeleting}:{id:string,name:string,isDeleting: boolean}) {
+    const router = useRouter();
     const [data, setData] = useState<UserFromApi | undefined>();
     const triggerHandler = async () => {
         const res = await getEmployeeByIdAction(id);
         setData(res);
+        router.refresh();
     };
-    console.log(data);
     return (
         <Sheet>
             <SheetTrigger asChild>
@@ -35,7 +37,7 @@ export default function EditEmployeeDialog({id,name,isDeleting}:{id:string,name:
                     <SheetTitle className="text-center">{name}</SheetTitle>
                     <SheetDescription className="text-center">Add or edit employee!</SheetDescription>
                 </SheetHeader>
-                {!data ? <p>Loading...</p> : <DetailFormDialog id={id} data={data}/>}
+                {!data ? <DetailFormSkeleton/> : <DetailFormDialog id={id} data={data}/>}
             </SheetContent>
         </Sheet>
     );

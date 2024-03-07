@@ -24,7 +24,6 @@ import editEmployeeDetailsAction from "@/action/editEmployeeDetailsAction";
 import { CalendarIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { ResponseMessage } from "@/model/interface-server";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 // Bug on update harus refresh dulu === ini todo
 export default function DetailFormDialog({id,data}:{id:string,data:UserFromApi}) {
@@ -83,12 +82,10 @@ export default function DetailFormDialog({id,data}:{id:string,data:UserFromApi})
             const res: ResponseMessage = await addEmployeeDetailsAction(id, formData) as ResponseMessage;
             router.refresh();
             toast.success(res.message);
-            console.log("add", res);
         } else {
             const res: ResponseMessage = await editEmployeeDetailsAction(id, formData) as ResponseMessage;
             router.refresh();
             toast.success(res.message);
-            console.log("update",res);
         }
     };
 
@@ -96,267 +93,268 @@ export default function DetailFormDialog({id,data}:{id:string,data:UserFromApi})
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}
                 className="w-full"
-                // className="flex flex-wrap justify-between"
             >
-                <div className={cn("flex justify-between gap-6")}>
-                    <div className="w-1/2 space-y-2">
-                        {/* address */}
-                        <FormField
-                            control={form.control}
-                            name="postalCode"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Postal Code</FormLabel>
-                                    <FormControl>
-                                        <Input type="number" placeholder="54366" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="village"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Village</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            placeholder="Serut"
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="subdistrict"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Subdistrict</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            placeholder="Kuwarasan"
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                    </div>
-                    <div className="w-1/2 space-y-2">
-                        <FormField
-                            control={form.control}
-                            name="city"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>City</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Kebumen" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="province"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Province</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Jawa Tengah" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="country"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Country</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Jawa Tengah" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                    </div>
-                </div>
-
-                {/* ========================================= */}
-                <div className={cn("flex justify-between gap-6 top-0 left-0 right-0")}>
-                    <div className="w-1/2 space-y-2">
-                        <FormField
-                            control={form.control}
-                            name="phone"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Phone</FormLabel>
-                                    <FormControl>
-                                        <Input type="number" placeholder="085218939086" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        {/* dob */}
-                        <FormField
-                            control={form.control}
-                            name="dob"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Date of Birth</FormLabel>
-                                    <Popover>
-                                        <PopoverTrigger asChild>
-                                            <FormControl>
-                                                <Button
-                                                    variant={"outline"}
-                                                    className={cn(
-                                                        "w-full pl-3 text-left font-normal",
-                                                        !field.value && "text-muted-foreground"
-                                                    )}
-                                                >
-                                                    {field.value ? (
-                                                        format(field.value, "PPP")
-                                                    ) : (
-                                                        <span>Pilih tanggal</span>
-                                                    )}
-                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                                </Button>
-                                            </FormControl>
-                                        </PopoverTrigger>
-                                        <PopoverContent className="w-auto p-0" align="start">
-                                            <Calendar
-                                                mode="single"
-                                                classNames={{
-                                                    caption_dropdowns: "flex",
-                                                    dropdown:
-                          "z-50 text-sm font-medium font overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
-                                                    dropdown_month:
-                          "flex justify-between items-center gap-2 text-sm font-medium font",
-                                                    dropdown_year:
-                          "flex justify-between items-center gap-2 text-sm font-medium font",
-                                                    dropdown_icon: "hidden",
-                                                    vhidden: "hidden"
-                                                }}
-                                                captionLayout="dropdown-buttons"
-                                                fromYear={1945}
-                                                toYear={2025}
-                                                selected={field.value}
-                                                onSelect={field.onChange}
-                                                disabled={(date) =>
-                                                    date > new Date() || date < new Date("1900-01-01")
-                                                }
-                                                initialFocus
+                <div className="flex justify-between gap-6 mt-5">
+                    <div className={cn("flex justify-between gap-6")}>
+                        <div className="w-1/2 space-y-2">
+                            {/* address */}
+                            <FormField
+                                control={form.control}
+                                name="postalCode"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Postal Code</FormLabel>
+                                        <FormControl>
+                                            <Input type="number" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="village"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Village</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                {...field}
                                             />
-                                        </PopoverContent>
-                                    </Popover>
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="gender"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Gender</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Pria" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="maritalStatus"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Marital Status</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Lajang" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="idCard"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>ID Card</FormLabel>
-                                    <FormControl>
-                                        <Input type="number" placeholder="3309861064839991" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="subdistrict"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Subdistrict</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+                        <div className="w-1/2 space-y-2">
+                            <FormField
+                                control={form.control}
+                                name="city"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>City</FormLabel>
+                                        <FormControl>
+                                            <Input {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="province"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Province</FormLabel>
+                                        <FormControl>
+                                            <Input {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="country"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Country</FormLabel>
+                                        <FormControl>
+                                            <Input {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
                     </div>
-                    <div className="w-1/2 space-y-2">
-                        <FormField
-                            control={form.control}
-                            name="religion"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Religion</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Islam" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="tertiaryEducation"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Tertiary Education</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Sarjana" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="job"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Job</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Developer" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="salary"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Salary</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Rp. 5.000.000" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+
+                    {/* ========================================= */}
+                    <div className={cn("flex justify-between gap-6")}>
+                        <div className="w-1/2 space-y-2">
+                            <FormField
+                                control={form.control}
+                                name="phone"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Phone</FormLabel>
+                                        <FormControl>
+                                            <Input type="number" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            {/* dob */}
+                            <FormField
+                                control={form.control}
+                                name="dob"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Date of Birth</FormLabel>
+                                        <Popover>
+                                            <PopoverTrigger asChild>
+                                                <FormControl>
+                                                    <Button
+                                                        variant={"outline"}
+                                                        className={cn(
+                                                            "w-full pl-3 text-left font-normal",
+                                                            !field.value && "text-muted-foreground"
+                                                        )}
+                                                    >
+                                                        {field.value ? (
+                                                            format(field.value, "PPP")
+                                                        ) : (
+                                                            <span>Pilih tanggal</span>
+                                                        )}
+                                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                    </Button>
+                                                </FormControl>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-auto p-0" align="start">
+                                                <Calendar
+                                                    mode="single"
+                                                    classNames={{
+                                                        caption_dropdowns: "flex",
+                                                        dropdown:
+                          "z-50 text-sm font-medium font overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+                                                        dropdown_month:
+                          "flex justify-between items-center gap-2 text-sm font-medium font",
+                                                        dropdown_year:
+                          "flex justify-between items-center gap-2 text-sm font-medium font",
+                                                        dropdown_icon: "hidden",
+                                                        vhidden: "hidden"
+                                                    }}
+                                                    captionLayout="dropdown-buttons"
+                                                    fromYear={1945}
+                                                    toYear={2025}
+                                                    selected={field.value}
+                                                    onSelect={field.onChange}
+                                                    disabled={(date) =>
+                                                        date > new Date() || date < new Date("1900-01-01")
+                                                    }
+                                                    initialFocus
+                                                />
+                                            </PopoverContent>
+                                        </Popover>
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="gender"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Gender</FormLabel>
+                                        <FormControl>
+                                            <Input {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="maritalStatus"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Marital Status</FormLabel>
+                                        <FormControl>
+                                            <Input {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <div className="w-[200%]">
+                                <FormField
+                                    control={form.control}
+                                    name="idCard"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>ID Card</FormLabel>
+                                            <FormControl>
+                                                <Input type="number" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+                        </div>
+                        <div className="w-1/2 space-y-2">
+                            <FormField
+                                control={form.control}
+                                name="religion"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Religion</FormLabel>
+                                        <FormControl>
+                                            <Input {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="tertiaryEducation"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Tertiary Education</FormLabel>
+                                        <FormControl>
+                                            <Input {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="job"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Job</FormLabel>
+                                        <FormControl>
+                                            <Input {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="salary"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Salary</FormLabel>
+                                        <FormControl>
+                                            <Input {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
                     </div>
                 </div>
-                <div className="flex justify-end gap-2 mt-4">
+                <div className="flex justify-end items-center mt-10">
                     <Button
                         type="submit"
                     >

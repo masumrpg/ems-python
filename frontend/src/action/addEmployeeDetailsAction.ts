@@ -16,7 +16,8 @@ export default async function addEmployeeDetailsAction(id:string, formData:any) 
                 "Authorization": `Bearer ${session?.accessToken}`,
                 "Content-Type": "application/json"
             },
-            body: jsonData
+            body: jsonData,
+            next: {revalidate: false}
         });
         const resMsg: ResponseMessage = await res.json().then((value)=> {return value;});
 
