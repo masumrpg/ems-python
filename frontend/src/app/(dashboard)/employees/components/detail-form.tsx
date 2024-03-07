@@ -24,9 +24,13 @@ import editEmployeeDetailsAction from "@/action/editEmployeeDetailsAction";
 import { CalendarIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { ResponseMessage } from "@/model/interface-server";
+import { useState } from "react";
+import { ClipLoader } from "react-spinners";
 
 // Bug on update harus refresh dulu === ini todo
 export default function DetailFormDialog({id,data}:{id:string,data:UserFromApi}) {
+    const [loadData, setLoadData] = useState<boolean>(false);
+
     const router = useRouter();
     const dobData = data?.user_detail?.dob ? new Date(data?.user_detail.dob) : new Date();
     const form = useForm<z.infer<typeof formSchemaDetailEmployee>>({
@@ -79,21 +83,27 @@ export default function DetailFormDialog({id,data}:{id:string,data:UserFromApi})
         };
 
         if (data.user_detail === null) {
+            setLoadData(true);
             const res: ResponseMessage = await addEmployeeDetailsAction(id, formData) as ResponseMessage;
             router.refresh();
             if (res.status === 201) {
                 toast.success(res.message);
+                setLoadData(false);
             } else {
                 toast.success(res.detail);
+                setLoadData(false);
             }
         } else {
+            setLoadData(true);
             const res: ResponseMessage = await editEmployeeDetailsAction(id, formData) as ResponseMessage;
             router.refresh();
             router.refresh();
             if (res.status === 200) {
                 toast.success(res.message);
+                setLoadData(false);
             } else {
                 toast.success(res.detail);
+                setLoadData(false);
             }
         }
     };
@@ -364,10 +374,8 @@ export default function DetailFormDialog({id,data}:{id:string,data:UserFromApi})
                     </div>
                 </div>
                 <div className="flex justify-end items-center mt-10">
-                    <Button
-                        type="submit"
-                    >
-                        Add Details
+                    <Button type="submit" disabled={loadData}>
+                        {loadData === false ? "Add Details" : <ClipLoader/>}
                     </Button>
                 </div>
             </form>
