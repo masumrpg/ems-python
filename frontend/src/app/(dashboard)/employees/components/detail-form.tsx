@@ -27,7 +27,7 @@ import { ResponseMessage } from "@/model/interface-server";
 import { useState } from "react";
 import { ClipLoader } from "react-spinners";
 
-// Bug on update harus refresh dulu === ini todo
+// FIXME Bug on update harus refresh dulu
 export default function DetailFormDialog({id,data}:{id:string,data:UserFromApi}) {
     const [loadData, setLoadData] = useState<boolean>(false);
 
@@ -375,7 +375,7 @@ export default function DetailFormDialog({id,data}:{id:string,data:UserFromApi})
                 </div>
                 <div className="flex justify-end items-center mt-10">
                     <Button type="submit" disabled={loadData}>
-                        {loadData === false ? "Add Details" : <ClipLoader/>}
+                        {loadData === false ? "Add Details" : <ClipLoader size={25}/>}
                     </Button>
                 </div>
             </form>

@@ -14,7 +14,7 @@ app = FastAPI(
     redoc_url=f"/{redocs_url}",
     title="Employee Management System API",
     version="0.1.0",
-    description="My first big project  by Ma'sum",
+    description="My first big project by Ma'sum",
 )
 app.include_router(guest_router)
 app.include_router(user_router)
