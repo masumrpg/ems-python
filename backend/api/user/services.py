@@ -1,6 +1,6 @@
 from datetime import datetime
 from fastapi import Request, logger, status
-from sqlalchemy.orm import aliased
+from sqlalchemy.orm import aliased, Session
 from sqlalchemy.exc import SQLAlchemyError
 from api.user.models import AddressModel, UserDetailModel, UserModel
 from api.user.schemas import CreateUserDetailRequest, CreateUserRequest
@@ -11,11 +11,11 @@ from api.user.responses import (
     UserWithDetilResponse,
 )
 from api.core.security import get_password_hash
-from api.core.database import db, commit_rollback
+from api.core.database import commit_rollback
 from fastapi.exceptions import HTTPException
 
 
-def create_user_services(data: CreateUserRequest):
+def create_user_services(data: CreateUserRequest, db: Session):
     username = db.query(UserModel).filter(UserModel.username == data.username).first()
     email = db.query(UserModel).filter(UserModel.email == data.email).first()
 
@@ -40,7 +40,7 @@ def create_user_services(data: CreateUserRequest):
 
 
 def create_user_detail_services(
-    data: CreateUserDetailRequest, request: Request
+    data: CreateUserDetailRequest, request: Request, db: Session
 ):
     user_id = request.user.id
 
@@ -88,7 +88,7 @@ def create_user_detail_services(
 
 
 def create_user_detail_by_id_services(
-    data: CreateUserDetailRequest, user_id: str
+    data: CreateUserDetailRequest, user_id: str, db: Session
 ):
     db_user: UserModel = db.query(UserModel).filter(UserModel.id == user_id).first()
     if not db_user:
@@ -118,7 +118,8 @@ def create_user_detail_by_id_services(
         user_id=db_user.id,
     )
     db.add(new_user_detail)
-    commit_rollback()
+    db.commit()
+    db.refresh(new_user_detail)
 
     db_user_detail_new: UserDetailModel = (
         db.query(UserDetailModel).filter(UserDetailModel.user_id == db_user.id).first()
@@ -141,7 +142,7 @@ def create_user_detail_by_id_services(
     )
 
     db.add(new_detail_address)
-    commit_rollback
+    commit_rollback()
 
     if not new_detail_address:
         raise HTTPException(
@@ -150,7 +151,7 @@ def create_user_detail_by_id_services(
         )
 
 
-def get_all_user_services():
+def get_all_user_services(db: Session):
 
     try:
         all_users_details = (
@@ -189,7 +190,7 @@ def get_all_user_services():
     return user_responses
 
 
-def get_me_by_id_services(user_id: str):
+def get_me_by_id_services(user_id: str, db: Session):
     db_user: UserModel = db.query(UserModel).filter(UserModel.id == user_id).first()
     if not db_user:
         raise HTTPException(
@@ -198,7 +199,7 @@ def get_me_by_id_services(user_id: str):
     return db_user
 
 
-def get_user_by_id_services(user_id: str):
+def get_user_by_id_services(user_id: str, db: Session):
     db_user: UserModel = db.query(UserModel).filter(UserModel.id == user_id).first()
     if not db_user:
         raise HTTPException(
@@ -268,7 +269,7 @@ def get_user_by_id_services(user_id: str):
 
 
 def update_user_detail_services(
-    data: CreateUserDetailRequest, request: Request
+    data: CreateUserDetailRequest, request: Request, db: Session
 ):
     user_id = request.user.id
     db_user_detail: UserDetailModel = (
@@ -324,7 +325,7 @@ def update_user_detail_services(
 
 
 def update_user_detail_by_id_services(
-    data: CreateUserDetailRequest, user_id: str
+    data: CreateUserDetailRequest, user_id: str, db: Session
 ):
     db_user_detail: UserDetailModel = (
         db.query(UserDetailModel).filter(UserDetailModel.user_id == user_id).first()
@@ -378,7 +379,7 @@ def update_user_detail_by_id_services(
     commit_rollback()
 
 
-def delete_user_by_id_services(user_id: str):
+def delete_user_by_id_services(user_id: str, db: Session):
     # Aliases untuk tabel UserDetailModel dan AddressModel
     User = aliased(UserModel)
     UserDetail = aliased(UserDetailModel)

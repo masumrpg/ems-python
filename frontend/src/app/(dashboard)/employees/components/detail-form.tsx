@@ -97,7 +97,6 @@ export default function DetailFormDialog({id,data}:{id:string,data:UserFromApi})
             setLoadData(true);
             const res: ResponseMessage = await editEmployeeDetailsAction(id, formData) as ResponseMessage;
             router.refresh();
-            router.refresh();
             if (res.status === 200) {
                 toast.success(res.message);
                 setLoadData(false);
