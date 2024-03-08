@@ -1,32 +1,28 @@
+from datetime import datetime
 from fastapi import Request, logger, status
-from fastapi.responses import JSONResponse
-from sqlalchemy.orm import Session, aliased
+from sqlalchemy.orm import aliased
 from sqlalchemy.exc import SQLAlchemyError
 from api.user.models import AddressModel, UserDetailModel, UserModel
 from api.user.schemas import CreateUserDetailRequest, CreateUserRequest
 from api.user.responses import (
     AddressResponse,
-    SuccessResponse,
     UserDetailResponse,
     UserResponse,
     UserWithDetilResponse,
 )
-from datetime import datetime
 from api.core.security import get_password_hash
+from api.core.database import db, commit_rollback
 from fastapi.exceptions import HTTPException
 
 
-def create_user_account_services(data: CreateUserRequest, db: Session):
+def create_user_services(data: CreateUserRequest):
     username = db.query(UserModel).filter(UserModel.username == data.username).first()
-
-    if username:
-        # Jika pengguna dengan username dan email yang sama sudah ada, lemparkan HTTPException
-        raise HTTPException(status_code=409, detail="Username already exists")
-
     email = db.query(UserModel).filter(UserModel.email == data.email).first()
 
+    if username:
+        raise HTTPException(status_code=409, detail="Username already exists")
+
     if email:
-        # Jika pengguna dengan username dan email yang sama sudah ada, lemparkan HTTPException
         raise HTTPException(status_code=409, detail="Email already exists")
 
     new_user = UserModel(
@@ -39,25 +35,17 @@ def create_user_account_services(data: CreateUserRequest, db: Session):
         updated_at=datetime.now(),
     )
 
-    try:
-        db.add(new_user)
-        db.commit()
-        db.refresh(new_user)
-        return SuccessResponse(message="User account has been successfully created.")
-    except Exception as e:
-        print("Error: ", e)
-    finally:
-        db.close()
+    db.add(new_user)
+    commit_rollback()
 
 
-async def create_user_detail_services(
-    data: CreateUserDetailRequest, request: Request, db: Session
+def create_user_detail_services(
+    data: CreateUserDetailRequest, request: Request
 ):
     user_id = request.user.id
-    db_user_detail: UserDetailModel = (
-        db.query(UserDetailModel).filter(UserDetailModel.user_id == user_id).first()
-    )
-    if db_user_detail:
+
+    # Cek apakah detail pengguna sudah ada
+    if db.query(UserDetailModel).filter(UserDetailModel.user_id == user_id).first():
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail="User detail is already exist.",
@@ -76,14 +64,10 @@ async def create_user_detail_services(
         user_id=user_id,
     )
     db.add(new_user_detail)
-    db.commit()
-    db.refresh(new_user_detail)
+    commit_rollback()
 
-    db_user_detail_new: UserDetailModel = (
-        db.query(UserDetailModel).filter(UserDetailModel.user_id == user_id).first()
-    )
-
-    if db_user_detail_new is None:
+    db_user_detail_new = db.query(UserDetailModel).filter(UserDetailModel.user_id == user_id).first()
+    if not db_user_detail_new:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Something went wrong",
@@ -100,25 +84,14 @@ async def create_user_detail_services(
     )
 
     db.add(new_detail_address)
-    db.commit()
-    db.refresh(new_detail_address)
-
-    if new_detail_address is None:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Something went wrong",
-        )
-
-    return JSONResponse(
-        content={"message": "User detail has been succesfully created."}
-    )
+    commit_rollback()
 
 
 def create_user_detail_by_id_services(
-    data: CreateUserDetailRequest, user_id: str, db: Session
+    data: CreateUserDetailRequest, user_id: str
 ):
     db_user: UserModel = db.query(UserModel).filter(UserModel.id == user_id).first()
-    if db_user is None:
+    if not db_user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="User not found."
         )
@@ -145,14 +118,13 @@ def create_user_detail_by_id_services(
         user_id=db_user.id,
     )
     db.add(new_user_detail)
-    db.commit()
-    db.refresh(new_user_detail)
+    commit_rollback()
 
     db_user_detail_new: UserDetailModel = (
         db.query(UserDetailModel).filter(UserDetailModel.user_id == db_user.id).first()
     )
 
-    if db_user_detail_new is None:
+    if not db_user_detail_new:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Something went wrong",
@@ -169,21 +141,16 @@ def create_user_detail_by_id_services(
     )
 
     db.add(new_detail_address)
-    db.commit()
-    db.refresh(new_detail_address)
+    commit_rollback
 
-    if new_detail_address is None:
+    if not new_detail_address:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Something went wrong",
         )
 
-    return JSONResponse(
-        content={"message": "User detail has been succesfully created."}
-    )
 
-
-def get_all_user_services(db: Session):
+def get_all_user_services():
 
     try:
         all_users_details = (
@@ -192,7 +159,6 @@ def get_all_user_services(db: Session):
     except SQLAlchemyError as e:
         db.rollback()
         logger.error(f"Failed to query users: {str(e)}")
-
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Database error: {str(e)}",
@@ -223,36 +189,18 @@ def get_all_user_services(db: Session):
     return user_responses
 
 
-async def get_me_by_id_services(user_id: str, db: Session):
+def get_me_by_id_services(user_id: str):
     db_user: UserModel = db.query(UserModel).filter(UserModel.id == user_id).first()
-    if db_user is None:
+    if not db_user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
         )
-
-    user_response = UserResponse(
-        id=db_user.id,
-        username=db_user.username,
-        email=db_user.email,
-        full_name=db_user.full_name,
-        is_active=db_user.is_active,
-        is_superuser=db_user.is_superuser,
-        is_verified=db_user.is_verified,
-        verified_at=str(db_user.verified_at) if db_user.verified_at else None,
-        created_at=str(db_user.created_at)
-    )
-
-    if user_response is None:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error"
-        )
-
-    return user_response
+    return db_user
 
 
-def get_user_by_id_services(user_id: str, db: Session):
+def get_user_by_id_services(user_id: str):
     db_user: UserModel = db.query(UserModel).filter(UserModel.id == user_id).first()
-    if db_user is None:
+    if not db_user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
         )
@@ -319,8 +267,8 @@ def get_user_by_id_services(user_id: str, db: Session):
     return user_response
 
 
-async def update_user_detail_services(
-    data: CreateUserDetailRequest, request: Request, db: Session
+def update_user_detail_services(
+    data: CreateUserDetailRequest, request: Request
 ):
     user_id = request.user.id
     db_user_detail: UserDetailModel = (
@@ -336,7 +284,7 @@ async def update_user_detail_services(
         .filter(AddressModel.user_detail_id == db_user_detail.user_detail_id)
         .first()
     )
-    if db_user_address is None:
+    if not db_user_address:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="User address not found."
         )
@@ -372,23 +320,11 @@ async def update_user_detail_services(
         )
         db.add(new_detail_address)
 
-    try:
-        db.commit()
-    except Exception as e:
-        db.rollback()
-        logger.error(f"Failed to query users: {str(e)}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to update user detail. Please try again.",
-        )
-
-    return JSONResponse(
-        content={"message": "User detail has been successfully updated."}
-    )
+    commit_rollback()
 
 
 def update_user_detail_by_id_services(
-    data: CreateUserDetailRequest, user_id: str, db: Session
+    data: CreateUserDetailRequest, user_id: str
 ):
     db_user_detail: UserDetailModel = (
         db.query(UserDetailModel).filter(UserDetailModel.user_id == user_id).first()
@@ -439,22 +375,10 @@ def update_user_detail_by_id_services(
         )
         db.add(new_detail_address)
 
-    try:
-        db.commit()
-    except Exception as e:
-        db.rollback()
-        logger.error(f"Failed to query users: {str(e)}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to update user detail. Please try again.",
-        )
-
-    return JSONResponse(
-        content={"message": "User detail has been successfully updated."}
-    )
+    commit_rollback()
 
 
-def delete_user_by_id_services(user_id: str, db: Session):
+def delete_user_by_id_services(user_id: str):
     # Aliases untuk tabel UserDetailModel dan AddressModel
     User = aliased(UserModel)
     UserDetail = aliased(UserDetailModel)
@@ -498,7 +422,3 @@ def delete_user_by_id_services(user_id: str, db: Session):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Database error: {str(e)}",
         )
-
-    return JSONResponse(
-        content={"message": f"{user.full_name} has been succesfully deleted."}
-    )

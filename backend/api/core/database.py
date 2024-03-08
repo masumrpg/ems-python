@@ -17,11 +17,19 @@ engine = create_engine(
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
+db = SessionLocal()
 
 
 def get_db() -> Generator:
-    db = SessionLocal()
     try:
         yield db
     finally:
         db.close()
+
+
+def commit_rollback():
+    try:
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        raise e

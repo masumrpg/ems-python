@@ -1,10 +1,8 @@
 from typing import List
 from fastapi import APIRouter, status, Depends, Request
-from sqlalchemy.orm import Session
-from api.core.database import get_db
 from api.user.schemas import CreateUserDetailRequest, CreateUserRequest
 from api.user.services import (
-    create_user_account_services,
+    create_user_services,
     create_user_detail_by_id_services,
     create_user_detail_services,
     delete_user_by_id_services,
@@ -40,66 +38,65 @@ admin_router = APIRouter(
 
 
 @router.post("", status_code=status.HTTP_201_CREATED, response_model=SuccessResponse)
-def create_user(data: CreateUserRequest, db: Session = Depends(get_db)):
-    res = create_user_account_services(data=data, db=db)
-    return res
+def create_user(data: CreateUserRequest):
+    create_user_services(data=data)
+    return SuccessResponse(message="User account has been successfully created.")
 
 
 @user_router.post(
     "/detail/me", status_code=status.HTTP_200_OK, response_model=SuccessResponse
 )
-async def create_user_detail_me(
-    data: CreateUserDetailRequest, request: Request, db: Session = Depends(get_db)
+def create_user_detail_me(
+    data: CreateUserDetailRequest, request: Request
 ):
-    res = await create_user_detail_services(data, request, db)
-    return res
+    create_user_detail_services(data, request)
+    return SuccessResponse(message="User detail has been succesfully created.")
 
 
 @user_router.get(
     "/me", status_code=status.HTTP_200_OK, response_model=UserResponse
 )
-async def get_me(
-    current_user: UserResponse = Depends(get_current_user),
-    db: Session = Depends(get_db),
+def get_me(
+    current_user: UserResponse = Depends(get_current_user)
 ):
     user_id = current_user.id
-    res = await get_me_by_id_services(user_id, db)
+    res = get_me_by_id_services(user_id)
     return res
 
 
 @user_router.patch(
     "/detail/me", status_code=status.HTTP_200_OK, response_model=SuccessResponse
 )
-async def update_user_detail_me(
-    data: CreateUserDetailRequest, request: Request, db: Session = Depends(get_db)
+def update_user_detail_me(
+    data: CreateUserDetailRequest, request: Request
 ):
-    res = await update_user_detail_services(data, request, db)
-    return res
+    update_user_detail_services(data, request)
+    return SuccessResponse(message="User detail has been successfully updated.")
 
 
 @admin_router.post(
     "/detail/{user_id}", status_code=status.HTTP_201_CREATED, response_model=SuccessResponse
 )
 def create_user_detail_by_id(
-    data: CreateUserDetailRequest, user_id: str, db: Session = Depends(get_db)
+    data: CreateUserDetailRequest, user_id: str
 ):
-    res = create_user_detail_by_id_services(data, user_id, db)
-    return res
+    create_user_detail_by_id_services(data, user_id)
+    return SuccessResponse(message="User detail has been succesfully created.")
 
 
 @admin_router.get(
     "", status_code=status.HTTP_200_OK, response_model=List[UserResponse]
 )
-def get_all_user(db: Session = Depends(get_db)):
-    users = get_all_user_services(db=db)
+def get_all_user():
+    users = get_all_user_services()
     return users
 
 
 @admin_router.get(
     "/{user_id}", status_code=status.HTTP_200_OK, response_model=UserWithDetilResponse
 )
-def get_user_by_id(user_id: str, db: Session = Depends(get_db)):
-    user = get_user_by_id_services(user_id, db)
+def get_user_by_id(user_id: str):
+    user = get_user_by_id_services(user_id)
     return user
 
 
@@ -107,16 +104,15 @@ def get_user_by_id(user_id: str, db: Session = Depends(get_db)):
     "/detail/{user_id}", status_code=status.HTTP_200_OK, response_model=SuccessResponse
 )
 def update_user_detail_by_id(
-    data: CreateUserDetailRequest, user_id: str, db: Session = Depends(get_db)
+    data: CreateUserDetailRequest, user_id: str
 ):
-    res = update_user_detail_by_id_services(data, user_id, db)
-    return res
+    update_user_detail_by_id_services(data, user_id)
+    return SuccessResponse(message="User detail has been successfully updated.")
 
 
 @admin_router.delete(
     "/{user_id}", status_code=status.HTTP_200_OK, response_model=SuccessResponse
 )
-def delete_user_by_id(user_id: str, db: Session = Depends(get_db)):
-    # db: Session = Depends(get_db)
-    res = delete_user_by_id_services(user_id, db)
-    return res
+def delete_user_by_id(user_id: str):
+    delete_user_by_id_services(user_id)
+    return SuccessResponse(message="User has been succesfully deleted.")
