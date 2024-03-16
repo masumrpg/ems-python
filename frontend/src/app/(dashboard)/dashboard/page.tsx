@@ -12,7 +12,7 @@ export default function DashboardPage() {
                 </Button>
             </div>
             <div className="border shadow-sm rounded-lg">
-                <Dashboard/>
+                {/* <Dashboard/> */}
             </div>
         </main>
     );
