@@ -23,15 +23,15 @@ import {
 } from "@/components/ui/table";
 
 import React from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import {Button} from "@/components/ui/button";
+import {Input} from "@/components/ui/input";
 import {
     DropdownMenu,
     DropdownMenuCheckboxItem,
     DropdownMenuContent,
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-import { toast } from "sonner";
+import {toast} from "sonner";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -75,7 +75,7 @@ export default function DataTable<TData, TValue>({
             {/* input */}
             <div className="flex items-center py-4">
                 <Input
-                    placeholder="Filter First names"
+                    placeholder="Filter by names"
                     value={
                         (table
                             .getColumn("full_name")
@@ -89,9 +89,9 @@ export default function DataTable<TData, TValue>({
                     className="max-w-sm"
                 />
 
-                <Button onClick={() => toast.info("Okayyyy")} className="ml-4">
-                    Click
-                </Button>
+                {/*<Button onClick={() => toast.info("Okayyyy")} className="ml-4">*/}
+                {/*    Click*/}
+                {/*</Button>*/}
                 <DropdownMenu>
                     <DropdownMenuTrigger>
                         <Button variant="outline" className="ml-4">

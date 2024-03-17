@@ -10,11 +10,12 @@ export default async function getAllEmployeesAction() {
             headers: {
                 "Accept": "application/json",
                 "Authorization": `Bearer ${session?.accessToken}`
-            },
-            cache: "no-cache"
+            }
         });
 
-        const resMsg = await res.json().then((value)=> {return value;});
+        const resMsg = await res.json().then((value) => {
+            return value;
+        });
         if (res.status === 200) {
             return resMsg;
         } else {

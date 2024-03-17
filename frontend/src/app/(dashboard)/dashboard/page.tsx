@@ -1,6 +1,5 @@
-"use client";
 import {Button} from "@/components/ui/button";
-import { Dashboard } from "./components/dashboard";
+import {Dashboard} from "./components/dashboard";
 
 export default function DashboardPage() {
     return (
@@ -12,7 +11,7 @@ export default function DashboardPage() {
                 </Button>
             </div>
             <div className="border shadow-sm rounded-lg">
-                {/* <Dashboard/> */}
+                <Dashboard/>
             </div>
         </main>
     );

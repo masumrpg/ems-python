@@ -1,5 +1,5 @@
 import type {Metadata} from "next";
-import "../../style/globals.css";
+import "../style/globals.css";
 import React from "react";
 import {ThemeProvider} from "@/components/theme-provider";
 import {Inter as FontSans} from "next/font/google";

@@ -17,7 +17,7 @@ from api.core.security import get_current_user, is_superuser, oauth2_scheme
 from api.user.responses import SuccessResponse, UserResponse, UserWithDetilResponse
 from api.core.database import get_db
 
-router = APIRouter(
+public_router = APIRouter(
     prefix="/user",
     tags=["User"],
     responses={404: {"description": "Not found"}},
@@ -39,7 +39,7 @@ admin_router = APIRouter(
 )
 
 
-@router.post("", status_code=status.HTTP_201_CREATED, response_model=SuccessResponse)
+@public_router.post("", status_code=status.HTTP_201_CREATED, response_model=SuccessResponse)
 def create_user(data: CreateUserRequest, db: Session = Depends(get_db)):
     create_user_services(data, db)
     return SuccessResponse(message="User account has been successfully created.")

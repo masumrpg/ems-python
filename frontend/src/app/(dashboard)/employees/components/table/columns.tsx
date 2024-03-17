@@ -1,20 +1,11 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { ColumnDef } from "@tanstack/react-table";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
-import { ResponseUsers } from "@/model/interface-client";
-import { Badge } from "@/components/ui/badge";
-import DeleteEmployeeDialog from "../delete-employee";
-import { toast } from "sonner";
-import { DeleteAlert } from "../delete-alert";
-import { TestAlert } from "./test";
+import {Button} from "@/components/ui/button";
+import {ColumnDef} from "@tanstack/react-table";
+import {ArrowUpDown, MoreHorizontal} from "lucide-react";
+import {ResponseUsers} from "@/interface/interface-client";
+import {Badge} from "@/components/ui/badge";
+import {DeleteAlert} from "../delete-alert";
+import EditEmployeeDialog from "@/app/(dashboard)/employees/components/edit-employee";
 // import { Checkbox } from "@/components/ui/checkbox";
 
 export const columns: ColumnDef<ResponseUsers>[] = [
@@ -44,7 +35,7 @@ export const columns: ColumnDef<ResponseUsers>[] = [
     //     enableHiding: false
     // },
     {
-        header: ({ column }) => {
+        header: ({column}) => {
             return (
                 <Button
                     variant="ghost"
@@ -53,12 +44,12 @@ export const columns: ColumnDef<ResponseUsers>[] = [
                     }}
                 >
                     ID
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                    <ArrowUpDown className="ml-2 h-4 w-4"/>
                 </Button>
             );
         },
         accessorKey: "id",
-        cell: ({ row }) => {
+        cell: ({row}) => {
             const employee = row.original;
             const uuid = employee.id;
             const employeeId = uuid.slice(uuid.length - 6);
@@ -83,7 +74,7 @@ export const columns: ColumnDef<ResponseUsers>[] = [
         cell: ({row}) => {
             const employee = row.original;
             return (
-                <div>{employee.is_superuser === true ? "admin" : "user"}</div>
+                <div>{employee.is_superuser ? "admin" : "user"}</div>
             );
         }
     },
@@ -93,43 +84,21 @@ export const columns: ColumnDef<ResponseUsers>[] = [
         cell: ({row}) => {
             const employee = row.original;
             return (
-                <div>{employee.is_verified === true ? <Badge>Verified</Badge> : <Badge variant="destructive">Not Verified</Badge>}</div>
+                <div>{employee.is_verified ? <Badge>Verified</Badge> :
+                    <Badge variant="destructive">Not Verified</Badge>}</div>
             );
         }
     },
     {
         id: "actions",
-        cell: ({ row }) => {
-            const employee = row.original;
+        header: "Action",
+        cell: ({row}) => {
+            const user: ResponseUsers = row.original;
             return (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="w-8 h-8 p-0">
-                            <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem
-                            onClick={() => {
-                                navigator.clipboard.writeText(
-                                    employee.id.toString()
-                                );
-                                toast.info("ID copyed to clipboard");
-                            }}
-                        >
-                            Copy ID
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => {
-                            toast.info("Ok");
-                            return <TestAlert/>;
-                        }}>
-                            {/* FIXME */}
-                            {/* <DeleteAlert/> */}
-                            Ok
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                <div className="space-x-2">
+                    <EditEmployeeDialog user={user}/>
+                    <DeleteAlert user={user}/>
+                </div>
             );
         }
     }

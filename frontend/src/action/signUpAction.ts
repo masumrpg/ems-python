@@ -1,6 +1,6 @@
 "use server";
 
-import { ResponseMessage } from "@/model/interface-server";
+import {ResponseMessage} from "@/interface/interface-server";
 
 export default async function signUpAction(formData: any) {
     const jsonData = JSON.stringify(formData);
@@ -12,7 +12,9 @@ export default async function signUpAction(formData: any) {
             headers: {"Accept": "application/json", "Content-Type": "application/json"},
             body: jsonData
         });
-        const resMsg: ResponseMessage = await res.json().then((value)=> {return value;});
+        const resMsg: ResponseMessage = await res.json().then((value) => {
+            return value;
+        });
 
         if (res.status === 201) {
             return {

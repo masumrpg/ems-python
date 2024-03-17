@@ -1,15 +1,15 @@
 "use server";
 
-import { auth } from "@/lib/auth";
-import { ResponseMessage } from "@/model/interface-server";
+import {auth} from "@/lib/auth";
+import {ResponseMessage} from "@/interface/interface-server";
 
-export default async function editEmployeeDetailsAction(id:string, formData:any) {
+export default async function editEmployeeDetailsAction(id: string, formData: any) {
     const session = await auth();
     const jsonData = JSON.stringify(formData);
     const url = `${process.env.NEXT_PUBLIC_API_URL}/user/detail/${id}`;
 
     try {
-        const res = await fetch(url,{
+        const res = await fetch(url, {
             method: "PATCH",
             headers: {
                 "Accept": "application/json",
@@ -19,7 +19,9 @@ export default async function editEmployeeDetailsAction(id:string, formData:any)
             body: jsonData,
             next: {revalidate: false}
         });
-        const resMsg: ResponseMessage = await res.json().then((value)=> {return value;});
+        const resMsg: ResponseMessage = await res.json().then((value) => {
+            return value;
+        });
 
 
         if (res.status === 200) {

@@ -1,7 +1,8 @@
+"use client";
 import Link from "next/link";
-import { CardTitle, CardHeader, CardContent, Card, CardDescription } from "@/components/ui/card";
-import { ResponsiveLine } from "@nivo/line";
-import { BellIcon, CalendarCheckIcon, CalendarIcon, DollarSignIcon, TrendingUpIcon, UsersIcon } from "lucide-react";
+import {CardTitle, CardHeader, CardContent, Card, CardDescription} from "@/components/ui/card";
+import {ResponsiveLine} from "@nivo/line";
+import {BellIcon, CalendarCheckIcon, CalendarIcon, DollarSignIcon, TrendingUpIcon, UsersIcon} from "lucide-react";
 import Image from "next/image";
 
 export function Dashboard() {
@@ -11,7 +12,7 @@ export function Dashboard() {
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
                         <CardTitle className="text-sm font-medium">Total Employees</CardTitle>
-                        <UsersIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                        <UsersIcon className="w-4 h-4 text-gray-500 dark:text-gray-400"/>
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">250</div>
@@ -20,7 +21,7 @@ export function Dashboard() {
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
                         <CardTitle className="text-sm font-medium">Active Employees</CardTitle>
-                        <UsersIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                        <UsersIcon className="w-4 h-4 text-gray-500 dark:text-gray-400"/>
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">200</div>
@@ -29,7 +30,7 @@ export function Dashboard() {
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
                         <CardTitle className="text-sm font-medium">On Leave Employees</CardTitle>
-                        <UsersIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                        <UsersIcon className="w-4 h-4 text-gray-500 dark:text-gray-400"/>
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">50</div>
@@ -40,25 +41,25 @@ export function Dashboard() {
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
                         <CardTitle className="text-sm font-medium">Notifications</CardTitle>
-                        <BellIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                        <BellIcon className="w-4 h-4 text-gray-500 dark:text-gray-400"/>
                     </CardHeader>
                     <CardContent>
                         <ul className="grid gap-2 text-sm">
                             <li>
                                 <Link className="font-medium underline" href="#">
-                    New task assigned
+                                    New task assigned
                                 </Link>
                                 <p className="text-xs text-gray-500 dark:text-gray-400">2 min ago</p>
                             </li>
                             <li>
                                 <Link className="font-medium underline" href="#">
-                    Upcoming meeting
+                                    Upcoming meeting
                                 </Link>
                                 <p className="text-xs text-gray-500 dark:text-gray-400">1 hour ago</p>
                             </li>
                             <li>
                                 <Link className="font-medium underline" href="#">
-                    Holiday announcement
+                                    Holiday announcement
                                 </Link>
                                 <p className="text-xs text-gray-500 dark:text-gray-400">1 day ago</p>
                             </li>
@@ -68,17 +69,17 @@ export function Dashboard() {
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
                         <CardTitle className="text-sm font-medium">Attendance</CardTitle>
-                        <CalendarCheckIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                        <CalendarCheckIcon className="w-4 h-4 text-gray-500 dark:text-gray-400"/>
                     </CardHeader>
                     <CardContent>
-                        <LineChart className="h-[200px] aspect-[2/1]" />
+                        <LineChart className="h-[200px] aspect-[2/1]"/>
                     </CardContent>
                 </Card>
             </div>
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
                     <CardTitle className="text-sm font-medium">Work Plans</CardTitle>
-                    <CalendarIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                    <CalendarIcon className="w-4 h-4 text-gray-500 dark:text-gray-400"/>
                 </CardHeader>
                 <CardContent>
                     <div className="grid gap-4 text-sm">
@@ -101,7 +102,7 @@ export function Dashboard() {
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
                         <CardTitle className="text-sm font-medium">Calendar</CardTitle>
-                        <CalendarIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                        <CalendarIcon className="w-4 h-4 text-gray-500 dark:text-gray-400"/>
                     </CardHeader>
                     <CardContent>
                         <div className="grid gap-2 text-sm">
@@ -123,17 +124,17 @@ export function Dashboard() {
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
                         <CardTitle className="text-sm font-medium">Performance</CardTitle>
-                        <TrendingUpIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                        <TrendingUpIcon className="w-4 h-4 text-gray-500 dark:text-gray-400"/>
                     </CardHeader>
                     <CardContent>
-                        <CurvedlineChart className="h-[200px] aspect-[2/1]" />
+                        <CurvedlineChart className="h-[200px] aspect-[2/1]"/>
                     </CardContent>
                 </Card>
             </div>
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
                     <CardTitle className="text-sm font-medium">Payroll</CardTitle>
-                    <DollarSignIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                    <DollarSignIcon className="w-4 h-4 text-gray-500 dark:text-gray-400"/>
                 </CardHeader>
                 <CardContent>
                     <div className="grid gap-2 text-sm">
@@ -174,8 +175,9 @@ export function Dashboard() {
                             <div>
                                 <h3 className="font-semibold">New Employee Orientation</h3>
                                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Join us for the new employee orientation session on Monday, 10th July 2023 at 10:00 AM in the
-                    conference room. Refreshments will be provided.
+                                    Join us for the new employee orientation session on Monday, 10th July 2023 at 10:00
+                                    AM in the
+                                    conference room. Refreshments will be provided.
                                 </p>
                             </div>
                         </div>
@@ -194,9 +196,11 @@ export function Dashboard() {
                             <div>
                                 <h3 className="font-semibold">Quarterly Townhall</h3>
                                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                    The quarterly townhall meeting will be held on Friday, 14th July 2023 at 3:00 PM. The management
-                    will provide updates on the company&apos;s progress and future plans. All employees are encouraged to
-                    attend.
+                                    The quarterly townhall meeting will be held on Friday, 14th July 2023 at 3:00 PM.
+                                    The management
+                                    will provide updates on the company&apos;s progress and future plans. All employees
+                                    are encouraged to
+                                    attend.
                                 </p>
                             </div>
                         </div>
@@ -216,27 +220,27 @@ function LineChart({...props}) {
                     {
                         id: "Desktop",
                         data: [
-                            { x: "Jan", y: 43 },
-                            { x: "Feb", y: 137 },
-                            { x: "Mar", y: 61 },
-                            { x: "Apr", y: 145 },
-                            { x: "May", y: 26 },
-                            { x: "Jun", y: 154 }
+                            {x: "Jan", y: 43},
+                            {x: "Feb", y: 137},
+                            {x: "Mar", y: 61},
+                            {x: "Apr", y: 145},
+                            {x: "May", y: 26},
+                            {x: "Jun", y: 154}
                         ]
                     },
                     {
                         id: "Mobile",
                         data: [
-                            { x: "Jan", y: 60 },
-                            { x: "Feb", y: 48 },
-                            { x: "Mar", y: 177 },
-                            { x: "Apr", y: 78 },
-                            { x: "May", y: 96 },
-                            { x: "Jun", y: 204 }
+                            {x: "Jan", y: 60},
+                            {x: "Feb", y: 48},
+                            {x: "Mar", y: 177},
+                            {x: "Apr", y: 78},
+                            {x: "May", y: 96},
+                            {x: "Jun", y: 204}
                         ]
                     }
                 ]}
-                margin={{ top: 10, right: 10, bottom: 40, left: 40 }}
+                margin={{top: 10, right: 10, bottom: 40, left: 40}}
                 xScale={{
                     type: "point"
                 }}
@@ -290,27 +294,27 @@ function CurvedlineChart({...props}) {
                     {
                         id: "Desktop",
                         data: [
-                            { x: "Jan", y: 43 },
-                            { x: "Feb", y: 137 },
-                            { x: "Mar", y: 61 },
-                            { x: "Apr", y: 145 },
-                            { x: "May", y: 26 },
-                            { x: "Jun", y: 154 }
+                            {x: "Jan", y: 43},
+                            {x: "Feb", y: 137},
+                            {x: "Mar", y: 61},
+                            {x: "Apr", y: 145},
+                            {x: "May", y: 26},
+                            {x: "Jun", y: 154}
                         ]
                     },
                     {
                         id: "Mobile",
                         data: [
-                            { x: "Jan", y: 60 },
-                            { x: "Feb", y: 48 },
-                            { x: "Mar", y: 177 },
-                            { x: "Apr", y: 78 },
-                            { x: "May", y: 96 },
-                            { x: "Jun", y: 204 }
+                            {x: "Jan", y: 60},
+                            {x: "Feb", y: 48},
+                            {x: "Mar", y: 177},
+                            {x: "Apr", y: 78},
+                            {x: "May", y: 96},
+                            {x: "Jun", y: 204}
                         ]
                     }
                 ]}
-                margin={{ top: 10, right: 10, bottom: 40, left: 40 }}
+                margin={{top: 10, right: 10, bottom: 40, left: 40}}
                 xScale={{
                     type: "point"
                 }}

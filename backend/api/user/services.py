@@ -32,7 +32,7 @@ def create_user_services(data: CreateUserRequest, db: Session):
         password=get_password_hash(data.password),
         is_active=True,
         is_verified=True,
-        updated_at=datetime.now(),
+        updated_at=datetime.now()
     )
 
     db.add(new_user)
