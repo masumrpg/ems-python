@@ -1,5 +1,5 @@
 import type {Metadata} from "next";
-import "../style/globals.css";
+import "../../style/globals.css";
 import React from "react";
 import {ThemeProvider} from "@/components/theme-provider";
 import {Inter as FontSans} from "next/font/google";
@@ -7,7 +7,7 @@ import {cn} from "@/lib/utils";
 import SideBar from "@/components/navigation/sidebar";
 import NextAuthSessionProvider from "@/components/nextauth-provider";
 import ReactQuery from "@/components/react-query";
-import { Toaster } from "@/components/ui/sonner";
+import {Toaster} from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
     title: "Employee Management",
