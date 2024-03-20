@@ -11,3 +11,6 @@ __pycache__/
 *.pyd
 .flake8
 .oke
+
+tests
+/tests

@@ -3,15 +3,9 @@ from fastapi import APIRouter, status, Depends, Request
 from sqlalchemy.orm import Session
 from api.user.schemas import CreateUserDetailRequest, CreateUserRequest
 from api.user.services import (
-    create_user_services,
-    create_user_detail_by_id_services,
-    create_user_detail_services,
-    delete_user_by_id_services,
-    get_all_user_services,
-    get_me_by_id_services,
-    get_user_by_id_services,
-    update_user_detail_by_id_services,
-    update_user_detail_services,
+    AdminService,
+    PublicService,
+    UserService,
 )
 from api.core.security import get_current_user, is_superuser, oauth2_scheme
 from api.user.responses import SuccessResponse, UserResponse, UserWithDetilResponse
@@ -19,13 +13,13 @@ from api.core.database import get_db
 
 public_router = APIRouter(
     prefix="/user",
-    tags=["User"],
+    tags=["Public Acconuts Api"],
     responses={404: {"description": "Not found"}},
 )
 
 user_router = APIRouter(
     prefix="/user",
-    tags=["User"],
+    tags=["User Acconuts Api"],
     responses={404: {"description": "Not found"}},
     dependencies=[Depends(oauth2_scheme)],
 )
@@ -33,7 +27,7 @@ user_router = APIRouter(
 
 admin_router = APIRouter(
     prefix="/user",
-    tags=["Admin"],
+    tags=["Admin Acconuts Api"],
     responses={404: {"description": "Not found"}},
     dependencies=[Depends(oauth2_scheme), Depends(is_superuser)],
 )
@@ -41,7 +35,7 @@ admin_router = APIRouter(
 
 @public_router.post("", status_code=status.HTTP_201_CREATED, response_model=SuccessResponse)
 def create_user(data: CreateUserRequest, db: Session = Depends(get_db)):
-    create_user_services(data, db)
+    PublicService.create_user_service(data, db)
     return SuccessResponse(message="User account has been successfully created.")
 
 
@@ -51,7 +45,7 @@ def create_user(data: CreateUserRequest, db: Session = Depends(get_db)):
 def create_user_detail_me(
     data: CreateUserDetailRequest, request: Request, db: Session = Depends(get_db)
 ):
-    create_user_detail_services(data, request, db)
+    UserService.create_user_detail_service(data, request, db)
     return SuccessResponse(message="User detail has been succesfully created.")
 
 
@@ -62,8 +56,8 @@ def get_me(
     current_user: UserResponse = Depends(get_current_user), db: Session = Depends(get_db)
 ):
     user_id = current_user.id
-    res = get_me_by_id_services(user_id, db)
-    return res
+    user = UserService.get_me_by_req_service(user_id, db)
+    return user
 
 
 @user_router.patch(
@@ -72,7 +66,8 @@ def get_me(
 def update_user_detail_me(
     data: CreateUserDetailRequest, request: Request, db: Session = Depends(get_db)
 ):
-    update_user_detail_services(data, request, db)
+    user_id = request.user.id
+    UserService.update_user_detail_service(data, user_id, db)
     return SuccessResponse(message="User detail has been successfully updated.")
 
 
@@ -82,7 +77,7 @@ def update_user_detail_me(
 def create_user_detail_by_id(
     data: CreateUserDetailRequest, user_id: str, db: Session = Depends(get_db)
 ):
-    create_user_detail_by_id_services(data, user_id, db)
+    AdminService.create_user_detail_by_id_service(data, user_id, db)
     return SuccessResponse(message="User detail has been succesfully created.")
 
 
@@ -90,7 +85,7 @@ def create_user_detail_by_id(
     "", status_code=status.HTTP_200_OK, response_model=List[UserResponse]
 )
 def get_all_user(db: Session = Depends(get_db)):
-    users = get_all_user_services(db)
+    users = AdminService.get_all_user_service(db)
     return users
 
 
@@ -98,7 +93,7 @@ def get_all_user(db: Session = Depends(get_db)):
     "/{user_id}", status_code=status.HTTP_200_OK, response_model=UserWithDetilResponse
 )
 def get_user_by_id(user_id: str, db: Session = Depends(get_db)):
-    user = get_user_by_id_services(user_id, db)
+    user = AdminService.get_user_by_id_service(user_id, db)
     return user
 
 
@@ -108,7 +103,7 @@ def get_user_by_id(user_id: str, db: Session = Depends(get_db)):
 def update_user_detail_by_id(
     data: CreateUserDetailRequest, user_id: str, db: Session = Depends(get_db)
 ):
-    update_user_detail_by_id_services(data, user_id, db)
+    AdminService.update_user_detail_by_id_service(data, user_id, db)
     return SuccessResponse(message="User detail has been successfully updated.")
 
 
@@ -116,5 +111,5 @@ def update_user_detail_by_id(
     "/{user_id}", status_code=status.HTTP_200_OK, response_model=SuccessResponse
 )
 def delete_user_by_id(user_id: str, db: Session = Depends(get_db)):
-    delete_user_by_id_services(user_id, db)
+    AdminService.delete_user_by_id_service(user_id, db)
     return SuccessResponse(message="User has been succesfully deleted.")
