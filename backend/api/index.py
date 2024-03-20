@@ -44,7 +44,7 @@ def health_check(request: Request, db: Session = Depends(get_db)):
     # Lakukan pemeriksaan kesehatan database di sini
     try:
         # Contoh pemeriksaan sederhana, coba lakukan query ke database
-        db.execute(select([1]))
+        db.execute(select(1))
     except Exception as e:
         # Jika terjadi kesalahan, beri respon bahwa database tidak sehat
         return JSONResponse(
