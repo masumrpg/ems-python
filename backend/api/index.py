@@ -6,7 +6,7 @@ from api.auth.route import router as auth_router
 from api.core.security import JWTAuth
 from starlette.middleware.authentication import AuthenticationMiddleware
 from sqlalchemy.orm import Session
-
+from sqlalchemy import select
 from api.core.database import get_db
 
 docs_url = "docs"
@@ -44,7 +44,7 @@ def health_check(request: Request, db: Session = Depends(get_db)):
     # Lakukan pemeriksaan kesehatan database di sini
     try:
         # Contoh pemeriksaan sederhana, coba lakukan query ke database
-        db.execute("SELECT 1")
+        db.execute(select([1]))
     except Exception as e:
         # Jika terjadi kesalahan, beri respon bahwa database tidak sehat
         return JSONResponse(
