@@ -1,6 +1,9 @@
 from pydantic import ConfigDict, BaseModel, EmailStr
 from typing import Optional, Union
 from datetime import date, datetime
+from typing import TypeVar, List, Generic
+
+T = TypeVar("T")
 
 
 class BaseResponse(BaseModel):
@@ -53,6 +56,16 @@ class UserWithDetilResponse(BaseModel):
     verified_at: Union[None, datetime] = None
     created_at: Union[None, datetime] = None
     user_detail: Optional[UserDetailResponse] = None
+
+
+class UserPaginationResponse(BaseModel, Generic[T]):
+    """The response for a pagination query."""
+
+    page_number: int
+    page_size: int
+    total_pages: int
+    total_record: int
+    content: List[T]
 
 
 class SuccessResponse(BaseModel):

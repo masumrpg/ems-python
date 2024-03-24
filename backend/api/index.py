@@ -2,6 +2,7 @@ from fastapi import Depends, FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from api.user.routes import public_router, user_router, admin_router
+from api.statistics.routes import public_statistics_router, user_statistics_router, admin_statistics_router
 from api.auth.route import router as auth_router
 from api.core.security import JWTAuth
 from starlette.middleware.authentication import AuthenticationMiddleware
@@ -19,10 +20,18 @@ app = FastAPI(
     version="0.1.0",
     description="My first big project by Ma'sum",
 )
+
+# Auth Router
 app.include_router(auth_router)
+# Acconuts Router
 app.include_router(public_router)
 app.include_router(user_router)
 app.include_router(admin_router)
+# Statistic Router
+app.include_router(public_statistics_router)
+app.include_router(user_statistics_router)
+app.include_router(admin_statistics_router)
+
 
 # Middleware
 origins = ["*"]
