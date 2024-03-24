@@ -45,3 +45,8 @@ export interface AddressFromApi {
     province: string;
     country: string;
 }
+
+export interface DashboardProps {
+    total_users: number
+    active_users: number
+}

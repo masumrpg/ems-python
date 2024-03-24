@@ -190,42 +190,6 @@ class UserRepository:
                 detail="Something went wrong",
             )
 
-    # @staticmethod
-    # def get_all_user(db: Session):
-    #     try:
-    #         all_users_details = db.query(UserModel).all()
-    #     except SQLAlchemyError as e:
-    #         db.rollback()
-    #         logger.error(f"Failed to query users: {str(e)}")
-    #         raise HTTPException(
-    #             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-    #             detail=f"Database error: {str(e)}",
-    #         )
-
-    #     # Give response 404
-    #     if not all_users_details:
-    #         raise HTTPException(
-    #             status_code=status.HTTP_404_NOT_FOUND, detail="No users found"
-    #         )
-
-    #     user_responses = []
-
-    #     for user_data in all_users_details:
-    #         user_response = UserResponse(
-    #             id=user_data.id,
-    #             username=user_data.username,
-    #             email=user_data.email,
-    #             full_name=user_data.full_name,
-    #             is_active=user_data.is_active,
-    #             is_superuser=user_data.is_superuser,
-    #             is_verified=user_data.is_verified,
-    #             verified_at=user_data.verified_at,
-    #             created_at=user_data.created_at,
-    #         )
-    #         user_responses.append(user_response)
-
-    #     return user_responses
-
     @staticmethod
     def get_user_by_id(user_id: str, db: Session):
         db_user: UserModel = db.query(UserModel).filter(UserModel.id == user_id).first()
@@ -399,6 +363,78 @@ class UserRepository:
             )
 
     # get all
+    # @staticmethod
+    # def get_all_user(
+    #     db: Session,
+    #     page: int = 1,
+    #     limit: int = 10,
+    #     columns: str = None,
+    #     sort: str = None,
+    #     filter: str = None,
+    # ):
+    #     # query = select(from_obj=UserModel, columns="*")
+    #     query = select(from_obj=UserModel, columns="*")
+
+    #     # select columns dynamically
+    #     if columns is not None and columns != "all":
+    #         # we need column format data like this --> [column(id),column(name),column(sex)...]
+
+    #         query = select(from_obj=UserModel, columns=convert_columns(columns))
+
+    #     # select filter dynamically
+    #     if filter is not None and filter != "null":
+    #         # we need filter format data like this  --> {'name': 'an','country':'an'}
+
+    #         # convert string to dict format
+    #         criteria = dict(x.split("*") for x in filter.split("-"))
+
+    #         criteria_list = []
+
+    #         # check every key in dict. are there any table attributes that are the same as the dict key ?
+
+    #         for attr, value in criteria.items():
+    #             _attr = getattr(UserModel, attr)
+
+    #             # filter format
+    #             search = "%{}%".format(value)
+
+    #             # criteria list
+    #             criteria_list.append(_attr.like(search))
+
+    #         query = query.filter(or_(*criteria_list))
+
+    #     # select sort dynamically
+    #     if sort is not None and sort != "null":
+    #         # we need sort format data like this --> ['id','name']
+    #         query = query.order_by(text(convert_sort(sort)))
+
+    #     # count query
+    #     count_query = select(func.count(1)).select_from(query)
+
+    #     offset_page = page - 1
+    #     # pagination
+    #     query = query.offset(offset_page * limit).limit(limit)
+
+    #     # total record
+    #     total_record = (db.execute(count_query)).scalar() or 0
+
+    #     # total page
+    #     total_page = math.ceil(total_record / limit)
+
+    #     # result
+    #     results = (db.execute(query)).fetchall()
+
+    #     # Ubah setiap baris (row) menjadi dictionary
+    #     serialized_results = [dict(row) for row in results]
+
+    #     return UserPaginationResponse(
+    #         page_number=page,
+    #         page_size=limit,
+    #         total_pages=total_page,
+    #         total_record=total_record,
+    #         content=serialized_results,
+    #     )
+
     @staticmethod
     def get_all_user(
         db: Session,
@@ -408,7 +444,6 @@ class UserRepository:
         sort: str = None,
         filter: str = None,
     ):
-        # query = select(from_obj=UserModel, columns="*")
         query = select(from_obj=UserModel, columns="*")
 
         # select columns dynamically
@@ -445,7 +480,7 @@ class UserRepository:
             query = query.order_by(text(convert_sort(sort)))
 
         # count query
-        count_query = select(func.count(1)).select_from(query)
+        count_query = select(func.count()).select_from(query)
 
         offset_page = page - 1
         # pagination
@@ -463,10 +498,17 @@ class UserRepository:
         # Ubah setiap baris (row) menjadi dictionary
         serialized_results = [dict(row) for row in results]
 
+        # return UserPaginationResponse(
+        #     page_number=page,
+        #     page_size=limit,
+        #     total_pages=total_page,
+        #     total_record=total_record,
+        #     content=serialized_results,
+        # )
         return UserPaginationResponse(
             page_number=page,
             page_size=limit,
-            total_pages=total_page,
-            total_record=total_record,
+            total_pages=123,
+            total_record=123,
             content=[],
         )
