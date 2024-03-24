@@ -408,6 +408,7 @@ class UserRepository:
         sort: str = None,
         filter: str = None,
     ):
+        # query = select(from_obj=UserModel, columns="*")
         query = select(from_obj=UserModel, columns="*")
 
         # select columns dynamically
@@ -467,5 +468,5 @@ class UserRepository:
             page_size=limit,
             total_pages=total_page,
             total_record=total_record,
-            content=serialized_results,
+            content=[],
         )
