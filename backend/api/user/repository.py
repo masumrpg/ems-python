@@ -28,21 +28,21 @@ def convert_sort(sort):
     return ",".join(sort.split("-"))
 
 
-# def convert_columns(columns):
-#     """
-#     # seperate string using split ('-')
-#     new_columns = columns.split('-')
+def convert_columns(columns):
+    """
+    # seperate string using split ('-')
+    new_columns = columns.split('-')
 
-#     # add to list with column format
-#     column_list = []
-#     for data in new_columns:
-#         column_list.append(data)
+    # add to list with column format
+    column_list = []
+    for data in new_columns:
+        column_list.append(data)
 
-#     # we use lambda function to make code simple
+    # we use lambda function to make code simple
 
-#     """
+    """
 
-#     return list(map(lambda x: column(x), columns.split("-")))
+    return list(map(lambda x: column(x), columns.split("-")))
 
 
 class UserRepository:
@@ -444,13 +444,13 @@ class UserRepository:
         sort: str = None,
         filter: str = None,
     ):
-        query = select(from_obj=UserModel, columns="*")
+        query = select(UserModel)
 
         # select columns dynamically
-        # if columns is not None and columns != "all":
-        #     # we need column format data like this --> [column(id),column(name),column(sex)...]
+        if columns is not None and columns != "all":
+            # we need column format data like this --> [column(id),column(name),column(sex)...]
 
-        #     query = select(from_obj=UserModel, columns=convert_columns(columns))
+            query = select(UserModel, columns=convert_columns(columns))
 
         # # select filter dynamically
         if filter is not None and filter != "null":
