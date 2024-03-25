@@ -1,13 +1,13 @@
 export interface ResponseUsers {
-    id: string;
-    username: string;
-    email: string;
-    full_name: string;
-    is_active: boolean;
-    is_superuser: boolean;
-    is_verified: boolean;
-    verified_at: string | null;
-    created_at: string | null;
+    id?: string;
+    username?: string;
+    email?: string;
+    full_name?: string;
+    is_active?: boolean;
+    is_superuser?: boolean;
+    is_verified?: boolean;
+    verified_at?: string | null;
+    created_at?: string | null;
 }
 
 export interface UserFromApi {
@@ -49,4 +49,18 @@ export interface AddressFromApi {
 export interface DashboardProps {
     total_users: number
     active_users: number
+}
+
+export interface UserPaginationResponse {
+    pagination: boolean;
+    limit: number;
+    page: number;
+    columns?: string[];
+    sort?: string;
+    filter_by?: string;
+    filter_value?: string;
+    total_row_in_page: number;
+    total_records: number;
+    from_total: number;
+    content?: ResponseUsers[];
 }

@@ -18,7 +18,7 @@ from api.user.responses import (
 import re
 
 
-def map_user_model_to_response(user_model: UserModel) -> UserResponse:
+def map_user_model_to_response(user_model: UserModel):
     return UserResponse(
         id=str(user_model.id),
         username=user_model.username,
@@ -381,7 +381,7 @@ class UserRepository:
         pagination: bool = Query(True, description="Enable pagination"),
         limit: Optional[int] = Query(10, description="Limit of users per page"),
         page: Optional[int] = Query(1, description="Page number"),
-        columns: Optional[List[str]] = Query(None, description="Columns to display"),
+        columns: Optional[str] = Query(None, description="Columns to display"),
         sort: Optional[str] = Query(None, description="Sort by specific column"),
         filter_by: Optional[str] = Query(None, description="Filter by specific column"),
         filter_value: Optional[str] = Query(None, description="Filter value"),
@@ -414,8 +414,14 @@ class UserRepository:
 
         # Memilih kolom yang diminta
         if columns:
+            selected_columns = columns.split("-")
+            if "id" not in selected_columns:
+                selected_columns.insert(
+                    0, "id"
+                )  # Memastikan kolom 'id' selalu di depan
             users_to_return = [
-                {col: getattr(user, col) for col in columns} for user in users_to_return
+                {col: getattr(user, col) for col in selected_columns}
+                for user in users_to_return
             ]
 
         total_row_in_page = len(users_to_return)

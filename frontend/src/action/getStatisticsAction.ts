@@ -15,6 +15,7 @@ export default async function getStatisticsAction() {
         const resMsg = await res.json().then((value) => {
             return value;
         });
+
         if (res.status === 200) {
             return resMsg;
         } else {

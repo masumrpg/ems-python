@@ -1,5 +1,4 @@
-from typing import Optional, List
-
+from typing import Optional
 from fastapi import APIRouter, Query, status, Depends, Request
 from sqlalchemy.orm import Session
 from api.user.schemas import CreateUserDetailRequest, CreateUserRequest
@@ -85,11 +84,11 @@ def get_all_users(
     pagination: bool = Query(True, description="Enable pagination"),
     limit: Optional[int] = Query(10, description="Limit of users per page"),
     page: Optional[int] = Query(1, description="Page number"),
-    columns: Optional[List[str]] = Query(None, description="Columns to display"),
+    columns: Optional[str] = Query(None, description="Columns to display"),
     sort: Optional[str] = Query(None, description="Sort by specific column"),
     filter_by: Optional[str] = Query(None, description="Filter by specific column"),
     filter_value: Optional[str] = Query(None, description="Filter value"),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
     users = UserRepository.get_all(pagination, limit, page, columns, sort, filter_by, filter_value, db)
     return users

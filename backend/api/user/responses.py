@@ -64,7 +64,7 @@ class UserPaginationResponse(BaseModel, Generic[T]):
     pagination: bool
     limit: int
     page: int
-    columns: Optional[List[str]] = None
+    columns: Optional[str] = None
     sort: Optional[str] = None
     filter_by: Optional[str] = None
     filter_value: Optional[str] = None

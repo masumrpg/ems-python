@@ -21,7 +21,7 @@ user_statistics_router = APIRouter(
 
 
 admin_statistics_router = APIRouter(
-    prefix="/statistic",
+    prefix="/statistics",
     tags=["Admin Statistics Api"],
     responses={404: {"description": "Not found"}},
     dependencies=[Depends(oauth2_scheme), Depends(is_superuser)],

@@ -1,39 +1,13 @@
 "use client";
 import {Button} from "@/components/ui/button";
 import {ColumnDef} from "@tanstack/react-table";
-import {ArrowUpDown, MoreHorizontal} from "lucide-react";
+import {ArrowUpDown} from "lucide-react";
 import {ResponseUsers} from "@/interface/interface-client";
 import {Badge} from "@/components/ui/badge";
 import {DeleteAlert} from "../delete-alert";
 import EditEmployeeDialog from "@/app/(dashboard)/employees/components/edit-employee";
-// import { Checkbox } from "@/components/ui/checkbox";
 
 export const columns: ColumnDef<ResponseUsers>[] = [
-    // {
-    //     id: "select",
-    //     header: ({ table }) => {
-    //         return (
-    //             <Checkbox
-    //                 checked={table.getIsAllPageRowsSelected()}
-    //                 onCheckedChange={(value) => {
-    //                     table.toggleAllPageRowsSelected(!!value);
-    //                 }}
-    //             />
-    //         );
-    //     },
-    //     cell: ({ row }) => {
-    //         return (
-    //             <Checkbox
-    //                 checked={row.getIsSelected()}
-    //                 onCheckedChange={(value) => {
-    //                     row.toggleSelected(!!value);
-    //                 }}
-    //             />
-    //         );
-    //     },
-    //     enableSorting: false,
-    //     enableHiding: false
-    // },
     {
         header: ({column}) => {
             return (
@@ -52,7 +26,10 @@ export const columns: ColumnDef<ResponseUsers>[] = [
         cell: ({row}) => {
             const employee = row.original;
             const uuid = employee.id;
-            const employeeId = uuid.slice(uuid.length - 6);
+            let employeeId = "No Result";
+            if (uuid) {
+                employeeId = uuid.slice(uuid.length - 6);
+            }
             return <div>{employeeId}</div>;
         }
     },
