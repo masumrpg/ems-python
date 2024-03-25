@@ -1,48 +1,61 @@
 from datetime import datetime
-from fastapi import Request, logger, status
+from typing import List, Optional
+from fastapi import Query, Request, logger, status, Depends
 from sqlalchemy.orm import aliased, Session
 from sqlalchemy.exc import SQLAlchemyError
 from fastapi.exceptions import HTTPException
 from api.user.models import AddressModel, UserDetailModel, UserModel
 from api.core.security import get_password_hash
-from api.core.database import commit_rollback
+from api.core.database import commit_rollback, get_db
 from api.user.schemas import CreateUserDetailRequest, CreateUserRequest
 from api.user.responses import (
+    UserResponse,
     AddressResponse,
     UserDetailResponse,
     UserPaginationResponse,
     UserWithDetilResponse,
 )
-import math
-from sqlalchemy import or_, text, func, column
-from sqlalchemy.sql import select
+import re
 
 
-def convert_sort(sort):
-    """
-    # separate string using split('-')
-    split_sort = sort.split('-')
-    # join to list with ','
-    new_sort = ','.join(split_sort)
-    """
-    return ",".join(sort.split("-"))
+def map_user_model_to_response(user_model: UserModel) -> UserResponse:
+    return UserResponse(
+        id=str(user_model.id),
+        username=user_model.username,
+        email=user_model.email,
+        full_name=user_model.full_name,
+        is_active=user_model.is_active,
+        is_superuser=user_model.is_superuser,
+        is_verified=user_model.is_verified,
+        verified_at=user_model.verified_at,
+        created_at=user_model.created_at,
+    )
 
 
-def convert_columns(columns):
-    """
-    # seperate string using split ('-')
-    new_columns = columns.split('-')
+def apply_filter(
+    users: List[UserResponse], filter_by: str, filter_value: str
+) -> List[UserResponse]:
+    """Apply filter to the list of users."""
+    if filter_by and filter_value:
+        # Filter dengan mencari kecocokan parsial
+        filtered_users = [
+            user
+            for user in users
+            if re.search(filter_value, getattr(user, filter_by), re.IGNORECASE)
+        ]
+        return filtered_users
+    return users
 
-    # add to list with column format
-    column_list = []
-    for data in new_columns:
-        column_list.append(data)
 
-    # we use lambda function to make code simple
-
-    """
-
-    return list(map(lambda x: column(x), columns.split("-")))
+def apply_sort(
+    users: List[UserResponse], sort_by: str, reverse: bool = False
+) -> List[UserResponse]:
+    # Filter objek yang tidak memiliki nilai untuk atribut yang digunakan sebagai kunci pengurutan
+    filtered_users = [
+        user for user in users if getattr(user, sort_by, None) is not None
+    ]
+    # Lakukan pengurutan
+    return sorted(filtered_users, key=lambda x: getattr(x, sort_by), reverse=reverse)
 
 
 class UserRepository:
@@ -363,145 +376,61 @@ class UserRepository:
             )
 
     # get all
-    # @staticmethod
-    # def get_all_user(
-    #     db: Session,
-    #     page: int = 1,
-    #     limit: int = 10,
-    #     columns: str = None,
-    #     sort: str = None,
-    #     filter: str = None,
-    # ):
-    #     # query = select(from_obj=UserModel, columns="*")
-    #     query = select(from_obj=UserModel, columns="*")
-
-    #     # select columns dynamically
-    #     if columns is not None and columns != "all":
-    #         # we need column format data like this --> [column(id),column(name),column(sex)...]
-
-    #         query = select(from_obj=UserModel, columns=convert_columns(columns))
-
-    #     # select filter dynamically
-    #     if filter is not None and filter != "null":
-    #         # we need filter format data like this  --> {'name': 'an','country':'an'}
-
-    #         # convert string to dict format
-    #         criteria = dict(x.split("*") for x in filter.split("-"))
-
-    #         criteria_list = []
-
-    #         # check every key in dict. are there any table attributes that are the same as the dict key ?
-
-    #         for attr, value in criteria.items():
-    #             _attr = getattr(UserModel, attr)
-
-    #             # filter format
-    #             search = "%{}%".format(value)
-
-    #             # criteria list
-    #             criteria_list.append(_attr.like(search))
-
-    #         query = query.filter(or_(*criteria_list))
-
-    #     # select sort dynamically
-    #     if sort is not None and sort != "null":
-    #         # we need sort format data like this --> ['id','name']
-    #         query = query.order_by(text(convert_sort(sort)))
-
-    #     # count query
-    #     count_query = select(func.count(1)).select_from(query)
-
-    #     offset_page = page - 1
-    #     # pagination
-    #     query = query.offset(offset_page * limit).limit(limit)
-
-    #     # total record
-    #     total_record = (db.execute(count_query)).scalar() or 0
-
-    #     # total page
-    #     total_page = math.ceil(total_record / limit)
-
-    #     # result
-    #     results = (db.execute(query)).fetchall()
-
-    #     # Ubah setiap baris (row) menjadi dictionary
-    #     serialized_results = [dict(row) for row in results]
-
-    #     return UserPaginationResponse(
-    #         page_number=page,
-    #         page_size=limit,
-    #         total_pages=total_page,
-    #         total_record=total_record,
-    #         content=serialized_results,
-    #     )
-
     @staticmethod
-    def get_all_user(
-        db: Session,
-        page: int = 1,
-        limit: int = 10,
-        columns: str = None,
-        sort: str = None,
-        filter: str = None,
+    def get_all(
+        pagination: bool = Query(True, description="Enable pagination"),
+        limit: Optional[int] = Query(10, description="Limit of users per page"),
+        page: Optional[int] = Query(1, description="Page number"),
+        columns: Optional[List[str]] = Query(None, description="Columns to display"),
+        sort: Optional[str] = Query(None, description="Sort by specific column"),
+        filter_by: Optional[str] = Query(None, description="Filter by specific column"),
+        filter_value: Optional[str] = Query(None, description="Filter value"),
+        db: Session = Depends(get_db()),
     ):
-        query = select(UserModel)
+        # query to db
+        users = db.query(UserModel).all()
+        user_responses = [map_user_model_to_response(user) for user in users]
 
-        # # select columns dynamically
-        # if columns is not None and columns != "all":
-        #     # we need column format data like this --> [column(id),column(name),column(sex)...]
+        # Mengaplikasikan filter jika diberikan
+        filtered_users = user_responses
+        # Default sort
+        filtered_users = apply_sort(filtered_users, "full_name", reverse=False)
+        from_total = len(filtered_users)
 
-        #     query = select(UserModel, columns=convert_columns(columns))
+        if filter_by and filter_value:
+            # filtered_users = apply_filter(filtered_users, {filter_by: filter_value})
+            filtered_users = apply_filter(filtered_users, filter_by, filter_value)
 
-        # # # select filter dynamically
-        # if filter is not None and filter != "null":
-        #     # we need filter format data like this  --> {'name': 'an','country':'an'}
+        # Menghitung offset untuk pagination
+        if pagination:
+            offset = (page - 1) * limit
+            users_to_return = filtered_users[offset : offset + limit]  # noqa
+        else:
+            users_to_return = filtered_users
 
-        #     # convert string to dict format
-        #     criteria = dict(x.split("*") for x in filter.split("-"))
+        # Mengurutkan hasil jika diminta
+        if sort:
+            users_to_return = apply_sort(users_to_return, sort, reverse=True)
 
-        #     criteria_list = []
+        # Memilih kolom yang diminta
+        if columns:
+            users_to_return = [
+                {col: getattr(user, col) for col in columns} for user in users_to_return
+            ]
 
-        #     # check every key in dict. are there any table attributes that are the same as the dict key ?
-
-        #     for attr, value in criteria.items():
-        #         _attr = getattr(UserModel, attr)
-
-        #         # filter format
-        #         search = "%{}%".format(value)
-
-        #         # criteria list
-        #         criteria_list.append(_attr.like(search))
-
-        #     query = query.filter(or_(*criteria_list))
-
-        # # select sort dynamically
-        # if sort is not None and sort != "null":
-        #     # we need sort format data like this --> ['id','name']
-        #     query = query.order_by(text(convert_sort(sort)))
-
-        # count query
-        count_query = select(func.count()).select_from(query)
-
-        offset_page = page - 1
-        # pagination
-        query = query.offset(offset_page * limit).limit(limit)
-
-        # total record
-        total_record = (db.execute(count_query)).scalar() or 0
-
-        # total page
-        total_page = math.ceil(total_record / limit)
-
-        # result
-        results = (db.execute(query)).fetchall()
-
-        # Ubah setiap baris (row) menjadi dictionary
-        serialized_results = [dict(row) for row in results]
+        total_row_in_page = len(users_to_return)
+        total_records = len(filtered_users)
 
         return UserPaginationResponse(
-            page_number=page,
-            page_size=limit,
-            total_pages=total_page,
-            total_record=total_record,
-            content=serialized_results,
+            pagination=pagination,
+            limit=limit,
+            page=page,
+            columns=columns,
+            sort=sort,
+            filter_by=filter_by,
+            filter_value=filter_value,
+            total_row_in_page=total_row_in_page,
+            total_records=total_records,
+            from_total=from_total,
+            content=users_to_return,
         )

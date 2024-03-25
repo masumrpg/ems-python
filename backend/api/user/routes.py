@@ -1,3 +1,5 @@
+from typing import Optional, List
+
 from fastapi import APIRouter, Query, status, Depends, Request
 from sqlalchemy.orm import Session
 from api.user.schemas import CreateUserDetailRequest, CreateUserRequest
@@ -18,7 +20,6 @@ user_router = APIRouter(
     responses={404: {"description": "Not found"}},
     dependencies=[Depends(oauth2_scheme)],
 )
-
 
 admin_router = APIRouter(
     prefix="/user",
@@ -80,16 +81,18 @@ def create_user_detail_by_id(
 
 
 @admin_router.get("", status_code=status.HTTP_200_OK, response_model=UserPaginationResponse)
-def get_all_user(
-    db: Session = Depends(get_db),
-    page: int = 1,
-    limit: int = 10,
-    columns: str = Query(None, alias="columns"),
-    sort: str = Query(None, alias="sort"),
-    filter: str = Query(None, alias="filter"),
+def get_all_users(
+    pagination: bool = Query(True, description="Enable pagination"),
+    limit: Optional[int] = Query(10, description="Limit of users per page"),
+    page: Optional[int] = Query(1, description="Page number"),
+    columns: Optional[List[str]] = Query(None, description="Columns to display"),
+    sort: Optional[str] = Query(None, description="Sort by specific column"),
+    filter_by: Optional[str] = Query(None, description="Filter by specific column"),
+    filter_value: Optional[str] = Query(None, description="Filter value"),
+    db: Session = Depends(get_db)
 ):
-    user_pagination = UserRepository.get_all_user(db, page, limit, columns, sort, filter)
-    return user_pagination
+    users = UserRepository.get_all(pagination, limit, page, columns, sort, filter_by, filter_value, db)
+    return users
 
 
 @admin_router.get(

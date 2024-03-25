@@ -61,10 +61,16 @@ class UserWithDetilResponse(BaseModel):
 class UserPaginationResponse(BaseModel, Generic[T]):
     """The response for a pagination query."""
 
-    page_number: int
-    page_size: int
-    total_pages: int
-    total_record: int
+    pagination: bool
+    limit: int
+    page: int
+    columns: Optional[List[str]] = None
+    sort: Optional[str] = None
+    filter_by: Optional[str] = None
+    filter_value: Optional[str] = None
+    total_row_in_page: int
+    total_records: int
+    from_total: int
     content: List[T]
 
 

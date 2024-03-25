@@ -2,18 +2,18 @@ from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, status
 from api.core.security import is_superuser, oauth2_scheme
 from api.core.database import get_db
-from api.statistics.repository import StatisticRepository
-from api.statistics.responses import StatisticsResponse
+from api.statistic.repository import StatisticRepository
+from api.statistic.responses import StatisticsResponse
 
 
 public_statistics_router = APIRouter(
-    prefix="/statistics",
+    prefix="/statistic",
     tags=["Public Statistics Api"],
     responses={404: {"description": "Not found"}},
 )
 
 user_statistics_router = APIRouter(
-    prefix="/statistics",
+    prefix="/statistic",
     tags=["User Statistics Api"],
     responses={404: {"description": "Not found"}},
     dependencies=[Depends(oauth2_scheme)],
@@ -21,7 +21,7 @@ user_statistics_router = APIRouter(
 
 
 admin_statistics_router = APIRouter(
-    prefix="/statistics",
+    prefix="/statistic",
     tags=["Admin Statistics Api"],
     responses={404: {"description": "Not found"}},
     dependencies=[Depends(oauth2_scheme), Depends(is_superuser)],
