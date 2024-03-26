@@ -1,5 +1,5 @@
 export interface ResponseUsers {
-    id?: string;
+    id: string;
     username?: string;
     email?: string;
     full_name?: string;
@@ -55,7 +55,7 @@ export interface UserPaginationResponse {
     pagination: boolean;
     limit: number;
     page: number;
-    columns?: string[];
+    columns?: string;
     sort?: string;
     filter_by?: string;
     filter_value?: string;

@@ -1,18 +1,29 @@
 "use server";
+import { UserPaginationResponse } from "@/interface/interface-client";
 import { auth } from "@/lib/auth";
 
-const pagination = true;
-const limit = 10;
-const page = 1;
-const columns = "id,username";
-const sort = "username";
-const filterBy = "username";
-const filterValue = "ma";
+interface GetAllEmployeesActionProps {
+    pagination?: boolean;
+    limit?: number;
+    page?: number;
+    columns?: string | null;
+    sort?: string | null;
+    filterBy?: string | null;
+    filterValue?: string | null;
+}
 
-
-export default async function getAllEmployeesAction() {
+export default async function getAllEmployeesAction({
+    pagination = true,
+    limit = 2,
+    page = 1,
+    columns = "",
+    sort = "",
+    filterBy = "",
+    filterValue = ""
+}: GetAllEmployeesActionProps): Promise<UserPaginationResponse> {
     const session = await auth();
     const url = `${process.env.NEXT_PUBLIC_API_URL}/user?pagination=${pagination}&limit=${limit}&page=${page}&columns=${columns}&sort=${sort}&filter_by=${filterBy}&filter_value=${filterValue}`;
+
     try {
         const res = await fetch(url, {
             method: "GET",
@@ -22,19 +33,10 @@ export default async function getAllEmployeesAction() {
             }
         });
 
-        const resMsg = await res.json().then((value) => {
+        return await res.json().then((value) => {
             return value;
         });
-
-        console.log(resMsg);
-
-
-        if (res.status === 200) {
-            return resMsg;
-        } else {
-            return { message: "Getting data..." };
-        }
-    } catch (e) {
+    } catch (e:any) {
         return e;
     }
 }

@@ -1,5 +1,4 @@
 "use client";
-
 import {
     ColumnDef,
     ColumnFiltersState,
@@ -23,25 +22,43 @@ import {
 } from "@/components/ui/table";
 
 import React from "react";
-import {Button} from "@/components/ui/button";
-import {Input} from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
     DropdownMenu,
     DropdownMenuCheckboxItem,
     DropdownMenuContent,
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-// import {toast} from "sonner";
+import getAllEmployeesAction from "@/action/getAllEmployeesAction";
+import { UserPaginationResponse } from "@/interface/interface-client";
+import { toast } from "sonner";
+import {
+    Pagination,
+    PaginationContent,
+    PaginationEllipsis,
+    PaginationItem,
+    PaginationLink,
+    PaginationNext,
+    PaginationPrevious
+} from "@/components/ui/pagination";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
-    data: TData[];
+    data: UserPaginationResponse;
 }
 
 export default function DataTable<TData, TValue>({
     columns,
-    data
+    data: initialData
 }: DataTableProps<TData, TValue>) {
+    const [data, setData] = React.useState<any>(initialData.content); // test
+    const [response, setResponse] =
+        React.useState<UserPaginationResponse>(initialData); // test
+    const [inputValue, setInputValue] = React.useState(""); // test
+    // =========
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] =
         React.useState<ColumnFiltersState>([]);
@@ -70,28 +87,38 @@ export default function DataTable<TData, TValue>({
         }
     });
 
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setInputValue(e.target.value);
+    };
+
+    const handleSearchClick = async () => {
+        setInputValue(inputValue);
+        const res = await getAllEmployeesAction({
+            filterBy: "full_name",
+            filterValue: inputValue
+        });
+        setData(res.content);
+        // console.log(res.content);
+    };
+
+    const totalPage: number = Math.ceil(
+        response.total_records / response.limit
+    );
+
     return (
         <div className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-10">
             {/* input */}
             <div className="flex items-center py-4">
                 <Input
-                    placeholder="Filter by names"
-                    value={
-                        (table
-                            .getColumn("full_name")
-                            ?.getFilterValue() as string) || ""
-                    }
-                    onChange={(e) => {
-                        table
-                            .getColumn("full_name")
-                            ?.setFilterValue(e.target.value);
-                    }}
+                    type="text"
+                    value={inputValue}
+                    onChange={handleSearchChange}
+                    placeholder="Enter value"
                     className="max-w-sm"
                 />
-
-                {/*<Button onClick={() => toast.info("Okayyyy")} className="ml-4">*/}
-                {/*    Click*/}
-                {/*</Button>*/}
+                <Button onClick={handleSearchClick} className="ml-4">
+                    Search
+                </Button>
                 <DropdownMenu>
                     <DropdownMenuTrigger>
                         <Button variant="outline" className="ml-4">
@@ -167,30 +194,93 @@ export default function DataTable<TData, TValue>({
             </div>
             {/* pagination */}
             <div className="flex items-center justify-start space-x-2 py-4">
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => {
-                        table.previousPage();
-                    }}
-                    disabled={!table.getCanPreviousPage()}
-                >
-                    Previous
-                </Button>
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => {
-                        table.nextPage();
-                    }}
-                    disabled={!table.getCanNextPage()}
-                >
-                    Next
-                </Button>
+                <Pagination>
+                    <PaginationContent>
+                        <PaginationItem>
+                            <Button
+                                variant="ghost"
+                                className="gap-1 pl-2.5"
+                                disabled={response.page === 1}
+                                onClick={async () => {
+                                    const nextPage = response.page - 1;
+                                    const res = await getAllEmployeesAction({
+                                        page: nextPage
+                                    });
+                                    setData(res.content);
+                                    setResponse(res);
+                                }}
+                            >
+                                <ChevronLeft className="h-4 w-4" />
+                                <span>Previous</span>
+                            </Button>
+                        </PaginationItem>
+                        <PaginationItem>
+                            <Button
+                                variant={"ghost"}
+                                className={cn(
+                                    response.page === totalPage ? "" : "hidden", response.page - 2 === 0 ? "hidden" : ""
+                                )}
+                            >
+                                {response.page - 2}
+                            </Button>
+                        </PaginationItem>
+                        <PaginationItem>
+                            <Button
+                                variant={"ghost"}
+                                className={cn(
+                                    response.page - 1 ? "" : "hidden"
+                                )}
+                            >
+                                {response.page - 1}
+                            </Button>
+                        </PaginationItem>
+                        <PaginationItem>
+                            <Button variant={"outline"}>{response.page}</Button>
+                        </PaginationItem>
+                        <PaginationItem>
+                            <Button
+                                variant={"ghost"}
+                                className={cn(
+                                    response.page === totalPage ? "hidden" : ""
+                                )}
+                            >
+                                {response.page + 1}
+                            </Button>
+                        </PaginationItem>
+                        <PaginationItem>
+                            <Button
+                                variant={"ghost"}
+                                className={cn(
+                                    response.page -1 ? "hidden" : "", response.page + 2 > totalPage ? "hidden" : ""
+                                )}
+                            >
+                                {response.page + 2}
+                            </Button>
+                        </PaginationItem>
+                        <PaginationItem>
+                            <Button
+                                variant="ghost"
+                                disabled={response.page === totalPage}
+                                className="gap-1 pr-2.5"
+                                onClick={async () => {
+                                    const nextPage = response.page + 1;
+                                    const res = await getAllEmployeesAction({
+                                        page: nextPage
+                                    });
+                                    setData(res.content);
+                                    setResponse(res);
+                                }}
+                            >
+                                <span>Next</span>
+                                <ChevronRight className="h-4 w-4" />
+                            </Button>
+                        </PaginationItem>
+                    </PaginationContent>
+                </Pagination>
             </div>
             <div className="flex-1 text-sm text-muted-foreground">
                 {table.getFilteredSelectedRowModel().rows.length} of{" "}
-                {table.getFilteredRowModel().rows.length} row(s) selected
+                {table.getFilteredRowModel().rows.length} row(s)
             </div>
         </div>
     );
