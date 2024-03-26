@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/table";
 
 import React from "react";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
     DropdownMenu,
@@ -32,18 +32,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 import getAllEmployeesAction from "@/action/getAllEmployeesAction";
 import { UserPaginationResponse } from "@/interface/interface-client";
-import { toast } from "sonner";
+// import { toast } from "sonner";
 import {
     Pagination,
     PaginationContent,
-    PaginationEllipsis,
     PaginationItem,
-    PaginationLink,
     PaginationNext,
     PaginationPrevious
 } from "@/components/ui/pagination";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useSearchParams } from "next/navigation";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -54,9 +52,12 @@ export default function DataTable<TData, TValue>({
     columns,
     data: initialData
 }: DataTableProps<TData, TValue>) {
+    const searchParams = useSearchParams();
+    const resUrlPage = searchParams.get("page");
+
+
     const [data, setData] = React.useState<any>(initialData.content); // test
-    const [response, setResponse] =
-        React.useState<UserPaginationResponse>(initialData); // test
+    const [response, setResponse] = React.useState<UserPaginationResponse>(initialData); // test
     const [inputValue, setInputValue] = React.useState(""); // test
     // =========
     const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -65,6 +66,29 @@ export default function DataTable<TData, TValue>({
     const [rowSelection, setRowSelection] = React.useState({});
     const [columnVisibility, setColumnVisibility] =
         React.useState<VisibilityState>({});
+    // =========
+
+    React.useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await getAllEmployeesAction({
+                    page: Number(resUrlPage)
+                });
+
+
+                if (resUrlPage === null) {
+                    setData(initialData.content);
+                    setResponse(initialData);
+                } else {
+                    setData(res.content);
+                    setResponse(res);
+                }
+            } catch (e: any) {
+                console.log("Error:", e);
+            }
+        };
+        fetchData();
+    }, [resUrlPage, initialData]);
 
     const table = useReactTable({
         data,
@@ -87,6 +111,7 @@ export default function DataTable<TData, TValue>({
         }
     });
 
+
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setInputValue(e.target.value);
     };
@@ -98,7 +123,6 @@ export default function DataTable<TData, TValue>({
             filterValue: inputValue
         });
         setData(res.content);
-        // console.log(res.content);
     };
 
     const totalPage: number = Math.ceil(
@@ -121,9 +145,16 @@ export default function DataTable<TData, TValue>({
                 </Button>
                 <DropdownMenu>
                     <DropdownMenuTrigger>
-                        <Button variant="outline" className="ml-4">
+                        <p
+                            className={cn(
+                                buttonVariants({
+                                    variant: "outline"
+                                }),
+                                "ml-4"
+                            )}
+                        >
                             Columns
-                        </Button>
+                        </p>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                         {table
@@ -195,30 +226,19 @@ export default function DataTable<TData, TValue>({
             {/* pagination */}
             <div className="flex items-center justify-start space-x-2 py-4">
                 <Pagination>
+                    {/* TODO search dan page params belum di implementasikan */}
                     <PaginationContent>
                         <PaginationItem>
-                            <Button
-                                variant="ghost"
-                                className="gap-1 pl-2.5"
-                                disabled={response.page === 1}
-                                onClick={async () => {
-                                    const nextPage = response.page - 1;
-                                    const res = await getAllEmployeesAction({
-                                        page: nextPage
-                                    });
-                                    setData(res.content);
-                                    setResponse(res);
-                                }}
-                            >
-                                <ChevronLeft className="h-4 w-4" />
-                                <span>Previous</span>
-                            </Button>
+                            <PaginationPrevious
+                                className={`${response.page === 1 ? "pointer-events-none text-gray-400" : ""}`}
+                                href={`?page=${response.page > 1 ? response.page - 1 : 1}`} />
                         </PaginationItem>
                         <PaginationItem>
                             <Button
                                 variant={"ghost"}
                                 className={cn(
-                                    response.page === totalPage ? "" : "hidden", response.page - 2 === 0 ? "hidden" : ""
+                                    response.page === totalPage ? "" : "hidden",
+                                    response.page - 2 === 0 ? "hidden" : "", "cursor-default"
                                 )}
                             >
                                 {response.page - 2}
@@ -228,20 +248,20 @@ export default function DataTable<TData, TValue>({
                             <Button
                                 variant={"ghost"}
                                 className={cn(
-                                    response.page - 1 ? "" : "hidden"
+                                    response.page - 1 ? "" : "hidden", "cursor-default"
                                 )}
                             >
                                 {response.page - 1}
                             </Button>
                         </PaginationItem>
                         <PaginationItem>
-                            <Button variant={"outline"}>{response.page}</Button>
+                            <Button variant={"outline"} className="cursor-default">{response.page}</Button>
                         </PaginationItem>
                         <PaginationItem>
                             <Button
                                 variant={"ghost"}
                                 className={cn(
-                                    response.page === totalPage ? "hidden" : ""
+                                    response.page === totalPage ? "hidden" : "", "cursor-default"
                                 )}
                             >
                                 {response.page + 1}
@@ -251,36 +271,25 @@ export default function DataTable<TData, TValue>({
                             <Button
                                 variant={"ghost"}
                                 className={cn(
-                                    response.page -1 ? "hidden" : "", response.page + 2 > totalPage ? "hidden" : ""
+                                    response.page - 1 ? "hidden" : "",
+                                    response.page + 2 > totalPage
+                                        ? "hidden"
+                                        : "", "cursor-default"
                                 )}
                             >
                                 {response.page + 2}
                             </Button>
                         </PaginationItem>
                         <PaginationItem>
-                            <Button
-                                variant="ghost"
-                                disabled={response.page === totalPage}
-                                className="gap-1 pr-2.5"
-                                onClick={async () => {
-                                    const nextPage = response.page + 1;
-                                    const res = await getAllEmployeesAction({
-                                        page: nextPage
-                                    });
-                                    setData(res.content);
-                                    setResponse(res);
-                                }}
-                            >
-                                <span>Next</span>
-                                <ChevronRight className="h-4 w-4" />
-                            </Button>
+                            <PaginationNext
+                                className={`${response.page === totalPage ? "pointer-events-none text-gray-400" : ""}`}
+                                href={`?page=${totalPage < response.page ? totalPage : response.page + 1}`} />
                         </PaginationItem>
                     </PaginationContent>
                 </Pagination>
             </div>
             <div className="flex-1 text-sm text-muted-foreground">
-                {table.getFilteredSelectedRowModel().rows.length} of{" "}
-                {table.getFilteredRowModel().rows.length} row(s)
+                Result {response.total_records}
             </div>
         </div>
     );

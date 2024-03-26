@@ -27,7 +27,7 @@ import {ResponseMessage} from "@/interface/interface-server";
 import {useState} from "react";
 import {ClipLoader} from "react-spinners";
 
-// FIXME Bug on update harus refresh dulu
+// TODO Tambahkan dropdown form dan dll
 export default function DetailFormDialog({id, data}: { id: string, data: UserFromApi }) {
     const [loadData, setLoadData] = useState<boolean>(false);
 

@@ -14,7 +14,7 @@ interface GetAllEmployeesActionProps {
 
 export default async function getAllEmployeesAction({
     pagination = true,
-    limit = 2,
+    limit = 10,
     page = 1,
     columns = "",
     sort = "",

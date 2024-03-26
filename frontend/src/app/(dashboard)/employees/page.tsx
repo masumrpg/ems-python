@@ -2,15 +2,14 @@ import AddEmployeeDialog from "./components/add-employee";
 import DataTable from "./components/table/data-table";
 import { columns } from "./components/table/columns";
 import getAllEmployeesAction from "@/action/getAllEmployeesAction";
+import Loading from "@/app/loading";
 
 export const revalidate = 0;
 
 export default async function EmployeesPage() {
-    const data = await getAllEmployeesAction({
-        pagination: true
-    });
+    const data = await getAllEmployeesAction({});
     if (!data.content) {
-        return <p>No Result</p>;
+        return <Loading/>;
     }
 
     return (
