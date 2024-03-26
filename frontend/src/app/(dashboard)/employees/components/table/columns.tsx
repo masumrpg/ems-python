@@ -1,36 +1,19 @@
 "use client";
-import {Button} from "@/components/ui/button";
-import {ColumnDef} from "@tanstack/react-table";
-import {ArrowUpDown} from "lucide-react";
-import {ResponseUsers} from "@/interface/interface-client";
-import {Badge} from "@/components/ui/badge";
-import {DeleteAlert} from "../delete-alert";
+import { ColumnDef } from "@tanstack/react-table";
+import { ResponseUsers } from "@/interface/interface-client";
+import { Badge } from "@/components/ui/badge";
+import { DeleteAlert } from "../delete-alert";
 import EditEmployeeDialog from "@/app/(dashboard)/employees/components/edit-employee";
 
 export const columns: ColumnDef<ResponseUsers>[] = [
     {
-        header: ({column}) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => {
-                        column.toggleSorting(column.getIsSorted() === "asc");
-                    }}
-                >
-                    ID
-                    <ArrowUpDown className="ml-2 h-4 w-4"/>
-                </Button>
-            );
+        header: () => {
+            return <p className="text-center">No</p>;
         },
-        accessorKey: "id",
-        cell: ({row}) => {
-            const employee = row.original;
-            const uuid = employee.id;
-            let employeeId = "No Result";
-            if (uuid) {
-                employeeId = uuid.slice(uuid.length - 6);
-            }
-            return <div>{employeeId}</div>;
+        accessorKey: "index_user",
+        cell: ({ row }) => {
+            const employeeIndex = row.original.index_user;
+            return <div className="text-center">{employeeIndex}</div>;
         }
     },
     {
@@ -48,33 +31,36 @@ export const columns: ColumnDef<ResponseUsers>[] = [
     {
         header: "Role",
         accessorKey: "is_superuser",
-        cell: ({row}) => {
+        cell: ({ row }) => {
             const employee = row.original;
-            return (
-                <div>{employee.is_superuser ? "admin" : "user"}</div>
-            );
+            return <div>{employee.is_superuser ? "admin" : "user"}</div>;
         }
     },
     {
         header: "Verify",
         accessorKey: "is_verified",
-        cell: ({row}) => {
+        cell: ({ row }) => {
             const employee = row.original;
             return (
-                <div>{employee.is_verified ? <Badge>Verified</Badge> :
-                    <Badge variant="destructive">Not Verified</Badge>}</div>
+                <div>
+                    {employee.is_verified ? (
+                        <Badge>Verified</Badge>
+                    ) : (
+                        <Badge variant="destructive">Not Verified</Badge>
+                    )}
+                </div>
             );
         }
     },
     {
         id: "actions",
         header: "Action",
-        cell: ({row}) => {
+        cell: ({ row }) => {
             const user: ResponseUsers = row.original;
             return (
                 <div className="space-x-2">
-                    <EditEmployeeDialog user={user}/>
-                    <DeleteAlert user={user}/>
+                    <EditEmployeeDialog user={user} />
+                    <DeleteAlert user={user} />
                 </div>
             );
         }

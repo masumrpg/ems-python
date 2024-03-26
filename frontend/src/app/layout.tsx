@@ -20,7 +20,7 @@ const fontSans = FontSans({
     variable: "--font-sans"
 });
 
-const mobileBlock = "content hidden md:block";
+// const mobileBlock = "content hidden md:block";
 
 export default function RootLayout({
     children
@@ -31,7 +31,8 @@ export default function RootLayout({
         <html lang="en" suppressHydrationWarning>
             <body className={cn(
                 "min-h-screen bg-background font-sans antialiased",
-                fontSans.variable, mobileBlock
+                fontSans.variable
+                // mobileBlock
             )}>
                 <ThemeProvider
                     attribute="class"

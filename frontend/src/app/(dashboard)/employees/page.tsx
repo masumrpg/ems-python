@@ -9,7 +9,7 @@ export const revalidate = 0;
 export default async function EmployeesPage() {
     const data = await getAllEmployeesAction({});
     if (!data.content) {
-        return <Loading/>;
+        return <Loading />;
     }
 
     return (
@@ -20,9 +20,8 @@ export default async function EmployeesPage() {
             </div>
             <div
                 className="border shadow-sm rounded-lg"
-                suppressHydrationWarning={true}
             >
-                <DataTable columns={columns} data={data}/>
+                <DataTable columns={columns} data={data} />
             </div>
         </main>
     );
