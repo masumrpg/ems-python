@@ -11,6 +11,7 @@ class BaseResponse(BaseModel):
 
 
 class UserResponse(BaseModel):
+    index_user: Optional[T] = None
     id: str
     username: str
     email: EmailStr
@@ -71,6 +72,7 @@ class UserPaginationResponse(BaseModel, Generic[T]):
     total_row_in_page: int
     total_records: int
     from_total: int
+    total_pages: int
     content: List[T]
 
 

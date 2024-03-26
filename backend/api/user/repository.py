@@ -1,4 +1,5 @@
 from datetime import datetime
+from math import ceil
 from typing import List, Optional
 from fastapi import Query, Request, logger, status, Depends
 from sqlalchemy.orm import aliased, Session
@@ -18,8 +19,9 @@ from api.user.responses import (
 import re
 
 
-def map_user_model_to_response(user_model: UserModel):
+def map_user_model_to_response(user_model: UserModel, index: int):
     return UserResponse(
+        index_user=index,
         id=str(user_model.id),
         username=user_model.username,
         email=user_model.email,
@@ -389,12 +391,12 @@ class UserRepository:
     ):
         # query to db
         users = db.query(UserModel).all()
-        user_responses = [map_user_model_to_response(user) for user in users]
+        user_responses = apply_sort(users, "full_name", reverse=False)
+        filtered_users = [
+            map_user_model_to_response(user, index)
+            for index, user in enumerate(user_responses, start=1)
+        ]
 
-        # Mengaplikasikan filter jika diberikan
-        filtered_users = user_responses
-        # Default sort
-        filtered_users = apply_sort(filtered_users, "full_name", reverse=False)
         from_total = len(filtered_users)
 
         if filter_by and filter_value:
@@ -426,6 +428,7 @@ class UserRepository:
 
         total_row_in_page = len(users_to_return)
         total_records = len(filtered_users)
+        total_pages = ceil(total_records / limit)
 
         return UserPaginationResponse(
             pagination=pagination,
@@ -438,5 +441,6 @@ class UserRepository:
             total_row_in_page=total_row_in_page,
             total_records=total_records,
             from_total=from_total,
+            total_pages=total_pages,
             content=users_to_return,
         )
