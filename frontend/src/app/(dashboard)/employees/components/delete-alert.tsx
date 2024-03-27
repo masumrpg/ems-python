@@ -11,11 +11,10 @@ import {
     AlertDialogTrigger
 } from "@/components/ui/alert-dialog";
 import {Button} from "@/components/ui/button";
-import {ResponseUsers} from "@/interface/interface-client";
+import {ResponseMessageClient, ResponseUsers} from "@/interface/interface-client";
 import deleteEmployeeAction from "@/action/deleteEmployeeAction";
 import {TrashIcon} from "lucide-react";
 import {toast} from "sonner";
-import {ResponseMessage} from "@/interface/interface-server";
 import {useRouter} from "next/navigation";
 import {useState} from "react";
 
@@ -24,7 +23,7 @@ export function DeleteAlert({user}: { user: ResponseUsers }) {
     const router = useRouter();
     const handlerDeleteUser = async () => {
         setLoading(true);
-        const res: ResponseMessage = await deleteEmployeeAction(user.id) as ResponseMessage;
+        const res: ResponseMessageClient = await deleteEmployeeAction(user.id) as ResponseMessageClient;
         if (res.message) {
             toast.success(res.message);
         } else {

@@ -65,3 +65,9 @@ export interface UserPaginationResponse {
     total_pages: number;
     content?: ResponseUsers[];
 }
+
+export interface ResponseMessageClient {
+    status?: number
+    message?: string
+    detail?: string
+};

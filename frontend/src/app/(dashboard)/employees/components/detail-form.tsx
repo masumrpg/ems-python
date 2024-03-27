@@ -23,11 +23,10 @@ import { Calendar } from "@/components/ui/calendar";
 import { toast } from "sonner";
 import { formSchemaDetailEmployee } from "@/validators/validators";
 import addEmployeeDetailsAction from "@/action/addEmployeeDetailsAction";
-import { UserFromApi } from "@/interface/interface-client";
+import { ResponseMessageClient, UserFromApi } from "@/interface/interface-client";
 import editEmployeeDetailsAction from "@/action/editEmployeeDetailsAction";
 import { CalendarIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { ResponseMessage } from "@/interface/interface-server";
 import { useState } from "react";
 import { ClipLoader } from "react-spinners";
 import {
@@ -59,7 +58,7 @@ export const religions = [
 
 export const jobs = [
     { label: "Production Operator", value: "Operator Produksi" },
-    { label: "HRD", value: "HRD" },
+    { label: "HRD", value: "Human Resources Development" },
     { label: "Administrator", value: "Admin" },
     { label: "Manager", value: "Manajer" },
     { label: "Developer", value: "Developer" }
@@ -129,10 +128,10 @@ export default function DetailFormDialog({
 
         if (data.user_detail === null) {
             setLoadData(true);
-            const res: ResponseMessage = (await addEmployeeDetailsAction(
+            const res: ResponseMessageClient = (await addEmployeeDetailsAction(
                 id,
                 formData
-            )) as ResponseMessage;
+            )) as ResponseMessageClient;
             if (res.status === 201) {
                 toast.success(res.message);
                 setLoadData(false);
@@ -146,10 +145,10 @@ export default function DetailFormDialog({
             router.refresh();
         } else {
             setLoadData(true);
-            const res: ResponseMessage = (await editEmployeeDetailsAction(
+            const res: ResponseMessageClient = (await editEmployeeDetailsAction(
                 id,
                 formData
-            )) as ResponseMessage;
+            )) as ResponseMessageClient;
             if (res.status === 200) {
                 toast.success(res.message);
                 setLoadData(false);

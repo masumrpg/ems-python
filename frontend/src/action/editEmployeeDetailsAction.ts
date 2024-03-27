@@ -23,8 +23,6 @@ export default async function editEmployeeDetailsAction(id: string, formData: an
             return value;
         });
 
-        console.log(res.status);
-
         if (res.status === 200) {
             return {
                 status: res.status,
@@ -34,6 +32,11 @@ export default async function editEmployeeDetailsAction(id: string, formData: an
             return {
                 status: res.status,
                 detail: "Internal server error"
+            };
+        } else if (res.status === 422) {
+            return {
+                status: res.status,
+                detail: resMsg.detail?.[0]?.msg
             };
         } else {
             return {

@@ -55,14 +55,14 @@ export const formSchemaDetailEmployee = z.object({
         .min(9, "Minimum 9 characters")
         .max(16, "Maximum 16 characters"),
     dob: z.date(),
-    gender: z.string().min(1, "Select one"),
-    maritalStatus: z.string().min(1, "Select one"),
+    gender: z.string().min(1, "Select one gender"),
+    maritalStatus: z.string().min(1, "Select one status"),
     idCard: z
         .string()
         .min(1, "Need id card field")
         .min(16, "Minimum 16 characters")
         .max(16, "Maximum 16 characters"),
-    religion: z.string().min(1, "Select one"),
+    religion: z.string().min(1, "Select one religion"),
     tertiaryEducation: z
         .string()
         .min(1, "Need tertiary education field")
@@ -72,7 +72,7 @@ export const formSchemaDetailEmployee = z.object({
         )
         .min(4, "Minimum 4 characters")
         .max(50, "Maximum 50 characters"),
-    job: z.string().min(1, "Select one"),
+    job: z.string().min(1, "Select one job"),
     salary: z
         .string()
         .min(6, "Minimun 6 digit")
