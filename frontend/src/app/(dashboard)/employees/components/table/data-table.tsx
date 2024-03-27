@@ -78,10 +78,10 @@ export default function DataTable<TData, TValue>({
         }
     });
 
+    const pageSearchSize = 30;
     const searchFetch = async (filterBy: string, filterValue: string) => {
-        const pageSize = 20;
         const res = await getAllEmployeesAction({
-            limit: pageSize,
+            limit: pageSearchSize,
             filterBy: filterBy,
             filterValue: filterValue
         });
@@ -90,7 +90,7 @@ export default function DataTable<TData, TValue>({
             setUpdatedData(res);
             setPagination({
                 pageIndex: 0,
-                pageSize: pageSize
+                pageSize: pageSearchSize
             });
         } else {
             setData(initialData.content);
@@ -238,7 +238,7 @@ export default function DataTable<TData, TValue>({
                             const next = updatedData.page + 1;
                             paginationHandler(next);
                         }}
-                        disabled={updatedData.page === updatedData.total_pages}
+                        disabled={updatedData.page === updatedData.total_pages || updatedData.page === pageSearchSize}
                     >
                         Next
                     </Button>
