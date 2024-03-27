@@ -38,17 +38,17 @@ import {
     SelectValue
 } from "@/components/ui/select";
 
-const genders = [
+export const genders = [
     { label: "Man", value: "Pria" },
     { label: "Women", value: "Wanita" }
 ] as const;
 
-const martialStatuses = [
+export const martialStatuses = [
     { label: "Single", value: "Lajang" },
     { label: "Married", value: "Menikah" }
 ] as const;
 
-const religions = [
+export const religions = [
     { label: "Islam", value: "Islam" },
     { label: "Protestant Christianity", value: "Kristen Protestan" },
     { label: "Catholic Christianity", value: "Kristen Katolik" },
@@ -57,7 +57,7 @@ const religions = [
     { label: "Confucianism", value: "Khonghucu" }
 ] as const;
 
-const jobs = [
+export const jobs = [
     { label: "Production Operator", value: "Operator Produksi" },
     { label: "HRD", value: "HRD" },
     { label: "Administrator", value: "Admin" },

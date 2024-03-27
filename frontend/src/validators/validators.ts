@@ -49,42 +49,20 @@ export const formSchemaDetailEmployee = z.object({
         )
         .min(4, "Minimum 4 characters")
         .max(25, "Minimum 25 characters"),
-    phone: z.string({
-        required_error: "Please select a language."
-    }),
+    phone: z
+        .string()
+        .min(1, "Need phone number")
+        .min(9, "Minimum 9 characters")
+        .max(16, "Maximum 16 characters"),
     dob: z.date(),
-    gender: z
-        .string()
-        .min(1, "Need gender field")
-        .regex(
-            RegExp("[A-Z][a-z]+(?: [A-Z][a-z]+)?"),
-            "Non special char and number"
-        )
-        .min(4, "Minimum 4 characters")
-        .max(20, "Maximum 20 characters"),
-    maritalStatus: z
-        .string()
-        .min(1, "Need martial status field")
-        .regex(
-            RegExp("[A-Z][a-z]+(?: [A-Z][a-z]+)?"),
-            "Non special char and number"
-        )
-        .min(4, "Minimum 4 characters")
-        .max(10, "Maximum 10 characters"),
+    gender: z.string().min(1, "Select one"),
+    maritalStatus: z.string().min(1, "Select one"),
     idCard: z
         .string()
         .min(1, "Need id card field")
         .min(16, "Minimum 16 characters")
         .max(16, "Maximum 16 characters"),
-    religion: z
-        .string()
-        .min(1, "Need religion field")
-        .regex(
-            RegExp("[A-Z][a-z]+(?: [A-Z][a-z]+)?"),
-            "Non special char and number"
-        )
-        .min(4, "Minimum 4 characters")
-        .max(20, "Maximum 20 characters"),
+    religion: z.string().min(1, "Select one"),
     tertiaryEducation: z
         .string()
         .min(1, "Need tertiary education field")
@@ -94,17 +72,10 @@ export const formSchemaDetailEmployee = z.object({
         )
         .min(4, "Minimum 4 characters")
         .max(50, "Maximum 50 characters"),
-    job: z
-        .string()
-        .min(1, "Need job field")
-        .regex(
-            RegExp("[A-Z][a-z]+(?: [A-Z][a-z]+)?"),
-            "Non special char and number"
-        )
-        .min(4, "Minimum 4 characters")
-        .max(20, "Maximum 20 characters"),
+    job: z.string().min(1, "Select one"),
     salary: z
         .string()
-        .min(6, "Need salary field")
-        .max(16, "Maximum 16 characters")
+        .min(6, "Minimun 6 digit")
+        .max(16, "Maximum 16 digit")
+        .regex(RegExp("^[0-9]+$"), "Number only")
 });

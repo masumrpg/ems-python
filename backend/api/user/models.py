@@ -62,6 +62,7 @@ class UserModel(Base):
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
     user_detail = relationship("UserDetailModel", uselist=False, backref="user")
 
+    # FIXME pantau siapa tau jadi error
     @orm.reconstructor
     def init_on_load(self):
         """Jika user_detail tidak None, set is_verified menjadi True"""
