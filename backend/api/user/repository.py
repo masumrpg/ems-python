@@ -1,7 +1,7 @@
 from datetime import datetime
-from math import ceil
 from typing import List, Optional
 from fastapi import Query, Request, logger, status, Depends
+from sqlalchemy import asc, desc
 from sqlalchemy.orm import aliased, Session
 from sqlalchemy.exc import SQLAlchemyError
 from fastapi.exceptions import HTTPException
@@ -378,6 +378,73 @@ class UserRepository:
             )
 
     # get all
+    # @staticmethod
+    # def get_all(
+    #     pagination: bool = Query(True, description="Enable pagination"),
+    #     limit: Optional[int] = Query(10, description="Limit of users per page"),
+    #     page: Optional[int] = Query(1, description="Page number"),
+    #     columns: Optional[str] = Query(None, description="Columns to display"),
+    #     sort: Optional[str] = Query(None, description="Sort by specific column"),
+    #     filter_by: Optional[str] = Query(None, description="Filter by specific column"),
+    #     filter_value: Optional[str] = Query(None, description="Filter value"),
+    #     db: Session = Depends(get_db()),
+    # ):
+    #     # query to db
+    #     users = db.query(UserModel).all()
+    #     user_responses = apply_sort(users, "full_name", reverse=False)
+    #     filtered_users = [
+    #         map_user_model_to_response(user, index)
+    #         for index, user in enumerate(user_responses, start=1)
+    #     ]
+
+    #     from_total = len(filtered_users)
+
+    #     if filter_by and filter_value:
+    #         # filtered_users = apply_filter(filtered_users, {filter_by: filter_value})
+    #         filtered_users = apply_filter(filtered_users, filter_by, filter_value)
+
+    #     # Menghitung offset untuk pagination
+    #     if pagination:
+    #         offset = (page - 1) * limit
+    #         users_to_return = filtered_users[offset : offset + limit]  # noqa
+    #     else:
+    #         users_to_return = filtered_users
+
+    #     # Mengurutkan hasil jika diminta
+    #     if sort:
+    #         users_to_return = apply_sort(users_to_return, sort, reverse=True)
+
+    #     # Memilih kolom yang diminta
+    #     if columns:
+    #         selected_columns = columns.split("-")
+    #         if "id" not in selected_columns:
+    #             selected_columns.insert(
+    #                 0, "id"
+    #             )  # Memastikan kolom 'id' selalu di depan
+    #         users_to_return = [
+    #             {col: getattr(user, col) for col in selected_columns}
+    #             for user in users_to_return
+    #         ]
+
+    #     total_row_in_page = len(users_to_return)
+    #     total_records = len(filtered_users)
+    #     total_pages = ceil(total_records / limit)
+
+    #     return UserPaginationResponse(
+    #         pagination=pagination,
+    #         limit=limit,
+    #         page=page,
+    #         columns=columns,
+    #         sort=sort,
+    #         filter_by=filter_by,
+    #         filter_value=filter_value,
+    #         total_row_in_page=total_row_in_page,
+    #         total_records=total_records,
+    #         from_total=from_total,
+    #         total_pages=total_pages,
+    #         content=users_to_return,
+    #     )
+
     @staticmethod
     def get_all(
         pagination: bool = Query(True, description="Enable pagination"),
@@ -389,30 +456,42 @@ class UserRepository:
         filter_value: Optional[str] = Query(None, description="Filter value"),
         db: Session = Depends(get_db()),
     ):
-        # query to db
-        users = db.query(UserModel).all()
-        user_responses = apply_sort(users, "full_name", reverse=False)
-        filtered_users = [
-            map_user_model_to_response(user, index)
-            for index, user in enumerate(user_responses, start=1)
-        ]
+        # Membuat kueri dasar
+        query = db.query(UserModel)
 
-        from_total = len(filtered_users)
+        # Grand total
+        from_total = query.count()
 
+        # Menerapkan filter jika diberikan
         if filter_by and filter_value:
-            # filtered_users = apply_filter(filtered_users, {filter_by: filter_value})
-            filtered_users = apply_filter(filtered_users, filter_by, filter_value)
+            query = query.filter(
+                getattr(UserModel, filter_by).ilike(f"%{filter_value}%")
+            )
 
-        # Menghitung offset untuk pagination
+        # Menerapkan pengurutan jika diminta
+        if sort:
+            if sort.startswith("-"):
+                column = sort[1:]
+                query = query.order_by(desc(getattr(UserModel, column)))
+            else:
+                query = query.order_by(asc(getattr(UserModel, sort)))
+
+        # Menghitung total jumlah catatan
+        total_records = query.count()
+
+        # Menerapkan pagination
         if pagination:
             offset = (page - 1) * limit
-            users_to_return = filtered_users[offset : offset + limit]  # noqa
-        else:
-            users_to_return = filtered_users
+            query = query.offset(offset).limit(limit)
 
-        # Mengurutkan hasil jika diminta
-        if sort:
-            users_to_return = apply_sort(users_to_return, sort, reverse=True)
+        # Mengeksekusi kueri untuk mendapatkan hasil
+        users = query.all()
+
+        # Mengonversi hasil menjadi respons pengguna
+        user_responses = [
+            map_user_model_to_response(user, index)
+            for index, user in enumerate(users, start=1)
+        ]
 
         # Memilih kolom yang diminta
         if columns:
@@ -421,14 +500,13 @@ class UserRepository:
                 selected_columns.insert(
                     0, "id"
                 )  # Memastikan kolom 'id' selalu di depan
-            users_to_return = [
+            user_responses = [
                 {col: getattr(user, col) for col in selected_columns}
-                for user in users_to_return
+                for user in user_responses
             ]
 
-        total_row_in_page = len(users_to_return)
-        total_records = len(filtered_users)
-        total_pages = ceil(total_records / limit)
+        # Menghitung total halaman
+        total_pages = (total_records + limit - 1) // limit
 
         return UserPaginationResponse(
             pagination=pagination,
@@ -438,9 +516,9 @@ class UserRepository:
             sort=sort,
             filter_by=filter_by,
             filter_value=filter_value,
-            total_row_in_page=total_row_in_page,
+            total_row_in_page=len(user_responses),
             total_records=total_records,
             from_total=from_total,
             total_pages=total_pages,
-            content=users_to_return,
+            content=user_responses,
         )
