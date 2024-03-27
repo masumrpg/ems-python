@@ -18,9 +18,7 @@ export default async function EmployeesPage() {
                 <h1 className="font-semibold text-lg md:text-2xl">Employees</h1>
                 <AddEmployeeDialog />
             </div>
-            <div
-                className="border shadow-sm rounded-lg"
-            >
+            <div className="border shadow-sm rounded-lg">
                 <DataTable columns={columns} data={data} />
             </div>
         </main>

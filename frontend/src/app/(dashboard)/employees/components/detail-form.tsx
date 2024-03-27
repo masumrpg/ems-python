@@ -1,38 +1,63 @@
 "use client";
-import {format} from "date-fns";
-import {useForm} from "react-hook-form";
+import { format } from "date-fns";
+import { useForm } from "react-hook-form";
 import {
     Form,
     FormControl,
+    FormDescription,
     FormField,
     FormItem,
     FormLabel,
     FormMessage
 } from "@/components/ui/form";
 import * as z from "zod";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {Input} from "@/components/ui/input";
-import {Button} from "@/components/ui/button";
-import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
-import {cn} from "@/lib/utils";
-import {Calendar} from "@/components/ui/calendar";
-import {toast} from "sonner";
-import {formSchemaDetailEmployee} from "@/validators/validators";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { Calendar } from "@/components/ui/calendar";
+import { toast } from "sonner";
+import { formSchemaDetailEmployee } from "@/validators/validators";
 import addEmployeeDetailsAction from "@/action/addEmployeeDetailsAction";
-import {UserFromApi} from "@/interface/interface-client";
+import { UserFromApi } from "@/interface/interface-client";
 import editEmployeeDetailsAction from "@/action/editEmployeeDetailsAction";
-import {CalendarIcon} from "lucide-react";
-import {useRouter} from "next/navigation";
-import {ResponseMessage} from "@/interface/interface-server";
-import {useState} from "react";
-import {ClipLoader} from "react-spinners";
+import { CalendarIcon, Check, ChevronsUpDown } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { ResponseMessage } from "@/interface/interface-server";
+import { useState } from "react";
+import { ClipLoader } from "react-spinners";
+import {
+    Command,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem
+} from "@/components/ui/command";
+
+const genders = [
+    { label: "Pria", value: "Pria" },
+    { label: "Wanita", value: "Wanita" }
+] as const;
 
 // TODO Tambahkan dropdown form dan dll
-export default function DetailFormDialog({id, data}: { id: string, data: UserFromApi }) {
+export default function DetailFormDialog({
+    id,
+    data
+}: {
+    id: string;
+    data: UserFromApi;
+}) {
     const [loadData, setLoadData] = useState<boolean>(false);
 
     const router = useRouter();
-    const dobData = data?.user_detail?.dob ? new Date(data?.user_detail.dob) : new Date();
+    const dobData = data?.user_detail?.dob
+        ? new Date(data?.user_detail.dob)
+        : new Date();
     const form = useForm<z.infer<typeof formSchemaDetailEmployee>>({
         resolver: zodResolver(formSchemaDetailEmployee),
         defaultValues: {
@@ -54,13 +79,13 @@ export default function DetailFormDialog({id, data}: { id: string, data: UserFro
         }
     });
 
-
-    const onSubmit = async (values: z.infer<typeof formSchemaDetailEmployee>) => {
+    const onSubmit = async (
+        values: z.infer<typeof formSchemaDetailEmployee>
+    ) => {
         const year = values.dob.getFullYear();
         const month = String(values.dob.getMonth() + 1).padStart(2, "0"); // Ditambah 1 karena bulan dimulai dari 0
         const day = String(values.dob.getDate()).padStart(2, "0");
         const formattedDOB = `${year}-${month}-${day}`;
-
 
         const formData = {
             address: {
@@ -84,7 +109,10 @@ export default function DetailFormDialog({id, data}: { id: string, data: UserFro
 
         if (data.user_detail === null) {
             setLoadData(true);
-            const res: ResponseMessage = await addEmployeeDetailsAction(id, formData) as ResponseMessage;
+            const res: ResponseMessage = (await addEmployeeDetailsAction(
+                id,
+                formData
+            )) as ResponseMessage;
             router.refresh();
             if (res.status === 201) {
                 toast.success(res.message);
@@ -95,7 +123,10 @@ export default function DetailFormDialog({id, data}: { id: string, data: UserFro
             }
         } else {
             setLoadData(true);
-            const res: ResponseMessage = await editEmployeeDetailsAction(id, formData) as ResponseMessage;
+            const res: ResponseMessage = (await editEmployeeDetailsAction(
+                id,
+                formData
+            )) as ResponseMessage;
             router.refresh();
             if (res.status === 200) {
                 toast.success(res.message);
@@ -109,9 +140,7 @@ export default function DetailFormDialog({id, data}: { id: string, data: UserFro
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}
-                className="w-full"
-            >
+            <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
                 <div className="flex justify-between gap-6 mt-5">
                     <div className={cn("flex justify-between gap-6")}>
                         <div className="w-1/2 space-y-2">
@@ -119,43 +148,39 @@ export default function DetailFormDialog({id, data}: { id: string, data: UserFro
                             <FormField
                                 control={form.control}
                                 name="postalCode"
-                                render={({field}) => (
+                                render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Postal Code</FormLabel>
                                         <FormControl>
                                             <Input type="number" {...field} />
                                         </FormControl>
-                                        <FormMessage/>
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
                             <FormField
                                 control={form.control}
                                 name="village"
-                                render={({field}) => (
+                                render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Village</FormLabel>
                                         <FormControl>
-                                            <Input
-                                                {...field}
-                                            />
+                                            <Input {...field} />
                                         </FormControl>
-                                        <FormMessage/>
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
                             <FormField
                                 control={form.control}
                                 name="subdistrict"
-                                render={({field}) => (
+                                render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Subdistrict</FormLabel>
                                         <FormControl>
-                                            <Input
-                                                {...field}
-                                            />
+                                            <Input {...field} />
                                         </FormControl>
-                                        <FormMessage/>
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
@@ -164,39 +189,39 @@ export default function DetailFormDialog({id, data}: { id: string, data: UserFro
                             <FormField
                                 control={form.control}
                                 name="city"
-                                render={({field}) => (
+                                render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>City</FormLabel>
                                         <FormControl>
                                             <Input {...field} />
                                         </FormControl>
-                                        <FormMessage/>
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
                             <FormField
                                 control={form.control}
                                 name="province"
-                                render={({field}) => (
+                                render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Province</FormLabel>
                                         <FormControl>
                                             <Input {...field} />
                                         </FormControl>
-                                        <FormMessage/>
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
                             <FormField
                                 control={form.control}
                                 name="country"
-                                render={({field}) => (
+                                render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Country</FormLabel>
                                         <FormControl>
                                             <Input {...field} />
                                         </FormControl>
-                                        <FormMessage/>
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
@@ -209,13 +234,13 @@ export default function DetailFormDialog({id, data}: { id: string, data: UserFro
                             <FormField
                                 control={form.control}
                                 name="phone"
-                                render={({field}) => (
+                                render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Phone</FormLabel>
                                         <FormControl>
                                             <Input type="number" {...field} />
                                         </FormControl>
-                                        <FormMessage/>
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
@@ -223,7 +248,7 @@ export default function DetailFormDialog({id, data}: { id: string, data: UserFro
                             <FormField
                                 control={form.control}
                                 name="dob"
-                                render={({field}) => (
+                                render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Date of Birth</FormLabel>
                                         <Popover>
@@ -233,23 +258,33 @@ export default function DetailFormDialog({id, data}: { id: string, data: UserFro
                                                         variant={"outline"}
                                                         className={cn(
                                                             "w-full pl-3 text-left font-normal",
-                                                            !field.value && "text-muted-foreground"
+                                                            !field.value &&
+                                                                "text-muted-foreground"
                                                         )}
                                                     >
                                                         {field.value ? (
-                                                            format(field.value, "PPP")
+                                                            format(
+                                                                field.value,
+                                                                "PPP"
+                                                            )
                                                         ) : (
-                                                            <span>Pilih tanggal</span>
+                                                            <span>
+                                                                Pilih tanggal
+                                                            </span>
                                                         )}
-                                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50"/>
+                                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                                                     </Button>
                                                 </FormControl>
                                             </PopoverTrigger>
-                                            <PopoverContent className="w-auto p-0" align="start">
+                                            <PopoverContent
+                                                className="w-auto p-0"
+                                                align="start"
+                                            >
                                                 <Calendar
                                                     mode="single"
                                                     classNames={{
-                                                        caption_dropdowns: "flex",
+                                                        caption_dropdowns:
+                                                            "flex",
                                                         dropdown:
                                                             "z-50 text-sm font-medium font overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
                                                         dropdown_month:
@@ -265,7 +300,11 @@ export default function DetailFormDialog({id, data}: { id: string, data: UserFro
                                                     selected={field.value}
                                                     onSelect={field.onChange}
                                                     disabled={(date) =>
-                                                        date > new Date() || date < new Date("1900-01-01")
+                                                        date > new Date() ||
+                                                        date <
+                                                            new Date(
+                                                                "1900-01-01"
+                                                            )
                                                     }
                                                     initialFocus
                                                 />
@@ -274,6 +313,82 @@ export default function DetailFormDialog({id, data}: { id: string, data: UserFro
                                     </FormItem>
                                 )}
                             />
+                            {/* FIXME failed mount */}
+                            {/* <FormField
+                                control={form.control}
+                                name="gender"
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-col">
+                                        <FormLabel>Gender</FormLabel>
+                                        <Popover>
+                                            <PopoverTrigger asChild>
+                                                <FormControl>
+                                                    <Button
+                                                        variant="outline"
+                                                        role="combobox"
+                                                        className={cn(
+                                                            "w-[200px] justify-between",
+                                                            !field.value &&
+                                                                "text-muted-foreground"
+                                                        )}
+                                                    >
+                                                        {field.value
+                                                            ? genders.find(
+                                                                  (gender) =>
+                                                                      gender.value ===
+                                                                      field.value
+                                                              )?.label
+                                                            : "Select gender"}
+                                                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                                    </Button>
+                                                </FormControl>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-[200px] p-0">
+                                                <Command>
+                                                    <CommandGroup>
+                                                        {genders.map(
+                                                            (gender) => (
+                                                                <CommandItem
+                                                                    value={
+                                                                        gender.label
+                                                                    }
+                                                                    key={
+                                                                        gender.value
+                                                                    }
+                                                                    onSelect={() => {
+                                                                        form.setValue(
+                                                                            "gender",
+                                                                            gender.value
+                                                                        );
+                                                                    }}
+                                                                >
+                                                                    <Check
+                                                                        className={cn(
+                                                                            "mr-2 h-4 w-4",
+                                                                            gender.value ===
+                                                                                field.value
+                                                                                ? "opacity-100"
+                                                                                : "opacity-0"
+                                                                        )}
+                                                                    />
+                                                                    {
+                                                                        gender.label
+                                                                    }
+                                                                </CommandItem>
+                                                            )
+                                                        )}
+                                                    </CommandGroup>
+                                                </Command>
+                                            </PopoverContent>
+                                        </Popover>
+                                        <FormDescription>
+                                            This is the gender that will be
+                                            used in the dashboard.
+                                        </FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            /> */}
                             <FormField
                                 control={form.control}
                                 name="gender"
@@ -290,13 +405,13 @@ export default function DetailFormDialog({id, data}: { id: string, data: UserFro
                             <FormField
                                 control={form.control}
                                 name="maritalStatus"
-                                render={({field}) => (
+                                render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Marital Status</FormLabel>
                                         <FormControl>
                                             <Input {...field} />
                                         </FormControl>
-                                        <FormMessage/>
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
@@ -304,13 +419,16 @@ export default function DetailFormDialog({id, data}: { id: string, data: UserFro
                                 <FormField
                                     control={form.control}
                                     name="idCard"
-                                    render={({field}) => (
+                                    render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>ID Card</FormLabel>
                                             <FormControl>
-                                                <Input type="number" {...field} />
+                                                <Input
+                                                    type="number"
+                                                    {...field}
+                                                />
                                             </FormControl>
-                                            <FormMessage/>
+                                            <FormMessage />
                                         </FormItem>
                                     )}
                                 />
@@ -320,52 +438,54 @@ export default function DetailFormDialog({id, data}: { id: string, data: UserFro
                             <FormField
                                 control={form.control}
                                 name="religion"
-                                render={({field}) => (
+                                render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Religion</FormLabel>
                                         <FormControl>
                                             <Input {...field} />
                                         </FormControl>
-                                        <FormMessage/>
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
                             <FormField
                                 control={form.control}
                                 name="tertiaryEducation"
-                                render={({field}) => (
+                                render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Tertiary Education</FormLabel>
+                                        <FormLabel>
+                                            Tertiary Education
+                                        </FormLabel>
                                         <FormControl>
                                             <Input {...field} />
                                         </FormControl>
-                                        <FormMessage/>
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
                             <FormField
                                 control={form.control}
                                 name="job"
-                                render={({field}) => (
+                                render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Job</FormLabel>
                                         <FormControl>
                                             <Input {...field} />
                                         </FormControl>
-                                        <FormMessage/>
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
                             <FormField
                                 control={form.control}
                                 name="salary"
-                                render={({field}) => (
+                                render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Salary</FormLabel>
                                         <FormControl>
                                             <Input {...field} />
                                         </FormControl>
-                                        <FormMessage/>
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
@@ -374,7 +494,11 @@ export default function DetailFormDialog({id, data}: { id: string, data: UserFro
                 </div>
                 <div className="flex justify-end items-center mt-10">
                     <Button type="submit" disabled={loadData}>
-                        {loadData === false ? "Add Details" : <ClipLoader size={25}/>}
+                        {loadData === false ? (
+                            "Add Details"
+                        ) : (
+                            <ClipLoader size={25} />
+                        )}
                     </Button>
                 </div>
             </form>

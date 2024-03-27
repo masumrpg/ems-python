@@ -2,6 +2,7 @@
 import {
     ColumnDef,
     ColumnFiltersState,
+    PaginationState,
     SortingState,
     VisibilityState,
     flexRender,
@@ -30,16 +31,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import getAllEmployeesAction from "@/action/getAllEmployeesAction";
 import { UserPaginationResponse } from "@/interface/interface-client";
-import {
-    Pagination,
-    PaginationContent,
-    PaginationItem,
-    PaginationNext,
-    PaginationPrevious
-} from "@/components/ui/pagination";
 import { cn } from "@/lib/utils";
-import { useRouter, useSearchParams } from "next/navigation";
-import { toast } from "sonner";
+import { ChevronDown } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -50,47 +43,20 @@ export default function DataTable<TData, TValue>({
     columns,
     data: initialData
 }: DataTableProps<TData, TValue>) {
-    const router = useRouter();
-    const searchParams = useSearchParams();
-
-    const resUrlSearch = searchParams.get("search");
-    const resUrlPage = searchParams.get("page");
-
-    const [data, setData] = React.useState<any>(initialData.content); // test
-    const [response, setResponse] =
-        React.useState<UserPaginationResponse>(initialData); // test
-    const [inputValue, setInputValue] = React.useState(""); // test
+    const [data, setData] = React.useState<any>(initialData.content);
+    const [updatedData, setUpdatedData] =
+        React.useState<UserPaginationResponse>(initialData);
     // =========
     const [sorting, setSorting] = React.useState<SortingState>([]);
+    const [pagination, setPagination] = React.useState<PaginationState>({
+        pageIndex: 0,
+        pageSize: 10
+    });
     const [columnFilters, setColumnFilters] =
         React.useState<ColumnFiltersState>([]);
-    const [rowSelection, setRowSelection] = React.useState({});
     const [columnVisibility, setColumnVisibility] =
         React.useState<VisibilityState>({});
     // =========
-
-    React.useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const res = await getAllEmployeesAction({
-                    page: Number(resUrlPage),
-                    filterBy: !resUrlSearch ? "" : "full_name",
-                    filterValue: !resUrlSearch ? "" : resUrlSearch
-                });
-
-                if (!resUrlSearch && !resUrlPage) {
-                    setData(initialData.content);
-                    setResponse(initialData);
-                } else {
-                    setData(res.content);
-                    setResponse(res);
-                }
-            } catch (e: any) {
-                toast.error("Error:", e);
-            }
-        };
-        fetchData();
-    }, [resUrlPage, initialData, resUrlSearch]);
 
     const table = useReactTable({
         data,
@@ -103,45 +69,70 @@ export default function DataTable<TData, TValue>({
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
         onColumnVisibilityChange: setColumnVisibility,
-        onRowSelectionChange: setRowSelection,
 
         state: {
             sorting,
             columnFilters,
             columnVisibility,
-            rowSelection
+            pagination
         }
     });
 
-    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setInputValue(e.target.value);
-    };
-    // FIXME susah ges ini untuk search
-    const handleSearchClick = async () => {
-        setInputValue(inputValue);
+    const searchFetch = async (filterBy: string, filterValue: string) => {
+        const pageSize = 20;
         const res = await getAllEmployeesAction({
-            limit: 20,
-            filterBy: "full_name",
-            filterValue: inputValue
+            limit: pageSize,
+            filterBy: filterBy,
+            filterValue: filterValue
+        });
+        if (filterValue) {
+            setData(res.content);
+            setUpdatedData(res);
+            setPagination({
+                pageIndex: 0,
+                pageSize: pageSize
+            });
+        } else {
+            setData(initialData.content);
+            setUpdatedData(initialData);
+            setPagination({
+                pageIndex: 0,
+                pageSize: 10
+            });
+        }
+    };
+
+    const paginationHandler = async (page: number) => {
+        const res = await getAllEmployeesAction({
+            page: page
         });
         setData(res.content);
-        router.push(`?search=${inputValue}`);
+        setUpdatedData(res);
     };
 
     return (
-        <div className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-10">
+        <div className="flex flex-1 flex-col gap-4 p-4 md:p-10">
             {/* input */}
-            <div className="flex items-center py-4">
+            <div className="flex items-center py-4 space-x-4">
                 <Input
-                    type="text"
-                    value={inputValue ?? ""}
-                    onChange={handleSearchChange}
-                    placeholder="Enter value"
+                    placeholder="Filter name..."
+                    value={
+                        (table
+                            .getColumn("full_name")
+                            ?.getFilterValue() as string) ?? ""
+                    }
+                    onChange={(event) => {
+                        const column = "full_name";
+                        table
+                            .getColumn(column)
+                            ?.setFilterValue(event.target.value);
+                        searchFetch(column, event.target.value);
+                    }}
                     className="max-w-sm"
                 />
-                <Button onClick={handleSearchClick} className="ml-4">
+                {/* <Button className="ml-4">
                     Search
-                </Button>
+                </Button> */}
                 <DropdownMenu>
                     <DropdownMenuTrigger>
                         <p
@@ -149,10 +140,10 @@ export default function DataTable<TData, TValue>({
                                 buttonVariants({
                                     variant: "outline"
                                 }),
-                                "ml-4"
+                                "ml-auto"
                             )}
                         >
-                            Columns
+                            Columns <ChevronDown className="ml-2 h-4 w-4" />
                         </p>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
@@ -223,99 +214,35 @@ export default function DataTable<TData, TValue>({
                 </Table>
             </div>
             {/* pagination */}
-            <div className="flex items-center justify-start space-x-2 py-4">
-                <Pagination>
-                    {/* TODO search dan page params belum di implementasikan */}
-                    <PaginationContent>
-                        <PaginationItem>
-                            <PaginationPrevious
-                                className={`${
-                                    response.page === 1
-                                        ? "pointer-events-none text-muted-foreground"
-                                        : ""
-                                }`}
-                                href={`?page=${
-                                    response.page > 1 ? response.page - 1 : 1
-                                }`}
-                            />
-                        </PaginationItem>
-                        <PaginationItem>
-                            <Button
-                                variant={"ghost"}
-                                className={cn(
-                                    response.page === response.total_pages
-                                        ? ""
-                                        : "hidden",
-                                    response.page - 2 === 0 ? "hidden" : "",
-                                    "cursor-default"
-                                )}
-                            >
-                                {response.page - 2}
-                            </Button>
-                        </PaginationItem>
-                        <PaginationItem>
-                            <Button
-                                variant={"ghost"}
-                                className={cn(
-                                    response.page - 1 ? "" : "hidden",
-                                    "cursor-default"
-                                )}
-                            >
-                                {response.page - 1}
-                            </Button>
-                        </PaginationItem>
-                        <PaginationItem>
-                            <Button
-                                variant={"outline"}
-                                className="cursor-default"
-                            >
-                                {response.page}
-                            </Button>
-                        </PaginationItem>
-                        <PaginationItem>
-                            <Button
-                                variant={"ghost"}
-                                className={cn(
-                                    response.page === response.total_pages
-                                        ? "hidden"
-                                        : "",
-                                    "cursor-default"
-                                )}
-                            >
-                                {response.page + 1}
-                            </Button>
-                        </PaginationItem>
-                        <PaginationItem>
-                            <Button
-                                variant={"ghost"}
-                                className={cn(
-                                    response.page - 1 ? "hidden" : "",
-                                    response.page + 2 > response.total_pages
-                                        ? "hidden"
-                                        : "",
-                                    "cursor-default"
-                                )}
-                            >
-                                {response.page + 2}
-                            </Button>
-                        </PaginationItem>
-                        <PaginationItem>
-                            <PaginationNext
-                                className={`${
-                                    response.page === response.total_pages
-                                        ? "pointer-events-none text-muted-foreground"
-                                        : ""
-                                }`}
-                                href={`?page=${response.total_pages < response.page ? response.total_pages : response.page + 1
-                                }`}
-                            />
-                        </PaginationItem>
-                    </PaginationContent>
-                </Pagination>
-            </div>
-            <div className="flex-1 text-sm text-muted-foreground">
-                <p>Result {response.total_records}</p>
-                <p>Total pages {response.total_pages}</p>
+            <div className="flex items-center justify-end space-x-2 py-4">
+                <div className="flex-1 text-sm text-muted-foreground">
+                    Page {updatedData.page} of{" "}
+                    {updatedData.total_pages}
+                </div>
+                <div className="space-x-2">
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                            const prev = updatedData.page - 1;
+                            paginationHandler(prev);
+                        }}
+                        disabled={updatedData.page === 1}
+                    >
+                        Previous
+                    </Button>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                            const next = updatedData.page + 1;
+                            paginationHandler(next);
+                        }}
+                        disabled={updatedData.page === updatedData.total_pages}
+                    >
+                        Next
+                    </Button>
+                </div>
             </div>
         </div>
     );
