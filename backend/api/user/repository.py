@@ -19,9 +19,8 @@ from api.user.responses import (
 import re
 
 
-def map_user_model_to_response(user_model: UserModel, index: int):
+def map_user_model_to_response(user_model: UserModel):
     return UserResponse(
-        index_user=index,
         id=str(user_model.id),
         username=user_model.username,
         email=user_model.email,
@@ -377,74 +376,6 @@ class UserRepository:
                 detail=f"Database error: {str(e)}",
             )
 
-    # get all
-    # @staticmethod
-    # def get_all(
-    #     pagination: bool = Query(True, description="Enable pagination"),
-    #     limit: Optional[int] = Query(10, description="Limit of users per page"),
-    #     page: Optional[int] = Query(1, description="Page number"),
-    #     columns: Optional[str] = Query(None, description="Columns to display"),
-    #     sort: Optional[str] = Query(None, description="Sort by specific column"),
-    #     filter_by: Optional[str] = Query(None, description="Filter by specific column"),
-    #     filter_value: Optional[str] = Query(None, description="Filter value"),
-    #     db: Session = Depends(get_db()),
-    # ):
-    #     # query to db
-    #     users = db.query(UserModel).all()
-    #     user_responses = apply_sort(users, "full_name", reverse=False)
-    #     filtered_users = [
-    #         map_user_model_to_response(user, index)
-    #         for index, user in enumerate(user_responses, start=1)
-    #     ]
-
-    #     from_total = len(filtered_users)
-
-    #     if filter_by and filter_value:
-    #         # filtered_users = apply_filter(filtered_users, {filter_by: filter_value})
-    #         filtered_users = apply_filter(filtered_users, filter_by, filter_value)
-
-    #     # Menghitung offset untuk pagination
-    #     if pagination:
-    #         offset = (page - 1) * limit
-    #         users_to_return = filtered_users[offset : offset + limit]  # noqa
-    #     else:
-    #         users_to_return = filtered_users
-
-    #     # Mengurutkan hasil jika diminta
-    #     if sort:
-    #         users_to_return = apply_sort(users_to_return, sort, reverse=True)
-
-    #     # Memilih kolom yang diminta
-    #     if columns:
-    #         selected_columns = columns.split("-")
-    #         if "id" not in selected_columns:
-    #             selected_columns.insert(
-    #                 0, "id"
-    #             )  # Memastikan kolom 'id' selalu di depan
-    #         users_to_return = [
-    #             {col: getattr(user, col) for col in selected_columns}
-    #             for user in users_to_return
-    #         ]
-
-    #     total_row_in_page = len(users_to_return)
-    #     total_records = len(filtered_users)
-    #     total_pages = ceil(total_records / limit)
-
-    #     return UserPaginationResponse(
-    #         pagination=pagination,
-    #         limit=limit,
-    #         page=page,
-    #         columns=columns,
-    #         sort=sort,
-    #         filter_by=filter_by,
-    #         filter_value=filter_value,
-    #         total_row_in_page=total_row_in_page,
-    #         total_records=total_records,
-    #         from_total=from_total,
-    #         total_pages=total_pages,
-    #         content=users_to_return,
-    #     )
-
     @staticmethod
     def get_all(
         pagination: bool = Query(True, description="Enable pagination"),
@@ -488,10 +419,7 @@ class UserRepository:
         users = query.all()
 
         # Mengonversi hasil menjadi respons pengguna
-        user_responses = [
-            map_user_model_to_response(user, index)
-            for index, user in enumerate(users, start=1)
-        ]
+        user_responses = [map_user_model_to_response(user) for user in users]
 
         # Memilih kolom yang diminta
         if columns:

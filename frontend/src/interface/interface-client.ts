@@ -1,5 +1,4 @@
 export interface ResponseUsers {
-    index_user: number;
     id: string;
     username: string;
     email: string;

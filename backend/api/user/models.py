@@ -8,6 +8,7 @@ from sqlalchemy import (
     String,
     Date,
     func,
+    orm,
 )
 from sqlalchemy.orm import relationship
 from api.core.database import Base
@@ -60,3 +61,9 @@ class UserModel(Base):
     created_at = Column(DateTime, default=func.now())
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
     user_detail = relationship("UserDetailModel", uselist=False, backref="user")
+
+    @orm.reconstructor
+    def init_on_load(self):
+        """Jika user_detail tidak None, set is_verified menjadi True"""
+        if self.user_detail is not None:
+            self.is_verified = True

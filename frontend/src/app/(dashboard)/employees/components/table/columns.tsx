@@ -7,16 +7,6 @@ import EditEmployeeDialog from "@/app/(dashboard)/employees/components/edit-empl
 
 export const columns: ColumnDef<ResponseUsers>[] = [
     {
-        header: () => {
-            return <p className="text-center">No</p>;
-        },
-        accessorKey: "index_user",
-        cell: ({ row }) => {
-            const employeeIndex = row.original.index_user;
-            return <div className="text-center">{employeeIndex}</div>;
-        }
-    },
-    {
         header: "Name",
         accessorKey: "full_name"
     },

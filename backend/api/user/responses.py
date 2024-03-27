@@ -11,7 +11,6 @@ class BaseResponse(BaseModel):
 
 
 class UserResponse(BaseModel):
-    index_user: Optional[T] = None
     id: str
     username: str
     email: EmailStr

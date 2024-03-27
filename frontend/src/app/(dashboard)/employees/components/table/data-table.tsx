@@ -238,7 +238,7 @@ export default function DataTable<TData, TValue>({
                             const next = updatedData.page + 1;
                             paginationHandler(next);
                         }}
-                        disabled={updatedData.page === updatedData.total_pages || updatedData.page === pageSearchSize}
+                        disabled={updatedData.page === updatedData.total_pages || updatedData.limit === pageSearchSize}
                     >
                         Next
                     </Button>
