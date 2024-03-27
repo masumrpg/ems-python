@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -26,25 +25,46 @@ import { formSchemaDetailEmployee } from "@/validators/validators";
 import addEmployeeDetailsAction from "@/action/addEmployeeDetailsAction";
 import { UserFromApi } from "@/interface/interface-client";
 import editEmployeeDetailsAction from "@/action/editEmployeeDetailsAction";
-import { CalendarIcon, Check, ChevronsUpDown } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { ResponseMessage } from "@/interface/interface-server";
 import { useState } from "react";
 import { ClipLoader } from "react-spinners";
 import {
-    Command,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem
-} from "@/components/ui/command";
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue
+} from "@/components/ui/select";
 
 const genders = [
-    { label: "Pria", value: "Pria" },
-    { label: "Wanita", value: "Wanita" }
+    { label: "Man", value: "Pria" },
+    { label: "Women", value: "Wanita" }
 ] as const;
 
-// TODO Tambahkan dropdown form dan dll
+const martialStatuses = [
+    { label: "Single", value: "Lajang" },
+    { label: "Married", value: "Menikah" }
+] as const;
+
+const religions = [
+    { label: "Islam", value: "Islam" },
+    { label: "Protestant Christianity", value: "Kristen Protestan" },
+    { label: "Catholic Christianity", value: "Kristen Katolik" },
+    { label: "Hinduism", value: "Hindu" },
+    { label: "Buddhism", value: "Buddha" },
+    { label: "Confucianism", value: "Khonghucu" }
+] as const;
+
+const jobs = [
+    { label: "Production Operator", value: "Operator Produksi" },
+    { label: "HRD", value: "HRD" },
+    { label: "Administrator", value: "Admin" },
+    { label: "Manager", value: "Manajer" },
+    { label: "Developer", value: "Developer" }
+] as const;
+
 export default function DetailFormDialog({
     id,
     data
@@ -113,28 +133,34 @@ export default function DetailFormDialog({
                 id,
                 formData
             )) as ResponseMessage;
-            router.refresh();
             if (res.status === 201) {
                 toast.success(res.message);
                 setLoadData(false);
+            } else if (res.status === 500) {
+                toast.error(res.detail);
+                setLoadData(false);
             } else {
-                toast.success(res.detail);
+                toast.warning(res.detail);
                 setLoadData(false);
             }
+            router.refresh();
         } else {
             setLoadData(true);
             const res: ResponseMessage = (await editEmployeeDetailsAction(
                 id,
                 formData
             )) as ResponseMessage;
-            router.refresh();
             if (res.status === 200) {
                 toast.success(res.message);
                 setLoadData(false);
+            } else if (res.status === 500) {
+                toast.error(res.detail);
+                setLoadData(false);
             } else {
-                toast.success(res.detail);
+                toast.warning(res.detail);
                 setLoadData(false);
             }
+            router.refresh();
         }
     };
 
@@ -313,92 +339,38 @@ export default function DetailFormDialog({
                                     </FormItem>
                                 )}
                             />
-                            {/* FIXME failed mount */}
-                            {/* <FormField
-                                control={form.control}
-                                name="gender"
-                                render={({ field }) => (
-                                    <FormItem className="flex flex-col">
-                                        <FormLabel>Gender</FormLabel>
-                                        <Popover>
-                                            <PopoverTrigger asChild>
-                                                <FormControl>
-                                                    <Button
-                                                        variant="outline"
-                                                        role="combobox"
-                                                        className={cn(
-                                                            "w-[200px] justify-between",
-                                                            !field.value &&
-                                                                "text-muted-foreground"
-                                                        )}
-                                                    >
-                                                        {field.value
-                                                            ? genders.find(
-                                                                  (gender) =>
-                                                                      gender.value ===
-                                                                      field.value
-                                                              )?.label
-                                                            : "Select gender"}
-                                                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                                    </Button>
-                                                </FormControl>
-                                            </PopoverTrigger>
-                                            <PopoverContent className="w-[200px] p-0">
-                                                <Command>
-                                                    <CommandGroup>
-                                                        {genders.map(
-                                                            (gender) => (
-                                                                <CommandItem
-                                                                    value={
-                                                                        gender.label
-                                                                    }
-                                                                    key={
-                                                                        gender.value
-                                                                    }
-                                                                    onSelect={() => {
-                                                                        form.setValue(
-                                                                            "gender",
-                                                                            gender.value
-                                                                        );
-                                                                    }}
-                                                                >
-                                                                    <Check
-                                                                        className={cn(
-                                                                            "mr-2 h-4 w-4",
-                                                                            gender.value ===
-                                                                                field.value
-                                                                                ? "opacity-100"
-                                                                                : "opacity-0"
-                                                                        )}
-                                                                    />
-                                                                    {
-                                                                        gender.label
-                                                                    }
-                                                                </CommandItem>
-                                                            )
-                                                        )}
-                                                    </CommandGroup>
-                                                </Command>
-                                            </PopoverContent>
-                                        </Popover>
-                                        <FormDescription>
-                                            This is the gender that will be
-                                            used in the dashboard.
-                                        </FormDescription>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            /> */}
                             <FormField
                                 control={form.control}
                                 name="gender"
-                                render={({field}) => (
+                                render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Gender</FormLabel>
-                                        <FormControl>
-                                            <Input {...field} />
-                                        </FormControl>
-                                        <FormMessage/>
+                                        <Select
+                                            onValueChange={field.onChange}
+                                            defaultValue={field.value}
+                                        >
+                                            <FormControl>
+                                                <SelectTrigger>
+                                                    <SelectValue
+                                                        className="text-muted-foreground"
+                                                        placeholder="Select gender"
+                                                    />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                {genders.map((gender) => {
+                                                    return (
+                                                        <SelectItem
+                                                            value={gender.value}
+                                                            key={gender.label}
+                                                        >
+                                                            {gender.label}
+                                                        </SelectItem>
+                                                    );
+                                                })}
+                                            </SelectContent>
+                                        </Select>
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
@@ -407,10 +379,40 @@ export default function DetailFormDialog({
                                 name="maritalStatus"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Marital Status</FormLabel>
-                                        <FormControl>
-                                            <Input {...field} />
-                                        </FormControl>
+                                        <FormLabel>Martial Status</FormLabel>
+                                        <Select
+                                            onValueChange={field.onChange}
+                                            defaultValue={field.value}
+                                        >
+                                            <FormControl>
+                                                <SelectTrigger>
+                                                    <SelectValue
+                                                        className="text-muted-foreground"
+                                                        placeholder="Select martial status"
+                                                    />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                {martialStatuses.map(
+                                                    (martialStatus) => {
+                                                        return (
+                                                            <SelectItem
+                                                                value={
+                                                                    martialStatus.value
+                                                                }
+                                                                key={
+                                                                    martialStatus.label
+                                                                }
+                                                            >
+                                                                {
+                                                                    martialStatus.label
+                                                                }
+                                                            </SelectItem>
+                                                        );
+                                                    }
+                                                )}
+                                            </SelectContent>
+                                        </Select>
                                         <FormMessage />
                                     </FormItem>
                                 )}
@@ -441,9 +443,33 @@ export default function DetailFormDialog({
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Religion</FormLabel>
-                                        <FormControl>
-                                            <Input {...field} />
-                                        </FormControl>
+                                        <Select
+                                            onValueChange={field.onChange}
+                                            defaultValue={field.value}
+                                        >
+                                            <FormControl>
+                                                <SelectTrigger>
+                                                    <SelectValue
+                                                        className="text-muted-foreground"
+                                                        placeholder="Select religion"
+                                                    />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                {religions.map((religion) => {
+                                                    return (
+                                                        <SelectItem
+                                                            value={
+                                                                religion.value
+                                                            }
+                                                            key={religion.label}
+                                                        >
+                                                            {religion.label}
+                                                        </SelectItem>
+                                                    );
+                                                })}
+                                            </SelectContent>
+                                        </Select>
                                         <FormMessage />
                                     </FormItem>
                                 )}
@@ -468,10 +494,32 @@ export default function DetailFormDialog({
                                 name="job"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Job</FormLabel>
-                                        <FormControl>
-                                            <Input {...field} />
-                                        </FormControl>
+                                        <FormLabel>Job Role</FormLabel>
+                                        <Select
+                                            onValueChange={field.onChange}
+                                            defaultValue={field.value}
+                                        >
+                                            <FormControl>
+                                                <SelectTrigger>
+                                                    <SelectValue
+                                                        className="text-muted-foreground"
+                                                        placeholder="Select job"
+                                                    />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                {jobs.map((job) => {
+                                                    return (
+                                                        <SelectItem
+                                                            value={job.value}
+                                                            key={job.label}
+                                                        >
+                                                            {job.label}
+                                                        </SelectItem>
+                                                    );
+                                                })}
+                                            </SelectContent>
+                                        </Select>
                                         <FormMessage />
                                     </FormItem>
                                 )}

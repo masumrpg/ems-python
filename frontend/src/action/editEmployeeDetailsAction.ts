@@ -23,11 +23,17 @@ export default async function editEmployeeDetailsAction(id: string, formData: an
             return value;
         });
 
+        console.log(res.status);
 
         if (res.status === 200) {
             return {
                 status: res.status,
                 message: resMsg.message
+            };
+        } else if (res.status === 500) {
+            return {
+                status: res.status,
+                detail: "Internal server error"
             };
         } else {
             return {

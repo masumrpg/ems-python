@@ -23,11 +23,15 @@ export default async function addEmployeeDetailsAction(id: string, formData: any
             return value;
         });
 
-
-        if (res.status === 200) {
+        if (res.status === 201) {
             return {
                 status: res.status,
                 message: resMsg.message
+            };
+        } else if (res.status === 500) {
+            return {
+                status: res.status,
+                detail: "Internal server error"
             };
         } else {
             return {
