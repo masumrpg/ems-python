@@ -1,6 +1,12 @@
 "use client";
 
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
+import {
+    Bar,
+    BarChart,
+    ResponsiveContainer,
+    XAxis,
+    YAxis
+} from "recharts";
 
 const data = [
     {
@@ -53,6 +59,7 @@ const data = [
     }
 ];
 
+// FIXME Warning: XAxis: Support for defaultProps will be removed from function components in a future major release. Use JavaScript default parameters instead.
 export function Overview() {
     return (
         <ResponsiveContainer width="100%" height={350}>

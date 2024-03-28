@@ -26,6 +26,7 @@ export default async function addEmployeeDetailsAction(
             return value;
         });
 
+
         if (res.status === 201) {
             return {
                 status: res.status,

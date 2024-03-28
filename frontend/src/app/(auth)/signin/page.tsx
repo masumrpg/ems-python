@@ -1,19 +1,15 @@
 import SignInForm from "@/app/(auth)/signin/components/signin-form";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import {Suspense} from "react";
+import Animations from "@/animations/animations";
 
 export default function SignInPage() {
     return (
-        <Card className="flex flex-col w-[25rem] my-16">
-            <CardHeader>
-                <CardTitle>Signin</CardTitle>
-                <CardDescription>Please log in to your account.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <Suspense>
-                    <SignInForm/>
-                </Suspense>
-            </CardContent>
-        </Card>
+        <main className="w-full lg:grid lg:min-h-screen lg:grid-cols-2 xl:min-h-screen">
+            <div className="flex items-center justify-center">
+                <SignInForm />
+            </div>
+            <div className="hidden bg-primary lg:block">
+                <Animations className="flex items-center justify-center" />
+            </div>
+        </main>
     );
 }

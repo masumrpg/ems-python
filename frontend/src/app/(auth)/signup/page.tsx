@@ -1,16 +1,15 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import Animations from "@/animations/animations";
 import SignUpForm from "./components/signup-form";
 
 export default function SignUpPage() {
     return (
-        <Card className="flex flex-col w-[25rem]">
-            <CardHeader>
-                <CardTitle>Signup</CardTitle>
-                <CardDescription>Please signup for new user.</CardDescription>
-            </CardHeader>
-            <CardContent>
+        <main className="w-full lg:grid lg:min-h-screen lg:grid-cols-2 xl:min-h-screen">
+            <div className="flex items-center justify-center">
                 <SignUpForm />
-            </CardContent>
-        </Card>
+            </div>
+            <div className="hidden bg-primary lg:block">
+                <Animations className="flex items-center justify-center" />
+            </div>
+        </main>
     );
 }

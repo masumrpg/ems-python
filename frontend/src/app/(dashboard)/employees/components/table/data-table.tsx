@@ -33,6 +33,7 @@ import getAllEmployeesAction from "@/action/getAllEmployeesAction";
 import { UserPaginationResponse } from "@/interface/interface-client";
 import { cn } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
+import { useMediaQuery } from "@react-hook/media-query";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -109,6 +110,30 @@ export default function DataTable<TData, TValue>({
         setData(res.content);
         setUpdatedData(res);
     };
+
+    // Mobile hide column
+    const isMobile = useMediaQuery("(max-width: 768px)");
+
+    React.useEffect(() => {
+        const initialColumnVisibility: Record<string, boolean> = {};
+        table.getAllColumns().forEach((column) => {
+            // Set default visibility to true for all columns
+            initialColumnVisibility[column.id] = true;
+        });
+
+        // Set certain columns to be hidden by default if isMobile is true
+        if (isMobile) {
+            // initialColumnVisibility["full_name"] = false;
+            initialColumnVisibility["username"] = false;
+            initialColumnVisibility["email"] = false;
+            // initialColumnVisibility["is_superuser"] = false;
+            initialColumnVisibility["is_verified"] = false;
+            initialColumnVisibility["actions"] = false;
+        }
+
+        setColumnVisibility(initialColumnVisibility);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isMobile]);
 
     return (
         <div className="flex flex-1 flex-col gap-4 p-4 md:p-10">
@@ -216,8 +241,7 @@ export default function DataTable<TData, TValue>({
             {/* pagination */}
             <div className="flex items-center justify-end space-x-2 py-4">
                 <div className="flex-1 text-sm text-muted-foreground">
-                    Page {updatedData.page} of{" "}
-                    {updatedData.total_pages}
+                    Page {updatedData.page} of {updatedData.total_pages}
                 </div>
                 <div className="space-x-2">
                     <Button
@@ -238,7 +262,10 @@ export default function DataTable<TData, TValue>({
                             const next = updatedData.page + 1;
                             paginationHandler(next);
                         }}
-                        disabled={updatedData.page === updatedData.total_pages || updatedData.limit === pageSearchSize}
+                        disabled={
+                            updatedData.page === updatedData.total_pages ||
+                            updatedData.limit === pageSearchSize
+                        }
                     >
                         Next
                     </Button>

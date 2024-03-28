@@ -17,13 +17,13 @@ Aplikasi Employee Management memberikan solusi lengkap untuk merekam, mengelola,
 
 ### Teknologi yang Digunakan
 
-#### Backend (API)
+#### Backend (FastAPI)
 
 - **Framework**: FastAPI (Python)
 - **Database**: MongoDB atau PostgreSQL
 - **Otentikasi**: JSON Web Tokens (JWT)
 - **Validasi**: Pydantic
-- **Deployment**: Docker, Heroku, atau AWS
+- **Deployment**: Docker, Heroku, Vercel, atau AWS
 
 #### Frontend (Next.js)
 
