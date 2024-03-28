@@ -35,6 +35,7 @@ import { cn } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
 import { useMediaQuery } from "@react-hook/media-query";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -52,18 +53,33 @@ export default function DataTable<TData, TValue>({
     columns,
     data: initFromServer
 }: DataTableProps<TData, TValue>) {
+    const router = useRouter();
+    const searchParam = useSearchParams();
+    const limitUrlParam = searchParam.get("limit");
+    const pageUrlParam = searchParam.get("page");
+    const filterByUrlParam = searchParam.get("filter_by");
+    const filterValueUrlParam = searchParam.get("filter_value");
+
+
     const {
-        data: initialData,
-        refetch
+        isPending,
+        data: initialData
     } = useQuery({
-        queryKey: ["employees"],
+        queryKey: ["employees", pageUrlParam],
         initialData: initFromServer,
         queryFn: async () => {
-            const res = await getAllEmployeesAction({});
+            const res = await getAllEmployeesAction({
+                limit: Number(limitUrlParam) || 10 ,
+                page: Number(pageUrlParam) || 1,
+                filterBy: filterByUrlParam || "",
+                filterValue: filterValueUrlParam || ""
+            });
             setData(res.content);
+            setUpdatedData(res);
             return res;
         }
     });
+
 
     const mutation = useMutation({
         mutationKey: ["employeesUpdate"],
@@ -75,7 +91,7 @@ export default function DataTable<TData, TValue>({
         }: FetchDataProps) => {
             const res = await getAllEmployeesAction({
                 limit: limit || 10,
-                page: page,
+                page: page || 1,
                 filterBy: filterBy || "",
                 filterValue: filterValue || ""
             });
@@ -171,6 +187,8 @@ export default function DataTable<TData, TValue>({
         setColumnVisibility(initialColumnVisibility);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isMobile]);
+
+    if (isPending) return <p>Loading</p>;
 
     return (
         <div className="flex flex-1 flex-col gap-4 p-4 md:p-10">
@@ -289,6 +307,7 @@ export default function DataTable<TData, TValue>({
                         size="sm"
                         onClick={() => {
                             const prev = updatedData.page - 1;
+                            router.push(`?page=${prev}`);
                             paginationHandler(prev);
                         }}
                         disabled={updatedData.page === 1}
@@ -300,6 +319,7 @@ export default function DataTable<TData, TValue>({
                         size="sm"
                         onClick={() => {
                             const next = updatedData.page + 1;
+                            router.push(`?page=${next}`);
                             paginationHandler(next);
                         }}
                         disabled={
