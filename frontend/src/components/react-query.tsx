@@ -4,7 +4,9 @@ import {
     QueryClientProvider
 } from "@tanstack/react-query";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+    defaultOptions: { queries: {gcTime: 60000}}
+});
 
 export default function ReactQuery(
     {

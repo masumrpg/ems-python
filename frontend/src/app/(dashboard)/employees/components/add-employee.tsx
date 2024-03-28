@@ -1,5 +1,4 @@
 "use client";
-import SignUpForm from "@/app/(auth)/signup/components/signup-form";
 import {Button} from "@/components/ui/button";
 import {
     Dialog,
@@ -8,6 +7,7 @@ import {
     DialogTitle,
     DialogTrigger
 } from "@/components/ui/dialog";
+import AddEmployeeForm from "./add-employee/add-employee-form";
 
 export default function AddEmployeeDialog() {
     return (
@@ -19,7 +19,7 @@ export default function AddEmployeeDialog() {
                 <DialogHeader>
                     <DialogTitle className="text-center">Add Employee</DialogTitle>
                 </DialogHeader>
-                <SignUpForm hidden="hidden" add={true}/>
+                <AddEmployeeForm hidden="hidden" add={true}/>
             </DialogContent>
         </Dialog>
     );

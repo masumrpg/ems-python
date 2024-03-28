@@ -34,16 +34,57 @@ import { UserPaginationResponse } from "@/interface/interface-client";
 import { cn } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
 import { useMediaQuery } from "@react-hook/media-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: UserPaginationResponse;
 }
 
+interface FetchDataProps {
+    limit?: number;
+    page?: number;
+    filterBy?: string;
+    filterValue?: string;
+}
+
 export default function DataTable<TData, TValue>({
     columns,
-    data: initialData
+    data: initFromServer
 }: DataTableProps<TData, TValue>) {
+    const {
+        data: initialData,
+        refetch
+    } = useQuery({
+        queryKey: ["employees"],
+        initialData: initFromServer,
+        queryFn: async () => {
+            const res = await getAllEmployeesAction({});
+            setData(res.content);
+            return res;
+        }
+    });
+
+    const mutation = useMutation({
+        mutationKey: ["employeesUpdate"],
+        mutationFn: async ({
+            limit,
+            page,
+            filterBy,
+            filterValue
+        }: FetchDataProps) => {
+            const res = await getAllEmployeesAction({
+                limit: limit || 10,
+                page: page,
+                filterBy: filterBy || "",
+                filterValue: filterValue || ""
+            });
+            setData(res.content);
+            setUpdatedData(res);
+        },
+        gcTime: 0
+    });
+
     const [data, setData] = React.useState<any>(initialData.content);
     const [updatedData, setUpdatedData] =
         React.useState<UserPaginationResponse>(initialData);
@@ -81,21 +122,19 @@ export default function DataTable<TData, TValue>({
 
     const pageSearchSize = 30;
     const searchFetch = async (filterBy: string, filterValue: string) => {
-        const res = await getAllEmployeesAction({
-            limit: pageSearchSize,
-            filterBy: filterBy,
-            filterValue: filterValue
-        });
         if (filterValue) {
-            setData(res.content);
-            setUpdatedData(res);
+            mutation.mutate({
+                limit: pageSearchSize,
+                filterBy: filterBy,
+                filterValue: filterValue
+            });
             setPagination({
                 pageIndex: 0,
                 pageSize: pageSearchSize
             });
         } else {
             setData(initialData.content);
-            setUpdatedData(initialData);
+            mutation.mutate({});
             setPagination({
                 pageIndex: 0,
                 pageSize: 10
@@ -104,11 +143,9 @@ export default function DataTable<TData, TValue>({
     };
 
     const paginationHandler = async (page: number) => {
-        const res = await getAllEmployeesAction({
+        mutation.mutate({
             page: page
         });
-        setData(res.content);
-        setUpdatedData(res);
     };
 
     // Mobile hide column
@@ -155,9 +192,6 @@ export default function DataTable<TData, TValue>({
                     }}
                     className="max-w-sm"
                 />
-                {/* <Button className="ml-4">
-                    Search
-                </Button> */}
                 <DropdownMenu>
                     <DropdownMenuTrigger>
                         <p
@@ -240,9 +274,15 @@ export default function DataTable<TData, TValue>({
             </div>
             {/* pagination */}
             <div className="flex items-center justify-end space-x-2 py-4">
-                <div className="flex-1 text-sm text-muted-foreground">
-                    Page {updatedData.page} of {updatedData.total_pages}
-                </div>
+                {updatedData.limit === 10 ? (
+                    <div className="flex-1 text-sm text-muted-foreground">
+                        Page {updatedData.page} of {updatedData.total_pages}
+                    </div>
+                ) : (
+                    <div className="flex-1 text-sm text-muted-foreground">
+                        Result {updatedData.total_records}
+                    </div>
+                )}
                 <div className="space-x-2">
                     <Button
                         variant="outline"

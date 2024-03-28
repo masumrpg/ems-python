@@ -114,7 +114,7 @@ export default function SignUpForm({
     return (
         <Card className={cn("flex flex-col w-[25rem] my-16 border-0")}>
             <CardHeader>
-                <CardTitle>Signun</CardTitle>
+                <CardTitle>Signup</CardTitle>
                 <CardDescription>
                     Please sign up to create your account.
                 </CardDescription>
