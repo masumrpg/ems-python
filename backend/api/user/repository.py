@@ -399,9 +399,6 @@ class UserRepository:
                 getattr(UserModel, filter_by).ilike(f"%{filter_value}%")
             )
 
-        # Default sort
-        query = query.order_by(asc(getattr(UserModel, sort)))
-
         # Menerapkan pengurutan jika diminta
         if sort:
             if sort.startswith("-"):
