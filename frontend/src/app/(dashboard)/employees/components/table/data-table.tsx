@@ -21,8 +21,8 @@ import {
     TableRow
 } from "@/components/ui/table";
 import React from "react";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import {Button, buttonVariants} from "@/components/ui/button";
+import {Input} from "@/components/ui/input";
 import {
     DropdownMenu,
     DropdownMenuCheckboxItem,
@@ -30,12 +30,12 @@ import {
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import getAllEmployeesAction from "@/action/getAllEmployeesAction";
-import { UserPaginationResponse } from "@/interface/interface-client";
-import { cn } from "@/lib/utils";
-import { ChevronDown } from "lucide-react";
-import { useMediaQuery } from "@react-hook/media-query";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useRouter, useSearchParams } from "next/navigation";
+import {UserPaginationResponse} from "@/interface/interface-client";
+import {cn} from "@/lib/utils";
+import {ChevronDown} from "lucide-react";
+import {useMediaQuery} from "@react-hook/media-query";
+import {useMutation, useQuery} from "@tanstack/react-query";
+import {useRouter, useSearchParams} from "next/navigation";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -62,14 +62,13 @@ export default function DataTable<TData, TValue>({
 
 
     const {
-        isPending,
         data: initialData
     } = useQuery({
         queryKey: ["employees", pageUrlParam],
         initialData: initFromServer,
         queryFn: async () => {
             const res = await getAllEmployeesAction({
-                limit: Number(limitUrlParam) || 10 ,
+                limit: Number(limitUrlParam) || 10,
                 page: Number(pageUrlParam) || 1,
                 filterBy: filterByUrlParam || "",
                 filterValue: filterValueUrlParam || ""
@@ -188,7 +187,6 @@ export default function DataTable<TData, TValue>({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isMobile]);
 
-    if (isPending) return <p>Loading</p>;
 
     return (
         <div className="flex flex-1 flex-col gap-4 p-4 md:p-10">
@@ -220,7 +218,7 @@ export default function DataTable<TData, TValue>({
                                 "ml-auto"
                             )}
                         >
-                            Columns <ChevronDown className="ml-2 h-4 w-4" />
+                            Columns <ChevronDown className="ml-2 h-4 w-4"/>
                         </p>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
