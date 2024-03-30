@@ -60,10 +60,25 @@ class UserModel(Base):
     verified_at = Column(DateTime, nullable=True, default=None)
     created_at = Column(DateTime, default=func.now())
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
+
+    # Relationships
     user_detail = relationship("UserDetailModel", uselist=False, backref="user")
+    attendance_records = relationship("AttendanceModel", back_populates="user")
 
     @orm.reconstructor
     def init_on_load(self):
         """Jika user_detail tidak None, set is_verified menjadi True"""
         if self.user_detail is not None:
             self.is_verified = True
+
+
+class AttendanceModel(Base):
+    __tablename__ = "attendance"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    user_id = Column(String, ForeignKey("user.id"), nullable=False)
+    check_in = Column(DateTime, nullable=False, default=func.now())
+    check_out = Column(DateTime)
+
+    # Relationship with UserModel
+    user = relationship("UserModel", back_populates="attendance_records")

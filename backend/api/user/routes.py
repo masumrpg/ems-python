@@ -1,6 +1,8 @@
 from typing import Optional
 from fastapi import APIRouter, Query, status, Depends, Request
 from sqlalchemy.orm import Session
+
+from api.user.models import UserModel
 from api.user.schemas import CreateUserDetailRequest, CreateUserRequest
 from api.core.security import get_current_user, is_superuser, oauth2_scheme
 from api.user.responses import SuccessResponse, UserPaginationResponse, UserResponse, UserWithDetilResponse
@@ -29,7 +31,7 @@ admin_router = APIRouter(
 
 
 @public_router.post(
-    "", status_code=status.HTTP_201_CREATED, response_model=SuccessResponse
+    "/", status_code=status.HTTP_201_CREATED, response_model=SuccessResponse
 )
 def create_user(data: CreateUserRequest, db: Session = Depends(get_db)):
     UserRepository.create_user(data, db)
@@ -48,7 +50,7 @@ def create_user_detail_me(
 
 @user_router.get("/me", status_code=status.HTTP_200_OK, response_model=UserResponse)
 def get_me(
-    current_user: UserResponse = Depends(get_current_user),
+    current_user: UserModel = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     user_id = current_user.id
@@ -79,7 +81,7 @@ def create_user_detail_by_id(
     return SuccessResponse(message="User detail has been succesfully created.")
 
 
-@admin_router.get("", status_code=status.HTTP_200_OK, response_model=UserPaginationResponse)
+@admin_router.get("/", status_code=status.HTTP_200_OK, response_model=UserPaginationResponse)
 def get_all_users(
     pagination: bool = Query(True, description="Enable pagination"),
     limit: Optional[int] = Query(10, description="Limit of users per page"),
