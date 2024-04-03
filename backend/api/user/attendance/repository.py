@@ -109,7 +109,7 @@ class AttendanceRepository:
         commit_rollback()
 
     @staticmethod
-    def get_all_attendance(limit: int, db: Session):
+    def get_attendance_today(limit: int, db: Session):
         # Query
         query = db.query(AttendanceModel)
 

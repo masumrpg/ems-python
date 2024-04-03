@@ -31,7 +31,7 @@ admin_router = APIRouter(
 
 
 @public_router.post(
-    "/", status_code=status.HTTP_201_CREATED, response_model=SuccessResponse
+    "", status_code=status.HTTP_201_CREATED, response_model=SuccessResponse
 )
 def create_user(data: CreateUserRequest, db: Session = Depends(get_db)):
     UserRepository.create_user(data, db)
@@ -81,7 +81,7 @@ def create_user_detail_by_id(
     return SuccessResponse(message="User detail has been succesfully created.")
 
 
-@admin_router.get("/", status_code=status.HTTP_200_OK, response_model=UserPaginationResponse)
+@admin_router.get("", status_code=status.HTTP_200_OK, response_model=UserPaginationResponse)
 def get_all_users(
     pagination: bool = Query(True, description="Enable pagination"),
     limit: Optional[int] = Query(10, description="Limit of users per page"),

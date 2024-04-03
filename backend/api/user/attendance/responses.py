@@ -14,7 +14,7 @@ class ContentAttendanceResponse(BaseResponse):
     user_id: str
     full_name: str
     check_in: datetime
-    check_out: datetime
+    check_out: Optional[datetime] = None
 
 
 class AttendanceResponse(BaseResponse):

@@ -29,7 +29,7 @@ admin_attendance_router = APIRouter(
 
 
 @user_attendance_router.post(
-    "/", status_code=status.HTTP_201_CREATED, response_model=SuccessResponse
+    "", status_code=status.HTTP_201_CREATED, response_model=SuccessResponse
 )
 async def create_attendance_check_in(
     attendance: CreateAttendanceCheckIn,
@@ -45,7 +45,7 @@ async def create_attendance_check_in(
 
 
 @user_attendance_router.patch(
-    "/", status_code=status.HTTP_200_OK, response_model=SuccessResponse
+    "", status_code=status.HTTP_200_OK, response_model=SuccessResponse
 )
 async def create_attendance_check_out(
     attendance: CreateAttendanceCheckOut,
@@ -61,10 +61,10 @@ async def create_attendance_check_out(
 
 
 @admin_attendance_router.get(
-    "/", status_code=status.HTTP_200_OK, response_model=AttendanceResponse
+    "", status_code=status.HTTP_200_OK, response_model=AttendanceResponse
 )
-def get_all_attendance(limit: int = 10, db: Session = Depends(get_db)):
-    attendance = AttendanceRepository.get_all_attendance(limit, db)
+def get_attendance_today(limit: int = 10, db: Session = Depends(get_db)):
+    attendance = AttendanceRepository.get_attendance_today(limit, db)
     return attendance
 
 
