@@ -18,5 +18,5 @@ class ContentAttendanceResponse(BaseResponse):
 
 
 class AttendanceResponse(BaseResponse):
-    limit: int
+    limit: Optional[int] = 10
     content: Optional[List[ContentAttendanceResponse]] = None

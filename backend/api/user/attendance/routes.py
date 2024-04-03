@@ -1,6 +1,6 @@
 # TODO buat attendance user
-
-from fastapi import APIRouter, Depends, status
+from typing import Optional
+from fastapi import APIRouter, Depends, status, Query
 from sqlalchemy.orm import Session
 from api.core.database import get_db
 from api.core.security import get_current_user, oauth2_scheme, is_superuser
@@ -60,10 +60,12 @@ async def create_attendance_check_out(
     )
 
 
+# TODO trailing slash disini problem, jadi query param malah minta slash
 @admin_attendance_router.get(
-    "", status_code=status.HTTP_200_OK, response_model=AttendanceResponse
+    "/", status_code=status.HTTP_200_OK, response_model=AttendanceResponse
 )
-def get_attendance_today(limit: int = 10, db: Session = Depends(get_db)):
+def get_attendance_today(limit: Optional[int] = Query(10, description="Limit of users per page"),
+                         db: Session = Depends(get_db)):
     attendance = AttendanceRepository.get_attendance_today(limit, db)
     return attendance
 

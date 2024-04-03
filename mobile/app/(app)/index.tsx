@@ -12,7 +12,7 @@ export default function Index() {
         const currentTime = new Date().toISOString();
         console.log('Waktu Check-In:', currentTime);
 
-        const url = `${process.env.EXPO_PUBLIC_API_BASE_URL}/user/attendance/`
+        const url = `${process.env.EXPO_PUBLIC_API_BASE_URL}/user/attendance`
         const checkIn = {
             "check_in": currentTime
         }
@@ -52,7 +52,7 @@ export default function Index() {
         const currentTime = new Date().toISOString();
         console.log('Waktu Check-In:', currentTime);
 
-        const url = `${process.env.EXPO_PUBLIC_API_BASE_URL}/user/attendance/`
+        const url = `${process.env.EXPO_PUBLIC_API_BASE_URL}/user/attendance`
         const checkIn = {
             "check_out": currentTime
         }

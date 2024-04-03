@@ -1,3 +1,4 @@
+import arrow
 from typing import List
 from pytz import timezone
 from datetime import datetime, date
@@ -22,7 +23,6 @@ today_end = datetime.combine(date.today(), datetime.max.time())
 def get_current_time_jakarta():
     jakarta = timezone("Asia/Jakarta")
     return datetime.now(jakarta)
-
 
 # Fungsi untuk memeriksa apakah waktu berada dalam rentang yang diizinkan
 def attendance_time_allowed(current_time, start_hour: int, end_hour: int):
@@ -123,6 +123,8 @@ class AttendanceRepository:
 
         if limit:
             attendance_today = attendance_today.limit(limit).all()
+        else:
+            attendance_today = attendance_today.all()
 
         if not attendance_today:
             raise HTTPException(
