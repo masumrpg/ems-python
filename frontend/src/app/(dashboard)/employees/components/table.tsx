@@ -35,7 +35,7 @@ import {cn} from "@/lib/utils";
 import {ChevronDown} from "lucide-react";
 import {useMediaQuery} from "@react-hook/media-query";
 import {useMutation, useQuery} from "@tanstack/react-query";
-import {useRouter, useSearchParams} from "next/navigation";
+import {useSearchParams} from "next/navigation";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -53,7 +53,6 @@ export default function EmployeeTable<TData, TValue>({
     columns,
     data: initFromServer
 }: DataTableProps<TData, TValue>) {
-    const router = useRouter();
     const searchParam = useSearchParams();
     const limitUrlParam = searchParam.get("limit");
     const pageUrlParam = searchParam.get("page");
@@ -305,7 +304,6 @@ export default function EmployeeTable<TData, TValue>({
                         size="sm"
                         onClick={() => {
                             const prev = updatedData.page - 1;
-                            router.push(`?page=${prev}`);
                             paginationHandler(prev);
                         }}
                         disabled={updatedData.page === 1}
@@ -317,7 +315,6 @@ export default function EmployeeTable<TData, TValue>({
                         size="sm"
                         onClick={() => {
                             const next = updatedData.page + 1;
-                            router.push(`?page=${next}`);
                             paginationHandler(next);
                         }}
                         disabled={
