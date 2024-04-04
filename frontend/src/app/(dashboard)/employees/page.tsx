@@ -1,25 +1,25 @@
 import AddEmployeeDialog from "./components/add-employee";
-import DataTable from "./components/table/data-table";
-import { columns } from "./components/table/columns";
-import getAllEmployeesAction from "@/action/getAllEmployeesAction";
+import {columns} from "./components/table/columns";
+import getAllEmployeesAction from "@/action/employees/getAllEmployeesAction";
 import Loading from "@/app/loading";
+import EmployeeTable from "./components/table";
 
 export const revalidate = 0;
 
 export default async function EmployeesPage() {
     const data = await getAllEmployeesAction({});
     if (!data.content) {
-        return <Loading />;
+        return <Loading/>;
     }
 
     return (
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
             <div className="flex items-center">
                 <h1 className="font-semibold text-lg md:text-2xl">Employees</h1>
-                <AddEmployeeDialog />
+                <AddEmployeeDialog/>
             </div>
             <div className="border shadow-sm rounded-lg">
-                <DataTable columns={columns} data={data} />
+                <EmployeeTable columns={columns} data={data}/>
             </div>
         </main>
     );

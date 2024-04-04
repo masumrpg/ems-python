@@ -11,6 +11,7 @@ class BaseResponse(BaseModel):
 
 
 class ContentAttendanceResponse(BaseResponse):
+    id: int
     user_id: str
     full_name: str
     check_in: datetime

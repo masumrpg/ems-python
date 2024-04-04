@@ -1,7 +1,7 @@
-import { Button } from "@/components/ui/button";
-import { Dashboard } from "./components/dashboard";
-import getStatisticsAction from "@/action/getStatisticsAction";
-import { DashboardProps } from "@/interface/interface-client";
+import {Button} from "@/components/ui/button";
+import {Dashboard} from "./components/dashboard";
+import getStatisticsAction from "@/action/dashboard/getStatisticsAction";
+import {DashboardProps} from "@/interface/interface-client";
 
 export const revalidate = 0;
 

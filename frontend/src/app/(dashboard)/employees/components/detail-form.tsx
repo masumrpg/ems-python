@@ -1,6 +1,6 @@
 "use client";
-import { format } from "date-fns";
-import { useForm } from "react-hook-form";
+import {format} from "date-fns";
+import {useForm} from "react-hook-form";
 import {
     Form,
     FormControl,
@@ -10,25 +10,25 @@ import {
     FormMessage
 } from "@/components/ui/form";
 import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {Input} from "@/components/ui/input";
+import {Button} from "@/components/ui/button";
 import {
     Popover,
     PopoverContent,
     PopoverTrigger
 } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-import { Calendar } from "@/components/ui/calendar";
-import { toast } from "sonner";
-import { formSchemaDetailEmployee } from "@/validators/validators";
-import addEmployeeDetailsAction from "@/action/addEmployeeDetailsAction";
-import { ResponseMessageClient, UserFromApi } from "@/interface/interface-client";
-import editEmployeeDetailsAction from "@/action/editEmployeeDetailsAction";
-import { CalendarIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { ClipLoader } from "react-spinners";
+import {cn} from "@/lib/utils";
+import {Calendar} from "@/components/ui/calendar";
+import {toast} from "sonner";
+import {formSchemaDetailEmployee} from "@/validators/validators";
+import addEmployeeDetailsAction from "@/action/employees/addEmployeeDetailsAction";
+import {ResponseMessageClient, UserFromApi} from "@/interface/interface-client";
+import editEmployeeDetailsAction from "@/action/employees/editEmployeeDetailsAction";
+import {CalendarIcon} from "lucide-react";
+import {useRouter} from "next/navigation";
+import {useState} from "react";
+import {ClipLoader} from "react-spinners";
 import {
     Select,
     SelectContent,
@@ -38,30 +38,30 @@ import {
 } from "@/components/ui/select";
 
 export const genders = [
-    { label: "Man", value: "Pria" },
-    { label: "Women", value: "Wanita" }
+    {label: "Man", value: "Pria"},
+    {label: "Women", value: "Wanita"}
 ] as const;
 
 export const martialStatuses = [
-    { label: "Single", value: "Lajang" },
-    { label: "Married", value: "Menikah" }
+    {label: "Single", value: "Lajang"},
+    {label: "Married", value: "Menikah"}
 ] as const;
 
 export const religions = [
-    { label: "Islam", value: "Islam" },
-    { label: "Protestant Christianity", value: "Kristen Protestan" },
-    { label: "Catholic Christianity", value: "Kristen Katolik" },
-    { label: "Hinduism", value: "Hindu" },
-    { label: "Buddhism", value: "Buddha" },
-    { label: "Confucianism", value: "Khonghucu" }
+    {label: "Islam", value: "Islam"},
+    {label: "Protestant Christianity", value: "Kristen Protestan"},
+    {label: "Catholic Christianity", value: "Kristen Katolik"},
+    {label: "Hinduism", value: "Hindu"},
+    {label: "Buddhism", value: "Buddha"},
+    {label: "Confucianism", value: "Khonghucu"}
 ] as const;
 
 export const jobs = [
-    { label: "Production Operator", value: "Operator Produksi" },
-    { label: "HRD", value: "Human Resources Development" },
-    { label: "Administrator", value: "Admin" },
-    { label: "Manager", value: "Manajer" },
-    { label: "Developer", value: "Developer" }
+    {label: "Production Operator", value: "Operator Produksi"},
+    {label: "HRD", value: "Human Resources Development"},
+    {label: "Administrator", value: "Admin"},
+    {label: "Manager", value: "Manajer"},
+    {label: "Developer", value: "Developer"}
 ] as const;
 
 export default function DetailFormDialog({
@@ -173,39 +173,39 @@ export default function DetailFormDialog({
                             <FormField
                                 control={form.control}
                                 name="postalCode"
-                                render={({ field }) => (
+                                render={({field}) => (
                                     <FormItem>
                                         <FormLabel>Postal Code</FormLabel>
                                         <FormControl>
                                             <Input type="number" {...field} />
                                         </FormControl>
-                                        <FormMessage />
+                                        <FormMessage/>
                                     </FormItem>
                                 )}
                             />
                             <FormField
                                 control={form.control}
                                 name="village"
-                                render={({ field }) => (
+                                render={({field}) => (
                                     <FormItem>
                                         <FormLabel>Village</FormLabel>
                                         <FormControl>
                                             <Input {...field} />
                                         </FormControl>
-                                        <FormMessage />
+                                        <FormMessage/>
                                     </FormItem>
                                 )}
                             />
                             <FormField
                                 control={form.control}
                                 name="subdistrict"
-                                render={({ field }) => (
+                                render={({field}) => (
                                     <FormItem>
                                         <FormLabel>Subdistrict</FormLabel>
                                         <FormControl>
                                             <Input {...field} />
                                         </FormControl>
-                                        <FormMessage />
+                                        <FormMessage/>
                                     </FormItem>
                                 )}
                             />
@@ -214,39 +214,39 @@ export default function DetailFormDialog({
                             <FormField
                                 control={form.control}
                                 name="city"
-                                render={({ field }) => (
+                                render={({field}) => (
                                     <FormItem>
                                         <FormLabel>City</FormLabel>
                                         <FormControl>
                                             <Input {...field} />
                                         </FormControl>
-                                        <FormMessage />
+                                        <FormMessage/>
                                     </FormItem>
                                 )}
                             />
                             <FormField
                                 control={form.control}
                                 name="province"
-                                render={({ field }) => (
+                                render={({field}) => (
                                     <FormItem>
                                         <FormLabel>Province</FormLabel>
                                         <FormControl>
                                             <Input {...field} />
                                         </FormControl>
-                                        <FormMessage />
+                                        <FormMessage/>
                                     </FormItem>
                                 )}
                             />
                             <FormField
                                 control={form.control}
                                 name="country"
-                                render={({ field }) => (
+                                render={({field}) => (
                                     <FormItem>
                                         <FormLabel>Country</FormLabel>
                                         <FormControl>
                                             <Input {...field} />
                                         </FormControl>
-                                        <FormMessage />
+                                        <FormMessage/>
                                     </FormItem>
                                 )}
                             />
@@ -259,13 +259,13 @@ export default function DetailFormDialog({
                             <FormField
                                 control={form.control}
                                 name="phone"
-                                render={({ field }) => (
+                                render={({field}) => (
                                     <FormItem>
                                         <FormLabel>Phone</FormLabel>
                                         <FormControl>
                                             <Input type="number" {...field} />
                                         </FormControl>
-                                        <FormMessage />
+                                        <FormMessage/>
                                     </FormItem>
                                 )}
                             />
@@ -273,7 +273,7 @@ export default function DetailFormDialog({
                             <FormField
                                 control={form.control}
                                 name="dob"
-                                render={({ field }) => (
+                                render={({field}) => (
                                     <FormItem>
                                         <FormLabel>Date of Birth</FormLabel>
                                         <Popover>
@@ -284,7 +284,7 @@ export default function DetailFormDialog({
                                                         className={cn(
                                                             "w-full pl-3 text-left font-normal",
                                                             !field.value &&
-                                                                "text-muted-foreground"
+                                                            "text-muted-foreground"
                                                         )}
                                                     >
                                                         {field.value ? (
@@ -297,7 +297,7 @@ export default function DetailFormDialog({
                                                                 Pilih tanggal
                                                             </span>
                                                         )}
-                                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50"/>
                                                     </Button>
                                                 </FormControl>
                                             </PopoverTrigger>
@@ -327,9 +327,9 @@ export default function DetailFormDialog({
                                                     disabled={(date) =>
                                                         date > new Date() ||
                                                         date <
-                                                            new Date(
-                                                                "1900-01-01"
-                                                            )
+                                                        new Date(
+                                                            "1900-01-01"
+                                                        )
                                                     }
                                                     initialFocus
                                                 />
@@ -341,7 +341,7 @@ export default function DetailFormDialog({
                             <FormField
                                 control={form.control}
                                 name="gender"
-                                render={({ field }) => (
+                                render={({field}) => (
                                     <FormItem>
                                         <FormLabel>Gender</FormLabel>
                                         <Select
@@ -369,14 +369,14 @@ export default function DetailFormDialog({
                                                 })}
                                             </SelectContent>
                                         </Select>
-                                        <FormMessage />
+                                        <FormMessage/>
                                     </FormItem>
                                 )}
                             />
                             <FormField
                                 control={form.control}
                                 name="maritalStatus"
-                                render={({ field }) => (
+                                render={({field}) => (
                                     <FormItem>
                                         <FormLabel>Martial Status</FormLabel>
                                         <Select
@@ -412,7 +412,7 @@ export default function DetailFormDialog({
                                                 )}
                                             </SelectContent>
                                         </Select>
-                                        <FormMessage />
+                                        <FormMessage/>
                                     </FormItem>
                                 )}
                             />
@@ -420,7 +420,7 @@ export default function DetailFormDialog({
                                 <FormField
                                     control={form.control}
                                     name="idCard"
-                                    render={({ field }) => (
+                                    render={({field}) => (
                                         <FormItem>
                                             <FormLabel>ID Card</FormLabel>
                                             <FormControl>
@@ -429,7 +429,7 @@ export default function DetailFormDialog({
                                                     {...field}
                                                 />
                                             </FormControl>
-                                            <FormMessage />
+                                            <FormMessage/>
                                         </FormItem>
                                     )}
                                 />
@@ -439,7 +439,7 @@ export default function DetailFormDialog({
                             <FormField
                                 control={form.control}
                                 name="religion"
-                                render={({ field }) => (
+                                render={({field}) => (
                                     <FormItem>
                                         <FormLabel>Religion</FormLabel>
                                         <Select
@@ -469,14 +469,14 @@ export default function DetailFormDialog({
                                                 })}
                                             </SelectContent>
                                         </Select>
-                                        <FormMessage />
+                                        <FormMessage/>
                                     </FormItem>
                                 )}
                             />
                             <FormField
                                 control={form.control}
                                 name="tertiaryEducation"
-                                render={({ field }) => (
+                                render={({field}) => (
                                     <FormItem>
                                         <FormLabel>
                                             Tertiary Education
@@ -484,14 +484,14 @@ export default function DetailFormDialog({
                                         <FormControl>
                                             <Input {...field} />
                                         </FormControl>
-                                        <FormMessage />
+                                        <FormMessage/>
                                     </FormItem>
                                 )}
                             />
                             <FormField
                                 control={form.control}
                                 name="job"
-                                render={({ field }) => (
+                                render={({field}) => (
                                     <FormItem>
                                         <FormLabel>Job Role</FormLabel>
                                         <Select
@@ -519,20 +519,20 @@ export default function DetailFormDialog({
                                                 })}
                                             </SelectContent>
                                         </Select>
-                                        <FormMessage />
+                                        <FormMessage/>
                                     </FormItem>
                                 )}
                             />
                             <FormField
                                 control={form.control}
                                 name="salary"
-                                render={({ field }) => (
+                                render={({field}) => (
                                     <FormItem>
                                         <FormLabel>Salary</FormLabel>
                                         <FormControl>
                                             <Input {...field} />
                                         </FormControl>
-                                        <FormMessage />
+                                        <FormMessage/>
                                     </FormItem>
                                 )}
                             />
@@ -544,7 +544,7 @@ export default function DetailFormDialog({
                         {loadData === false ? (
                             "Add Details"
                         ) : (
-                            <ClipLoader size={25} />
+                            <ClipLoader size={25}/>
                         )}
                     </Button>
                 </div>

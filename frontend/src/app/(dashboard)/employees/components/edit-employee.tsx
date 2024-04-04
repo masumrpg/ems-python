@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/sheet";
 import {FileEditIcon} from "lucide-react";
 import DetailFormDialog from "./detail-form";
-import getEmployeeByIdAction from "@/action/getEmployeeByIdAction";
+import getEmployeeByIdAction from "@/action/employees/getEmployeeByIdAction";
 import {useState} from "react";
 import {ResponseUsers, UserFromApi} from "@/interface/interface-client";
 import {useRouter} from "next/navigation";

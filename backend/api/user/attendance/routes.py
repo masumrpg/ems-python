@@ -64,15 +64,15 @@ async def create_attendance_check_out(
 @admin_attendance_router.get(
     "/", status_code=status.HTTP_200_OK, response_model=AttendanceResponse
 )
-def get_attendance_today(limit: Optional[int] = Query(10, description="Limit of users per page"),
-                         db: Session = Depends(get_db)):
+def get_attendance_today(
+    limit: Optional[int] = Query(10, description="Limit of users per page"),
+    db: Session = Depends(get_db),
+):
     attendance = AttendanceRepository.get_attendance_today(limit, db)
     return attendance
 
 
-#
-#
-# @user_attendance_router.put("/{attendance_id}", response_model=schemas.Attendance)
+# @admin_attendance_router.put("/{attendance_id}", response_model=SuccessResponse)
 # def update_attendance(attendance_id: int, attendance: schemas.AttendanceUpdate, db: Session = Depends(get_db)):
 #     db_attendance = crud.get_attendance_by_id(db, attendance_id=attendance_id)
 #     if db_attendance is None:
@@ -80,9 +80,7 @@ def get_attendance_today(limit: Optional[int] = Query(10, description="Limit of 
 #     return crud.update_attendance(db=db, attendance=attendance, db_attendance=db_attendance)
 #
 #
-# @user_attendance_router.delete("/{attendance_id}", response_model=schemas.Attendance)
-# def delete_attendance(attendance_id: int, db: Session = Depends(get_db)):
-#     db_attendance = crud.get_attendance_by_id(db, attendance_id=attendance_id)
-#     if db_attendance is None:
-#         raise HTTPException(status_code=404, detail="Attendance not found")
-#     return crud.delete_attendance(db=db, db_attendance=db_attendance)
+@admin_attendance_router.delete("/{attendance_id}", response_model=SuccessResponse)
+def delete_attendance(attendance_id: int, db: Session = Depends(get_db)):
+    AttendanceRepository.delete_attendance(attendance_id, db)
+    return SuccessResponse(message="Success delete attendance")

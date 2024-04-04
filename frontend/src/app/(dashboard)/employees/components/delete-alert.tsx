@@ -10,19 +10,19 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+import {Button} from "@/components/ui/button";
 import {
     ResponseMessageClient,
     ResponseUsers
 } from "@/interface/interface-client";
-import deleteEmployeeAction from "@/action/deleteEmployeeAction";
-import { TrashIcon } from "lucide-react";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import deleteEmployeeAction from "@/action/employees/deleteEmployeeAction";
+import {TrashIcon} from "lucide-react";
+import {toast} from "sonner";
+import {useRouter} from "next/navigation";
+import {useState} from "react";
+import {useQueryClient} from "@tanstack/react-query";
 
-export function DeleteAlert({ user }: { user: ResponseUsers }) {
+export function DeleteAlert({user}: { user: ResponseUsers }) {
     const queryClient = useQueryClient();
     const [loading, setLoading] = useState<boolean>(false);
     const router = useRouter();
@@ -49,7 +49,7 @@ export function DeleteAlert({ user }: { user: ResponseUsers }) {
                     variant={"destructive"}
                     disabled={loading}
                 >
-                    <TrashIcon className="w-4 h-4" />
+                    <TrashIcon className="w-4 h-4"/>
                 </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>

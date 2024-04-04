@@ -1,9 +1,9 @@
 "use client";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { signInAction } from "@/action/signInAction";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
+import {z} from "zod";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {signInAction} from "@/action/employees/signInAction";
+import {useForm} from "react-hook-form";
+import {toast} from "sonner";
 import Link from "next/link";
 import {
     Form,
@@ -13,11 +13,11 @@ import {
     FormLabel,
     FormMessage
 } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useSearchParams } from "next/navigation";
-import { useState } from "react";
-import { ClipLoader } from "react-spinners";
+import {Button} from "@/components/ui/button";
+import {Input} from "@/components/ui/input";
+import {useSearchParams} from "next/navigation";
+import {useState} from "react";
+import {ClipLoader} from "react-spinners";
 import {
     Card,
     CardContent,
@@ -25,7 +25,7 @@ import {
     CardHeader,
     CardTitle
 } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import {cn} from "@/lib/utils";
 
 const FormSchema = z.object({
     username: z
@@ -86,7 +86,7 @@ export default function SignInForm() {
                             <FormField
                                 control={form.control}
                                 name="username"
-                                render={({ field }) => (
+                                render={({field}) => (
                                     <FormItem>
                                         <FormLabel>Username</FormLabel>
                                         <FormControl>
@@ -95,14 +95,14 @@ export default function SignInForm() {
                                                 {...field}
                                             />
                                         </FormControl>
-                                        <FormMessage />
+                                        <FormMessage/>
                                     </FormItem>
                                 )}
                             />
                             <FormField
                                 control={form.control}
                                 name="password"
-                                render={({ field }) => (
+                                render={({field}) => (
                                     <FormItem>
                                         <FormLabel>Password</FormLabel>
                                         <FormControl>
@@ -112,7 +112,7 @@ export default function SignInForm() {
                                                 {...field}
                                             />
                                         </FormControl>
-                                        <FormMessage />
+                                        <FormMessage/>
                                     </FormItem>
                                 )}
                             />
@@ -122,10 +122,11 @@ export default function SignInForm() {
                             type="submit"
                             disabled={isLoading}
                         >
-                            {isLoading ? <ClipLoader size={25} /> : "Signin"}
+                            {isLoading ? <ClipLoader size={25}/> : "Signin"}
                         </Button>
                     </form>
-                    <div className="mx-auto my-4 flex w-full items-center justify-evenly before:mr-4 before:block before:h-px before:flex-grow before:bg-stone-400 after:ml-4 after:block after:h-px after:flex-grow after:bg-stone-400">
+                    <div
+                        className="mx-auto my-4 flex w-full items-center justify-evenly before:mr-4 before:block before:h-px before:flex-grow before:bg-stone-400 after:ml-4 after:block after:h-px after:flex-grow after:bg-stone-400">
                         or
                     </div>
                     <p className="text-center text-sm text-gray-600 mt-2">

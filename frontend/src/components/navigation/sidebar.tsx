@@ -11,8 +11,8 @@ import {
     SettingsIcon,
     UsersIcon
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import {Badge} from "@/components/ui/badge";
+import {Button} from "@/components/ui/button";
 import Image from "next/image";
 import {
     DropdownMenu,
@@ -22,53 +22,53 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { cn } from "@/lib/utils";
-import { usePathname } from "next/navigation";
-import { toast } from "sonner";
-import signOutAction from "@/action/signOutAction";
+import {Input} from "@/components/ui/input";
+import {Sheet, SheetContent, SheetTrigger} from "@/components/ui/sheet";
+import {cn} from "@/lib/utils";
+import {usePathname} from "next/navigation";
+import {toast} from "sonner";
+import signOutAction from "@/action/employees/signOutAction";
 import ModeToggle from "@/components/mode-toggle";
 
 const navLinks = [
     {
         path: "/dashboard",
-        icon: <LineChart className="h-4 w-4" />,
+        icon: <LineChart className="h-4 w-4"/>,
         text: "Dashboard",
         badge: false,
         badgeValue: null
     },
     {
         path: "/employees",
-        icon: <UsersIcon className="h-4 w-4" />,
+        icon: <UsersIcon className="h-4 w-4"/>,
         text: "Employees",
         badge: true,
         badgeValue: 3
     },
     {
         path: "/attendance",
-        icon: <LayersIcon className="h-4 w-4" />,
+        icon: <LayersIcon className="h-4 w-4"/>,
         text: "Attendance",
         badge: false,
         badgeValue: null
     },
     {
         path: "/reports",
-        icon: <FileTextIcon className="h-4 w-4" />,
+        icon: <FileTextIcon className="h-4 w-4"/>,
         text: "Reports",
         badge: false,
         badgeValue: null
     },
     {
         path: "/settings",
-        icon: <SettingsIcon className="h-4 w-4" />,
+        icon: <SettingsIcon className="h-4 w-4"/>,
         text: "Settings",
         badge: false,
         badgeValue: null
     }
 ];
 
-export default function SideBar({ children }: { children: React.ReactNode }) {
+export default function SideBar({children}: { children: React.ReactNode }) {
     const path = usePathname();
     const isPathInList = navLinks.some((item) => item.path === path);
 
@@ -97,7 +97,7 @@ export default function SideBar({ children }: { children: React.ReactNode }) {
                                 href="/"
                                 className="flex items-center gap-2 font-semibold"
                             >
-                                <Package2 className="h-6 w-6" />
+                                <Package2 className="h-6 w-6"/>
                                 <span className="">Masum Inc</span>
                             </Link>
                             <Button
@@ -105,7 +105,7 @@ export default function SideBar({ children }: { children: React.ReactNode }) {
                                 size="icon"
                                 className="ml-auto h-8 w-8"
                             >
-                                <Bell className="h-4 w-4" />
+                                <Bell className="h-4 w-4"/>
                                 <span className="sr-only">
                                     Toggle notifications
                                 </span>
@@ -126,7 +126,8 @@ export default function SideBar({ children }: { children: React.ReactNode }) {
                                         {link.icon}
                                         {link.text}
                                         {link.badge && (
-                                            <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
+                                            <Badge
+                                                className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
                                                 {link.badgeValue}
                                             </Badge>
                                         )}
@@ -147,7 +148,7 @@ export default function SideBar({ children }: { children: React.ReactNode }) {
                                     size="icon"
                                     className="shrink-0 md:hidden"
                                 >
-                                    <Menu className="h-5 w-5" />
+                                    <Menu className="h-5 w-5"/>
                                     <span className="sr-only">
                                         Toggle navigation menu
                                     </span>
@@ -159,7 +160,7 @@ export default function SideBar({ children }: { children: React.ReactNode }) {
                                         href="#"
                                         className="flex items-center gap-2 text-lg font-semibold"
                                     >
-                                        <Package2 className="h-6 w-6" />
+                                        <Package2 className="h-6 w-6"/>
                                         <span className="sr-only">
                                             Acme Inc
                                         </span>
@@ -177,7 +178,8 @@ export default function SideBar({ children }: { children: React.ReactNode }) {
                                             {link.icon}
                                             {link.text}
                                             {link.badge && (
-                                                <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
+                                                <Badge
+                                                    className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
                                                     {link.badgeValue}
                                                 </Badge>
                                             )}
@@ -189,7 +191,7 @@ export default function SideBar({ children }: { children: React.ReactNode }) {
                         <div className="w-full flex-1">
                             <form>
                                 <div className="relative">
-                                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground"/>
                                     <Input
                                         type="search"
                                         placeholder="Search anything..."
@@ -226,14 +228,14 @@ export default function SideBar({ children }: { children: React.ReactNode }) {
                                 <DropdownMenuLabel>
                                     My Account
                                 </DropdownMenuLabel>
-                                <DropdownMenuSeparator />
+                                <DropdownMenuSeparator/>
                                 <DropdownMenuItem className="cursor-pointer">
                                     Settings
                                 </DropdownMenuItem>
                                 <DropdownMenuItem className="cursor-pointer">
                                     Support
                                 </DropdownMenuItem>
-                                <DropdownMenuSeparator />
+                                <DropdownMenuSeparator/>
                                 <DropdownMenuItem
                                     onClick={handleSignout}
                                     className="cursor-pointer"

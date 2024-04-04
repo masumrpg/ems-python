@@ -29,7 +29,7 @@ import {
     DropdownMenuContent,
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-import getAllEmployeesAction from "@/action/getAllEmployeesAction";
+import getAllEmployeesAction from "@/action/employees/getAllEmployeesAction";
 import {UserPaginationResponse} from "@/interface/interface-client";
 import {cn} from "@/lib/utils";
 import {ChevronDown} from "lucide-react";
@@ -49,7 +49,7 @@ interface FetchDataProps {
     filterValue?: string;
 }
 
-export default function DataTable<TData, TValue>({
+export default function EmployeeTable<TData, TValue>({
     columns,
     data: initFromServer
 }: DataTableProps<TData, TValue>) {

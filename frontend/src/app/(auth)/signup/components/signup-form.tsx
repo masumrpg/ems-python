@@ -1,5 +1,5 @@
 "use client";
-import { useForm } from "react-hook-form";
+import {useForm} from "react-hook-form";
 import {
     Form,
     FormControl,
@@ -9,17 +9,17 @@ import {
     FormMessage
 } from "@/components/ui/form";
 import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {Input} from "@/components/ui/input";
+import {Button} from "@/components/ui/button";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import signUpAction from "@/action/signUpAction";
-import { useState } from "react";
-import { ClipLoader } from "react-spinners";
-import { cn } from "@/lib/utils";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {useRouter} from "next/navigation";
+import {toast} from "sonner";
+import signUpAction from "@/action/employees/signUpAction";
+import {useState} from "react";
+import {ClipLoader} from "react-spinners";
+import {cn} from "@/lib/utils";
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 
 interface ResponseSignup {
     status: number;
@@ -129,7 +129,7 @@ export default function SignUpForm({
                             <FormField
                                 control={form.control}
                                 name="fullName"
-                                render={({ field }) => (
+                                render={({field}) => (
                                     <FormItem>
                                         <FormLabel>Full Name</FormLabel>
                                         <FormControl>
@@ -138,14 +138,14 @@ export default function SignUpForm({
                                                 {...field}
                                             />
                                         </FormControl>
-                                        <FormMessage />
+                                        <FormMessage/>
                                     </FormItem>
                                 )}
                             />
                             <FormField
                                 control={form.control}
                                 name="username"
-                                render={({ field }) => (
+                                render={({field}) => (
                                     <FormItem>
                                         <FormLabel>Username</FormLabel>
                                         <FormControl>
@@ -154,14 +154,14 @@ export default function SignUpForm({
                                                 {...field}
                                             />
                                         </FormControl>
-                                        <FormMessage />
+                                        <FormMessage/>
                                     </FormItem>
                                 )}
                             />
                             <FormField
                                 control={form.control}
                                 name="email"
-                                render={({ field }) => (
+                                render={({field}) => (
                                     <FormItem>
                                         <FormLabel>Email</FormLabel>
                                         <FormControl>
@@ -171,14 +171,14 @@ export default function SignUpForm({
                                                 {...field}
                                             />
                                         </FormControl>
-                                        <FormMessage />
+                                        <FormMessage/>
                                     </FormItem>
                                 )}
                             />
                             <FormField
                                 control={form.control}
                                 name="password"
-                                render={({ field }) => (
+                                render={({field}) => (
                                     <FormItem>
                                         <FormLabel>Password</FormLabel>
                                         <FormControl>
@@ -188,14 +188,14 @@ export default function SignUpForm({
                                                 {...field}
                                             />
                                         </FormControl>
-                                        <FormMessage />
+                                        <FormMessage/>
                                     </FormItem>
                                 )}
                             />
                             <FormField
                                 control={form.control}
                                 name="confirmPassword"
-                                render={({ field }) => (
+                                render={({field}) => (
                                     <FormItem>
                                         <FormLabel>Retype Password</FormLabel>
                                         <FormControl>
@@ -205,7 +205,7 @@ export default function SignUpForm({
                                                 {...field}
                                             />
                                         </FormControl>
-                                        <FormMessage />
+                                        <FormMessage/>
                                     </FormItem>
                                 )}
                             />
@@ -215,7 +215,7 @@ export default function SignUpForm({
                             type="submit"
                             disabled={isLoading}
                         >
-                            {isLoading ? <ClipLoader size={25} /> : buttonName}
+                            {isLoading ? <ClipLoader size={25}/> : buttonName}
                         </Button>
                     </form>
                     <div

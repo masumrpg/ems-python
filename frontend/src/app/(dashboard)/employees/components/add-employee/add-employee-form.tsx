@@ -1,5 +1,5 @@
 "use client";
-import { useForm } from "react-hook-form";
+import {useForm} from "react-hook-form";
 import {
     Form,
     FormControl,
@@ -9,16 +9,16 @@ import {
     FormMessage
 } from "@/components/ui/form";
 import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {Input} from "@/components/ui/input";
+import {Button} from "@/components/ui/button";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import signUpAction from "@/action/signUpAction";
-import { useState } from "react";
-import { ClipLoader } from "react-spinners";
-import { cn } from "@/lib/utils";
+import {useRouter} from "next/navigation";
+import {toast} from "sonner";
+import signUpAction from "@/action/employees/signUpAction";
+import {useState} from "react";
+import {ClipLoader} from "react-spinners";
+import {cn} from "@/lib/utils";
 
 interface ResponseSignup {
     status: number;
@@ -117,33 +117,33 @@ export default function AddEmployeeForm({
                     <FormField
                         control={form.control}
                         name="fullName"
-                        render={({ field }) => (
+                        render={({field}) => (
                             <FormItem>
                                 <FormLabel>Full Name</FormLabel>
                                 <FormControl>
                                     <Input placeholder="Your Name" {...field} />
                                 </FormControl>
-                                <FormMessage />
+                                <FormMessage/>
                             </FormItem>
                         )}
                     />
                     <FormField
                         control={form.control}
                         name="username"
-                        render={({ field }) => (
+                        render={({field}) => (
                             <FormItem>
                                 <FormLabel>Username</FormLabel>
                                 <FormControl>
                                     <Input placeholder="username" {...field} />
                                 </FormControl>
-                                <FormMessage />
+                                <FormMessage/>
                             </FormItem>
                         )}
                     />
                     <FormField
                         control={form.control}
                         name="email"
-                        render={({ field }) => (
+                        render={({field}) => (
                             <FormItem>
                                 <FormLabel>Email</FormLabel>
                                 <FormControl>
@@ -153,14 +153,14 @@ export default function AddEmployeeForm({
                                         {...field}
                                     />
                                 </FormControl>
-                                <FormMessage />
+                                <FormMessage/>
                             </FormItem>
                         )}
                     />
                     <FormField
                         control={form.control}
                         name="password"
-                        render={({ field }) => (
+                        render={({field}) => (
                             <FormItem>
                                 <FormLabel>Password</FormLabel>
                                 <FormControl>
@@ -170,14 +170,14 @@ export default function AddEmployeeForm({
                                         {...field}
                                     />
                                 </FormControl>
-                                <FormMessage />
+                                <FormMessage/>
                             </FormItem>
                         )}
                     />
                     <FormField
                         control={form.control}
                         name="confirmPassword"
-                        render={({ field }) => (
+                        render={({field}) => (
                             <FormItem>
                                 <FormLabel>Retype Password</FormLabel>
                                 <FormControl>
@@ -187,7 +187,7 @@ export default function AddEmployeeForm({
                                         {...field}
                                     />
                                 </FormControl>
-                                <FormMessage />
+                                <FormMessage/>
                             </FormItem>
                         )}
                     />
@@ -197,7 +197,7 @@ export default function AddEmployeeForm({
                     type="submit"
                     disabled={isLoading}
                 >
-                    {isLoading ? <ClipLoader size={25} /> : buttonName}
+                    {isLoading ? <ClipLoader size={25}/> : buttonName}
                 </Button>
             </form>
             <div

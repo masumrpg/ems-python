@@ -41,7 +41,7 @@ class AttendanceRepository:
         # Query
         query = db.query(AttendanceModel)
         # Memeriksa waktu saat ini dalam zona waktu Jakarta
-        current_time_jakarta = get_current_time_jakarta()
+        # current_time_jakarta = get_current_time_jakarta()
 
         # TODO disini di offkan dulu untuk testing
         # Memeriksa apakah waktu saat ini berada dalam rentang yang diizinkan
@@ -77,7 +77,7 @@ class AttendanceRepository:
         query = db.query(AttendanceModel)
 
         # Memeriksa waktu saat ini dalam zona waktu Jakarta
-        current_time_jakarta = get_current_time_jakarta()
+        # current_time_jakarta = get_current_time_jakarta()
 
         # TODO disini di offkan dulu untuk testing
         # Memeriksa apakah waktu saat ini berada dalam rentang yang diizinkan
@@ -140,6 +140,7 @@ class AttendanceRepository:
             )
             full_name = user.full_name if user else "Unknown"
             attendances = ContentAttendanceResponse(
+                id=attendance.id,
                 user_id=attendance.user_id,
                 full_name=full_name,
                 check_in=attendance.check_in,
@@ -148,3 +149,18 @@ class AttendanceRepository:
             attendance_response.append(attendances)
 
         return AttendanceResponse(limit=limit, content=attendance_response)
+
+    @staticmethod
+    def delete_attendance(attendance_id: int, db: Session):
+        # Mencari kehadiran berdasarkan ID
+        attendance = (
+            db.query(AttendanceModel)
+            .filter(AttendanceModel.id == attendance_id)
+            .first()
+        )
+        if not attendance:
+            raise HTTPException(status_code=404, detail="Attendance not found")
+
+        # Menghapus kehadiran dari database
+        db.delete(attendance)
+        commit_rollback()
