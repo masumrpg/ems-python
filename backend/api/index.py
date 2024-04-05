@@ -2,7 +2,7 @@ from fastapi import Depends, FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from api.user.routes import public_router, user_router, admin_router
-from api.user.attendance.routes import user_attendance_router, admin_attendance_router
+from api.attendance.routes import user_attendance_router, admin_attendance_router
 from api.statistic.routes import public_statistics_router, user_statistics_router, admin_statistics_router
 from api.auth.route import router as auth_router
 from api.core.security import JWTAuth

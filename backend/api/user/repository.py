@@ -5,7 +5,7 @@ from sqlalchemy import asc, desc
 from sqlalchemy.orm import aliased, Session
 from sqlalchemy.exc import SQLAlchemyError
 from fastapi.exceptions import HTTPException
-from api.user.models import AddressModel, UserDetailModel, UserModel
+from api.models import AddressModel, UserDetailModel, UserModel
 from api.core.security import get_password_hash
 from api.core.database import commit_rollback, get_db
 from api.user.schemas import CreateUserDetailRequest, CreateUserRequest

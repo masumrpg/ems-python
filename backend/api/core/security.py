@@ -6,7 +6,7 @@ from jose import jwt, JWTError
 from api.core.config import get_settings
 from fastapi import Depends, HTTPException
 from api.core.database import get_db
-from api.user.models import UserModel
+from api.models import UserModel
 
 settings = get_settings()
 

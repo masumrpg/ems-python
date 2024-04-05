@@ -2,7 +2,7 @@ from typing import Optional
 from fastapi import APIRouter, Query, status, Depends, Request
 from sqlalchemy.orm import Session
 
-from api.user.models import UserModel
+from api.models import UserModel
 from api.user.schemas import CreateUserDetailRequest, CreateUserRequest
 from api.core.security import get_current_user, is_superuser, oauth2_scheme
 from api.user.responses import SuccessResponse, UserPaginationResponse, UserResponse, UserWithDetilResponse

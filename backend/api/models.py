@@ -12,6 +12,8 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import relationship
 from api.core.database import Base
+from pytz import timezone
+from datetime import datetime
 
 
 class AddressModel(Base):
@@ -79,8 +81,17 @@ class AttendanceModel(Base):
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     user_id = Column(String, ForeignKey("user.id"), nullable=False)
-    check_in = Column(DateTime, nullable=False, default=func.now())
-    check_out = Column(DateTime)
+    check_in = Column(DateTime(timezone=True), nullable=False, default=func.now())
+    check_out = Column(DateTime(timezone=True))
 
     # Relationship with UserModel
     user = relationship("UserModel", back_populates="attendance_records")
+
+    @staticmethod
+    def get_jakarta_time():
+        return timezone("Asia/Jakarta").localize(datetime.now())
+
+    def __init__(self, user_id, check_in=None, check_out=None):
+        self.user_id = user_id
+        self.check_in = check_in if check_in else self.get_jakarta_time()
+        self.check_out = check_out

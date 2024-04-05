@@ -1,4 +1,4 @@
-from api.user.models import UserModel
+from api.models import UserModel
 from fastapi.exceptions import HTTPException
 from api.core.security import verify_password
 from api.core.config import get_settings

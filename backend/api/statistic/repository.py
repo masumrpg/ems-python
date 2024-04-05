@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func
 from sqlalchemy.sql import select
 from api.statistic.responses import StatisticsResponse
-from api.user.models import UserModel
+from api.models import UserModel
 
 
 class StatisticRepository:
