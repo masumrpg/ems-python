@@ -1,0 +1,21 @@
+{
+    "root": true,
+    "extends": "@react-native-community",
+    "rules": {
+        "indent": ["error", 4],
+        "semi": "warn",
+        "quotes": "warn",
+        "no-trailing-spaces": "warn",
+        "no-mixed-spaces-and-tabs": "warn",
+        "comma-dangle": "warn",
+        "no-console": "warn",
+        "no-unused-expressions": "warn",
+        "no-unused-labels": "warn",
+        "no-unused-vars": "warn"
+    },
+    "ignorePatterns": [
+        "src/types/*",
+        "../backend/",
+        "../test/"
+    ]
+}

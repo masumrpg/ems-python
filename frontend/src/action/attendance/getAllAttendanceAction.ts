@@ -1,5 +1,4 @@
 "use server";
-import {UserPaginationResponse} from "@/interface/interface-client";
 import {auth} from "@/lib/auth";
 
 interface GetAllEmployeesActionProps {
@@ -8,7 +7,7 @@ interface GetAllEmployeesActionProps {
 
 export default async function getAllEmployeesAction({limit = 10}: GetAllEmployeesActionProps) {
     const session = await auth();
-    const url = `${process.env.NEXT_PUBLIC_API_URL}/user/attendance/?limit=${limit}`;
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/attendance/?limit=${limit}`;
 
     try {
         const res = await fetch(url, {

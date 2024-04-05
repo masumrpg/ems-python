@@ -12,10 +12,7 @@ export default function Index() {
         const currentTime = new Date().toISOString();
         console.log('Waktu Check-In:', currentTime);
 
-        const url = `${process.env.EXPO_PUBLIC_API_BASE_URL}/user/attendance`
-        const checkIn = {
-            "check_in": currentTime
-        }
+        const url = `${process.env.EXPO_PUBLIC_API_BASE_URL}/attendance`
         const config = {
             headers: {
                 'accept': 'application/json',
@@ -23,7 +20,7 @@ export default function Index() {
                 'Authorization': `Bearer ${session}`,
             }
         };
-        const data = await axios.post(url, checkIn, config)
+        const data = await axios.post(url, config)
             .then((response) => {
                 console.log(response.data);
                 return response.data;
@@ -52,10 +49,7 @@ export default function Index() {
         const currentTime = new Date().toISOString();
         console.log('Waktu Check-In:', currentTime);
 
-        const url = `${process.env.EXPO_PUBLIC_API_BASE_URL}/user/attendance`
-        const checkIn = {
-            "check_out": currentTime
-        }
+        const url = `${process.env.EXPO_PUBLIC_API_BASE_URL}/attendance`
         const config = {
             headers: {
                 'accept': 'application/json',
@@ -63,7 +57,7 @@ export default function Index() {
                 'Authorization': `Bearer ${session}`,
             }
         };
-        const data = await axios.patch(url, checkIn, config)
+        const data = await axios.patch(url, config)
             .then((response) => {
                 console.log(response.data);
                 return response.data;
