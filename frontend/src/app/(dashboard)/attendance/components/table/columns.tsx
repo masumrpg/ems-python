@@ -1,8 +1,21 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { MoreHorizontal } from "lucide-react";
+import { toast } from "sonner";
+import DeleteAttendance from "./delete-attendance";
 
 export type Attendance = {
+    id: number;
     user_id: string;
     full_name: string;
     check_in: string;
@@ -59,17 +72,48 @@ export const columns: ColumnDef<Attendance>[] = [
             const localDate = utcDate.toLocaleString("id-ID", options);
             return (
                 <div className={"flex justify-center items-center"}>
-                    <Badge variant={!utcDateString ? "outline" : "destructive"}>
-                        <p
-                            className={cn(
-                                "text-center",
-                                !utcDateString ? "text-red-600" : ""
-                            )}
-                        >
+                    <Badge variant={!utcDateString ? "destructive" : "default"}>
+                        <p className={cn("text-center")}>
                             {!utcDateString ? "Hasn't come out yet" : localDate}
                         </p>
                     </Badge>
                 </div>
+            );
+        }
+    },
+    {
+        id: "actions",
+        enableHiding: false,
+        cell: ({ row }) => {
+            const data = row.original;
+
+            return (
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-8 w-8 p-0">
+                            <span className="sr-only">Open menu</span>
+                            <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuItem
+                            onClick={() => {
+                                toast.message(data.id);
+                            }}
+                        >
+                            Copy payment ID
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <div
+                            className={cn(
+                                "relative flex cursor-pointer select-none hover:bg-muted items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+                            )}
+                        >
+                            <DeleteAttendance data={data} />
+                        </div>
+                    </DropdownMenuContent>
+                </DropdownMenu>
             );
         }
     }

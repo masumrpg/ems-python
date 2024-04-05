@@ -2,7 +2,7 @@ import {Button} from "@/components/ui/button";
 import {AttendanceTable} from "./components/table";
 import getAllEmployeesAction from "@/action/attendance/getAllAttendanceAction";
 
-// export const revalidate = 0;
+export const revalidate = 0;
 
 export default async function AttendancePage() {
     const res = await getAllEmployeesAction({});
@@ -15,7 +15,7 @@ export default async function AttendancePage() {
                 {/*</Button>*/}
             </div>
             <div className="border shadow-sm rounded-lg">
-                <AttendanceTable data={!res.content ? null : res.content}/>
+                <AttendanceTable data={!res.content ? [] : res.content}/>
             </div>
         </main>
     );

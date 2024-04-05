@@ -11,16 +11,16 @@ import {
     getSortedRowModel,
     useReactTable
 } from "@tanstack/react-table";
-import {ChevronDown} from "lucide-react";
+import { ChevronDown } from "lucide-react";
 
-import {Button} from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
     DropdownMenuCheckboxItem,
     DropdownMenuContent,
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-import {Input} from "@/components/ui/input";
+import { Input } from "@/components/ui/input";
 import {
     Table,
     TableBody,
@@ -29,14 +29,9 @@ import {
     TableHeader,
     TableRow
 } from "@/components/ui/table";
-import {columns} from "./table/columns";
+import { Attendance, columns } from "./table/columns";
 
-
-export function AttendanceTable<TData>({
-    data
-}: {
-    data: any
-}) {
+export function AttendanceTable({ data }: { data: Attendance[] }) {
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] =
         React.useState<ColumnFiltersState>([]);
@@ -117,7 +112,11 @@ export function AttendanceTable<TData>({
                                         <TableHead key={header.id}>
                                             {header.isPlaceholder
                                                 ? null
-                                                : flexRender(header.column.columnDef.header, header.getContext())}
+                                                : flexRender(
+                                                    header.column.columnDef
+                                                        .header,
+                                                    header.getContext()
+                                                )}
                                         </TableHead>
                                     );
                                 })}
@@ -149,7 +148,7 @@ export function AttendanceTable<TData>({
                                     colSpan={columns.length}
                                     className="h-24 text-center"
                                 >
-                                    No results.
+                                    There are no attendance records for today.
                                 </TableCell>
                             </TableRow>
                         )}
