@@ -15,7 +15,7 @@ export default async function AttendancePage() {
                 {/*</Button>*/}
             </div>
             <div className="border shadow-sm rounded-lg">
-                <AttendanceTable data={res.content}/>
+                <AttendanceTable data={!res.content ? null : res.content}/>
             </div>
         </main>
     );
