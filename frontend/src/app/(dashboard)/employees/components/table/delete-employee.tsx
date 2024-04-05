@@ -10,24 +10,19 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger
 } from "@/components/ui/alert-dialog";
-import {Button} from "@/components/ui/button";
 import {
     ResponseMessageClient,
     ResponseUsers
 } from "@/interface/interface-client";
 import deleteEmployeeAction from "@/action/employees/deleteEmployeeAction";
-import {TrashIcon} from "lucide-react";
 import {toast} from "sonner";
 import {useRouter} from "next/navigation";
-import {useState} from "react";
 import {useQueryClient} from "@tanstack/react-query";
 
-export function DeleteAlert({user}: { user: ResponseUsers }) {
+export function DeleteEmployee({user}: { user: ResponseUsers }) {
     const queryClient = useQueryClient();
-    const [loading, setLoading] = useState<boolean>(false);
     const router = useRouter();
     const handlerDeleteUser = async () => {
-        setLoading(true);
         const res: ResponseMessageClient = (await deleteEmployeeAction(
             user.id
         )) as ResponseMessageClient;
@@ -38,24 +33,16 @@ export function DeleteAlert({user}: { user: ResponseUsers }) {
         }
         await queryClient.refetchQueries({queryKey: ["employees"]});
         router.refresh();
-        setLoading(false);
     };
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
-                <Button
-                    size={"icon"}
-                    className={"w-6 h-6"}
-                    variant={"destructive"}
-                    disabled={loading}
-                >
-                    <TrashIcon className="w-4 h-4"/>
-                </Button>
+                <p className="w-full text-red-600">Delete</p>
             </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle>
-                        Are you sure to delete{" "}
+                        Delete{" "}
                         <span className={"underline"}>{user.full_name}</span>?
                     </AlertDialogTitle>
                     <AlertDialogDescription>
@@ -68,7 +55,7 @@ export function DeleteAlert({user}: { user: ResponseUsers }) {
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
                     <AlertDialogAction
                         onClick={handlerDeleteUser}
-                        className={"bg-destructive hover:bg-red-400"}
+                        className="bg-destructive hover:bg-red-400 dark:text-white"
                     >
                         Continue
                     </AlertDialogAction>

@@ -2,6 +2,12 @@ import {Button} from "@/components/ui/button";
 import {Dashboard} from "./components/dashboard";
 import getStatisticsAction from "@/action/dashboard/getStatisticsAction";
 import {DashboardProps} from "@/interface/interface-client";
+import type {Metadata} from "next";
+
+export const metadata: Metadata = {
+    title: "Dashboard",
+    description: "Made by Masum"
+};
 
 export const revalidate = 0;
 

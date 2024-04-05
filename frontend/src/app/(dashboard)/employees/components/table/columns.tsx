@@ -2,8 +2,22 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { ResponseUsers } from "@/interface/interface-client";
 import { Badge } from "@/components/ui/badge";
-import { DeleteAlert } from "../delete-alert";
-import EditEmployeeDialog from "@/app/(dashboard)/employees/components/edit-employee";
+import { DeleteEmployee } from "./delete-employee";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { MoreHorizontal } from "lucide-react";
+import { toast } from "sonner";
+import { cn } from "@/lib/utils";
+import DeleteAttendance from "@/app/(dashboard)/attendance/components/table/delete-attendance";
+import EditEmployeeSheet from "@/app/(dashboard)/employees/components/table/edit-employee";
+import Link from "next/link";
 
 export const columns: ColumnDef<ResponseUsers>[] = [
     {
@@ -27,16 +41,18 @@ export const columns: ColumnDef<ResponseUsers>[] = [
         }
     },
     {
-        header: "Verify",
+        header: () => {
+            return <p className={"text-center"}>Verified</p>;
+        },
         accessorKey: "is_verified",
         cell: ({ row }) => {
             const employee = row.original;
             return (
-                <div>
+                <div className={"text-center"}>
                     {employee.is_verified ? (
                         <Badge>Verified</Badge>
                     ) : (
-                        <Badge variant="destructive">Not Verified</Badge>
+                        <Badge variant="destructive">Unverified</Badge>
                     )}
                 </div>
             );
@@ -44,14 +60,45 @@ export const columns: ColumnDef<ResponseUsers>[] = [
     },
     {
         id: "actions",
-        header: "Action",
+        header: () => {
+            return <p className={"text-center"}>Actions</p>;
+        },
+        enableHiding: false,
         cell: ({ row }) => {
             const user: ResponseUsers = row.original;
+
             return (
-                <div className="space-x-2">
-                    <EditEmployeeDialog user={user} />
-                    <DeleteAlert user={user} />
-                </div>
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <div className={"flex justify-center items-center"}>
+                            <Button variant="ghost" className="h-8 w-8 p-0">
+                                <span className="sr-only">Open menu</span>
+                                <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                        </div>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuItem className={"cursor-pointer"}>
+                            <Link href={`/employees/${user.id}`}>View</Link>
+                        </DropdownMenuItem>
+                        <div
+                            className={
+                                "relative flex cursor-pointer select-none hover:bg-muted items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+                            }
+                        >
+                            <EditEmployeeSheet user={user} />
+                        </div>
+                        <DropdownMenuSeparator />
+                        <div
+                            className={
+                                "relative flex cursor-pointer select-none hover:bg-muted items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+                            }
+                        >
+                            <DeleteEmployee user={user} />
+                        </div>
+                    </DropdownMenuContent>
+                </DropdownMenu>
             );
         }
     }

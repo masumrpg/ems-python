@@ -29,6 +29,7 @@ import {usePathname} from "next/navigation";
 import {toast} from "sonner";
 import signOutAction from "@/action/employees/signOutAction";
 import ModeToggle from "@/components/mode-toggle";
+import {authRoutes} from "@/routes";
 
 const navLinks = [
     {
@@ -70,26 +71,26 @@ const navLinks = [
 
 export default function SideBar({children}: { children: React.ReactNode }) {
     const path = usePathname();
-    const isPathInList = navLinks.some((item) => item.path === path);
+    const isPathInList = authRoutes.some((item) => item === path);
 
     const handleSignout = async () => {
         const error = await signOutAction();
         if (error) {
             toast.error(error.error);
         } else {
-            toast.success("Signout success");
+            toast.success("Sign out success");
         }
     };
 
     return (
         <div
             className={cn(
-                !isPathInList
+                isPathInList
                     ? ""
                     : "grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]"
             )}
         >
-            {!isPathInList ? null : (
+            {isPathInList ? null : (
                 <div className="hidden border-r bg-muted/40 md:block">
                     <div className="flex h-full max-h-screen flex-col gap-2">
                         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
@@ -138,8 +139,8 @@ export default function SideBar({children}: { children: React.ReactNode }) {
                     </div>
                 </div>
             )}
-            <div className={cn(!isPathInList ? "" : "flex flex-col")}>
-                {!isPathInList ? null : (
+            <div className={cn(isPathInList ? "" : "flex flex-col")}>
+                {isPathInList ? null : (
                     <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
                         <Sheet>
                             <SheetTrigger asChild>

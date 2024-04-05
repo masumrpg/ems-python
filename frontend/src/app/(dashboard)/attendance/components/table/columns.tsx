@@ -1,6 +1,6 @@
-import { ColumnDef } from "@tanstack/react-table";
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import {ColumnDef} from "@tanstack/react-table";
+import {Badge} from "@/components/ui/badge";
+import {cn} from "@/lib/utils";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -9,9 +9,9 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { MoreHorizontal } from "lucide-react";
-import { toast } from "sonner";
+import {Button} from "@/components/ui/button";
+import {MoreHorizontal} from "lucide-react";
+import {toast} from "sonner";
 import DeleteAttendance from "./delete-attendance";
 
 export type Attendance = {
@@ -38,7 +38,7 @@ export const columns: ColumnDef<Attendance>[] = [
         header: () => {
             return <p className={"text-center"}>Name</p>;
         },
-        cell: ({ row }) => {
+        cell: ({row}) => {
             const name = row.original.full_name;
             return <p className={"text-left"}>{name}</p>;
         }
@@ -48,7 +48,7 @@ export const columns: ColumnDef<Attendance>[] = [
         header: () => {
             return <p className={"text-center"}>Check In</p>;
         },
-        cell: ({ row }) => {
+        cell: ({row}) => {
             const utcDateString = row.original.check_in;
             const utcDate = new Date(utcDateString);
             const localDate = utcDate.toLocaleString("id-ID", options);
@@ -66,7 +66,7 @@ export const columns: ColumnDef<Attendance>[] = [
         header: () => {
             return <p className={"text-center"}>Check Out</p>;
         },
-        cell: ({ row }) => {
+        cell: ({row}) => {
             const utcDateString = row.original.check_out;
             const utcDate = new Date(utcDateString);
             const localDate = utcDate.toLocaleString("id-ID", options);
@@ -83,17 +83,21 @@ export const columns: ColumnDef<Attendance>[] = [
     },
     {
         id: "actions",
+        header: () => {
+            return <p className={"text-center"}>Actions</p>;
+        },
         enableHiding: false,
-        cell: ({ row }) => {
+        cell: ({row}) => {
             const data = row.original;
-
             return (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                            <span className="sr-only">Open menu</span>
-                            <MoreHorizontal className="h-4 w-4" />
-                        </Button>
+                        <div className={"flex justify-center items-center"}>
+                            <Button variant="ghost" className="h-8 w-8 p-0">
+                                <span className="sr-only">Open menu</span>
+                                <MoreHorizontal className="h-4 w-4"/>
+                            </Button>
+                        </div>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
@@ -104,16 +108,15 @@ export const columns: ColumnDef<Attendance>[] = [
                         >
                             Copy payment ID
                         </DropdownMenuItem>
-                        <DropdownMenuSeparator />
+                        <DropdownMenuSeparator/>
                         <div
-                            className={cn(
-                                "relative flex cursor-pointer select-none hover:bg-muted items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
-                            )}
+                            className={"relative flex cursor-pointer select-none hover:bg-muted items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"}
                         >
-                            <DeleteAttendance data={data} />
+                            <DeleteAttendance data={data}/>
                         </div>
                     </DropdownMenuContent>
                 </DropdownMenu>
+
             );
         }
     }

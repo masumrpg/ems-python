@@ -10,11 +10,11 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger
 } from "@/components/ui/alert-dialog";
-import { toast } from "sonner";
-import { Attendance } from "./columns";
-import { useRouter } from "next/navigation";
+import {toast} from "sonner";
+import {Attendance} from "./columns";
+import {useRouter} from "next/navigation";
 
-export default function DeleteAttendance({ data }: { data: Attendance }) {
+export default function DeleteAttendance({data}: { data: Attendance }) {
     const router = useRouter();
     return (
         <AlertDialog>
@@ -24,7 +24,7 @@ export default function DeleteAttendance({ data }: { data: Attendance }) {
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle>
-                        Delete {data.full_name} attendance?
+                        Delete <span className={"underline"}>{data.full_name}</span> attendance?
                     </AlertDialogTitle>
                     <AlertDialogDescription>
                         This action cannot be undone. This will permanently

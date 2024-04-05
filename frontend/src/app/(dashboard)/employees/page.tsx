@@ -1,8 +1,14 @@
-import AddEmployeeDialog from "./components/add-employee";
+import AddEmployeeDialog from "./components/table/add-employee";
 import {columns} from "./components/table/columns";
 import getAllEmployeesAction from "@/action/employees/getAllEmployeesAction";
 import Loading from "@/app/loading";
 import EmployeeTable from "./components/table";
+import type {Metadata} from "next";
+
+export const metadata: Metadata = {
+    title: "Employees",
+    description: "Made by Masum"
+};
 
 export const revalidate = 0;
 

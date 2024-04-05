@@ -11,16 +11,16 @@ import {
     getSortedRowModel,
     useReactTable
 } from "@tanstack/react-table";
-import { ChevronDown } from "lucide-react";
+import {ChevronDown} from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import {Button} from "@/components/ui/button";
 import {
     DropdownMenu,
     DropdownMenuCheckboxItem,
     DropdownMenuContent,
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
+import {Input} from "@/components/ui/input";
 import {
     Table,
     TableBody,
@@ -29,9 +29,9 @@ import {
     TableHeader,
     TableRow
 } from "@/components/ui/table";
-import { Attendance, columns } from "./table/columns";
+import {Attendance, columns} from "./table/columns";
 
-export function AttendanceTable({ data }: { data: Attendance[] }) {
+export function AttendanceTable({data}: { data: Attendance[] }) {
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] =
         React.useState<ColumnFiltersState>([]);

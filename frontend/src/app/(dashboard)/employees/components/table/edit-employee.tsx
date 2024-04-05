@@ -16,7 +16,7 @@ import {ResponseUsers, UserFromApi} from "@/interface/interface-client";
 import {useRouter} from "next/navigation";
 import DetailFormSkeleton from "./detail-form-skeleton";
 
-export default function EditEmployeeDialog({user}: { user: ResponseUsers }) {
+export default function EditEmployeeSheet({user}: { user: ResponseUsers }) {
     const router = useRouter();
     const [data, setData] = useState<UserFromApi | undefined>();
     const triggerHandler = async () => {
@@ -27,11 +27,9 @@ export default function EditEmployeeDialog({user}: { user: ResponseUsers }) {
     return (
         <Sheet>
             <SheetTrigger asChild>
-                <Button onClick={triggerHandler} className="w-6 h-6" size="icon" variant="outline"
-                    disabled={false}>
-                    <FileEditIcon className="w-4 h-4"/>
-                    <span className="sr-only">Edit</span>
-                </Button>
+                <p onClick={triggerHandler}>
+                    Edit details
+                </p>
             </SheetTrigger>
             <SheetContent className="sm:max-w-fit">
                 <SheetHeader>
