@@ -88,10 +88,10 @@ export default function SignInForm() {
                                 name="username"
                                 render={({field}) => (
                                     <FormItem>
-                                        <FormLabel>Username</FormLabel>
+                                        <FormLabel>Username test: testerrr123</FormLabel>
                                         <FormControl>
                                             <Input
-                                                placeholder="Username for test: testerrr123"
+                                                placeholder="username"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -104,10 +104,10 @@ export default function SignInForm() {
                                 name="password"
                                 render={({field}) => (
                                     <FormItem>
-                                        <FormLabel>Password</FormLabel>
+                                        <FormLabel>Password test: 123456789</FormLabel>
                                         <FormControl>
                                             <Input
-                                                type="password for test: 123456789"
+                                                type="password"
                                                 placeholder="*******"
                                                 {...field}
                                             />
