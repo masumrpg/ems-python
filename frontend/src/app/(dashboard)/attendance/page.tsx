@@ -1,4 +1,3 @@
-import {Button} from "@/components/ui/button";
 import {AttendanceTable} from "./components/table";
 import getAllEmployeesAction from "@/action/attendance/getAllAttendanceAction";
 import type {Metadata} from "next";

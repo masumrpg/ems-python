@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import Lottie from "lottie-react";
-import peopleOfficeAnimationData from "./people-office.json";
 import peopleOfficeAnimationData2 from "./people-office-2.json";
 
 interface AnimationsProps {
