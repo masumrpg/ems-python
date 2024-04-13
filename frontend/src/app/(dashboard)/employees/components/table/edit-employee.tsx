@@ -1,5 +1,4 @@
 "use client";
-import {Button} from "@/components/ui/button";
 import {
     Sheet,
     SheetContent,
@@ -8,7 +7,6 @@ import {
     SheetTitle,
     SheetTrigger
 } from "@/components/ui/sheet";
-import {FileEditIcon} from "lucide-react";
 import DetailFormDialog from "./detail-form";
 import getEmployeeByIdAction from "@/action/employees/getEmployeeByIdAction";
 import {useState} from "react";
@@ -24,6 +22,7 @@ export default function EditEmployeeSheet({user}: { user: ResponseUsers }) {
         setData(res);
         router.refresh();
     };
+
     return (
         <Sheet>
             <SheetTrigger asChild>

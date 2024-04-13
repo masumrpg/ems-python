@@ -1,7 +1,9 @@
 "use server";
+import { UserFromApi } from "@/interface/interface-client";
 import {auth} from "@/lib/auth";
 
-export default async function getEmployeeByIdAction(id:string) {
+
+export default async function getEmployeeByIdAction(id:string): Promise<UserFromApi> {
     const session = await auth();
     const url = `${process.env.NEXT_PUBLIC_API_URL}/user/${id}`;
     try {
@@ -13,13 +15,11 @@ export default async function getEmployeeByIdAction(id:string) {
             }
         });
 
-        const resMsg = await res.json().then((value)=> {return value;});
-        if (res.status === 200) {
-            return resMsg;
-        } else {
-            return {message: "Getting data..."};
-        }
-    } catch (e) {
+        return await res.json().then((value) => {
+            return value;
+        });
+
+    } catch (e: any) {
         return e;
     }
 }

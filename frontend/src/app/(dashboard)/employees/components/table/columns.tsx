@@ -13,9 +13,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
-import { toast } from "sonner";
-import { cn } from "@/lib/utils";
-import DeleteAttendance from "@/app/(dashboard)/attendance/components/table/delete-attendance";
 import EditEmployeeSheet from "@/app/(dashboard)/employees/components/table/edit-employee";
 import Link from "next/link";
 
@@ -66,6 +63,7 @@ export const columns: ColumnDef<ResponseUsers>[] = [
         enableHiding: false,
         cell: ({ row }) => {
             const user: ResponseUsers = row.original;
+            const userId = row.original.id;
 
             return (
                 <DropdownMenu>
@@ -80,7 +78,7 @@ export const columns: ColumnDef<ResponseUsers>[] = [
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuItem className={"cursor-pointer"}>
-                            <Link href={`/employees/${user.id}`}>View</Link>
+                            <Link href={`/employees/${userId}`}>View</Link>
                         </DropdownMenuItem>
                         <div
                             className={
