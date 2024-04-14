@@ -1,11 +1,13 @@
 import Link from "next/link";
-import { AvatarImage, Avatar } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { CardHeader, CardContent, Card } from "@/components/ui/card";
 import { CornerDownRight, ChevronLeftIcon, UserIcon } from "lucide-react";
 import getEmployeeByIdAction from "@/action/employees/getEmployeeByIdAction";
 import Loading from "@/app/loading";
 import { Badge } from "@/components/ui/badge";
 import EditDetails from "./components/edit-details";
+import getFirstChar from "@/lib/firstChar";
+
 
 export default async function EmployeeDetailsPage({
     params
@@ -18,6 +20,7 @@ export default async function EmployeeDetailsPage({
 
     const salary = data.user_detail?.salary;
     const formattedSalary = formatRupiah(salary || 0);
+    const firstChar = getFirstChar(data.full_name);
 
     return (
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
@@ -36,12 +39,9 @@ export default async function EmployeeDetailsPage({
             <div className="flex items-center">
                 <div className="container grid max-w-3xl items-start px-4 gap-4 sm:gap-8 md:px-6 lg:max-w-5xl lg:grid-cols-2 lg:gap-12">
                     <div className="flex items-center space-x-4">
+                        {/* <Avatar name="Test" round size="33"/> */}
                         <Avatar className="w-16 h-16 border">
-                            <AvatarImage
-                                alt="User avatar"
-                                className="border-2"
-                                src="/placeholder.svg"
-                            />
+                            <AvatarFallback>{firstChar}</AvatarFallback>
                         </Avatar>
                         <div className="grid gap-1.5">
                             <h1 className="text-2xl font-bold tracking-tighter sm:text-3xl xl:text-4xl">

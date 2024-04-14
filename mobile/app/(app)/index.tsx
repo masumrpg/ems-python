@@ -4,8 +4,10 @@ import { useSession } from '@/auth/authCtx';
 import {heightPercentageToDP as hp} from "react-native-responsive-screen";
 import Loading from "@/components/loading";
 import axios from "axios";
+import {useRouter} from "expo-router";
 
 export default function Index() {
+    const router = useRouter()
     const { signOut, session } = useSession();
     const handleCheckIn = async () => {
         // const currentTime = new Date().toLocaleString();
@@ -89,6 +91,12 @@ export default function Index() {
 
             <TouchableOpacity className={"pt-14 bg-blue-500 px-4 py-2 rounded"} onPress={handleCheckOut}>
                 <Text className={"text-white text-lg"}>Check-Out</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity className={"pt-14 bg-blue-500 px-4 py-2 rounded"} onPress={()=>{
+                router.replace("/(app)/maps");
+            }}>
+                <Text className={"text-white text-lg"}>Next</Text>
             </TouchableOpacity>
 
             <Text
