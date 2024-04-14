@@ -55,20 +55,20 @@ const navLinks = [
         badge: false,
         badgeValue: null
     },
-    {
-        path: "/reports",
-        icon: <FileTextIcon className="h-4 w-4" />,
-        text: "Reports",
-        badge: false,
-        badgeValue: null
-    },
-    {
-        path: "/settings",
-        icon: <SettingsIcon className="h-4 w-4" />,
-        text: "Settings",
-        badge: false,
-        badgeValue: null
-    }
+    // {
+    //     path: "/reports",
+    //     icon: <FileTextIcon className="h-4 w-4" />,
+    //     text: "Reports",
+    //     badge: false,
+    //     badgeValue: null
+    // },
+    // {
+    //     path: "/settings",
+    //     icon: <SettingsIcon className="h-4 w-4" />,
+    //     text: "Settings",
+    //     badge: false,
+    //     badgeValue: null
+    // }
 ];
 
 export default function SideBar({ children }: { children: React.ReactNode }) {
